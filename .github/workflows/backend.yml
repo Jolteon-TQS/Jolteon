@@ -1,6 +1,10 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - develop
+      - main
 
 jobs:
   build:
@@ -16,7 +20,7 @@ jobs:
         working-directory: backend
         run: mvn clean install
 
-      - name: import results to xray
+      - name: Import results to Xray
         uses: mikepenz/xray-action@v3
         with:
           username: ${{ secrets.xray_client_id }}
@@ -24,3 +28,4 @@ jobs:
           testformat: "junit"
           testpaths: "backend/target/surefire-reports/TEST-*.xml"
           projectkey: "JOLTEON"
+
