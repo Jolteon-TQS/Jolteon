@@ -23,4 +23,4 @@ jobs:
           password: ${{ secrets.xray_client_secret }}
           testformat: "junit"
           testpaths: "backend/target/surefire-reports/TEST-*.xml"
-          projectkey: "jolteon"
+          projectkey: "JOLTEON"
