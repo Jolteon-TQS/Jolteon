@@ -20,13 +20,6 @@ Please describe the tests that were run to verify your changes. Include details 
 
 ## Checklist
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any changes to the documentation are committed
-- [ ] Any dependent changes have been merged and published
 
 ## Screenshots (if applicable)
 
