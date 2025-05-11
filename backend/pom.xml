@@ -27,6 +27,8 @@
     <url/>
   </scm>
   <properties>
+    <sonar.organization>jolteon-tqs</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>21</java.version>
     <junit-platform-suite.version>1.12.1</junit-platform-suite.version>
     <junit-jupiter.version>5.12.1</junit-jupiter.version>
