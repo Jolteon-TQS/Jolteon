@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+      - develop
+      - JOLTEON-7-CI-Pipeline-initial-version
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
