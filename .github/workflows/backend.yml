@@ -16,11 +16,11 @@ jobs:
         working-directory: backend
         run: mvn clean install
 
-      - name: Import results to Xray
+      - name: import results to xray
         uses: mikepenz/xray-action@v3
         with:
-          username: ${{ secrets.XRAY_CLIENT_ID }}
-          password: ${{ secrets.XRAY_CLIENT_SECRET }}
-          testFormat: "junit"
-          testPaths: "target/surefire-reports/TEST-*.xml"
-          projectKey: "JOLTEON"
+          username: ${{ secrets.xray_client_id }}
+          password: ${{ secrets.xray_client_secret }}
+          testformat: "junit"
+          testpaths: "backend/target/surefire-reports/TEST-*.xml"
+          projectkey: "jolteon"
