@@ -39,3 +39,12 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Jolteon-TQS_Jolteon
+
+      - name: Import results to Xray
+        uses: mikepenz/xray-action@v3
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "target/surefire-reports/TEST-*.xml"
+          projectKey: "JOLTEON"
