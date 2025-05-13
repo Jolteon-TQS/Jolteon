@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-themes: light --default, dark --prefersdark, cupcake;
+  themes: bumblebee --default, cupcake;
 }
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
