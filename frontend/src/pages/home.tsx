@@ -94,7 +94,7 @@ function Home() {
             <p className="text-lg text-gray-700 mb-12">
             Everything you need for a smooth ride—nothing you don’t.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 place-items-center">
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 place-items-center text-left">
             {[
                 {
                 title: 'Point-to-point electric bike rentals',
@@ -145,9 +145,9 @@ function Home() {
                     <img src={feature.image} alt={feature.title} />
                     </figure>
                     <div className="card-body">
-                        <h2 className="card-title text-blue-900">Card Title</h2>
+                        <h2 className="card-title text-blue-900">{feature.title}</h2>
                         <p className="text-gray-800">
-                        A card component has a figure, a body part, and inside body there are title and actions parts
+                        {feature.description}
                         </p>
                         <div className="card-actions justify-end">
                         <button className="btn btn-outline btn-primary">Explore</button>
