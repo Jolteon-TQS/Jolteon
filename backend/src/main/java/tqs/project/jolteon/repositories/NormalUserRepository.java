@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import tqs.project.jolteon.entities.NormalUser;
 
-public interface UserRepository extends JpaRepository<NormalUser, Long> {
+public interface NormalUserRepository extends JpaRepository<NormalUser, Long> {
 }
