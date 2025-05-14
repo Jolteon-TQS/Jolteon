@@ -13,7 +13,7 @@ public class Review {
     private Long id;
 
     @ManyToOne
-    private User user;
+    private NormalUser user;
 
     @ManyToOne
     private CulturalLandmark spot;

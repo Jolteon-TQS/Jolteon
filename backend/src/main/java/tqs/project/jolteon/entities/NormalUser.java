@@ -7,6 +7,6 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class User extends BaseUser {
+public class NormalUser extends BaseUser {
     private Long balance;
 }
