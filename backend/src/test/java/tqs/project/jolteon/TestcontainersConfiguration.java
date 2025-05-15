@@ -1,4 +1,4 @@
-package tqs.project.nikev;
+package tqs.project.jolteon;
 
 import org.springframework.boot.test.context.TestConfiguration;
 

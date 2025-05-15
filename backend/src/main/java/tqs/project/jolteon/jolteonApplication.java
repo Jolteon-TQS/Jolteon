@@ -1,13 +1,13 @@
-package tqs.project.nikev;
+package tqs.project.jolteon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NikevApplication {
+public class jolteonApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(NikevApplication.class, args);
+		SpringApplication.run(jolteonApplication.class, args);
 	}
 
 }
