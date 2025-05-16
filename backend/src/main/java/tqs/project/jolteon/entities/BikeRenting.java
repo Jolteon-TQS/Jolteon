@@ -17,6 +17,9 @@ public class BikeRenting {
     @ManyToOne
     private Bike bike;
 
+    @ManyToOne
+    private NormalUser user;
+
     @OneToOne(mappedBy = "bikerenting", cascade = CascadeType.ALL)
     private Route route;
 
