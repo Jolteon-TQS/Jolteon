@@ -5,7 +5,7 @@ import maplibregl from 'maplibre-gl';
 const Map = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const apikey = '899a092ef47346c8af9097d08bc54b13';
+  const apikey = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     const map = new maplibregl.Map({
