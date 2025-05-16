@@ -68,7 +68,7 @@ const StationsMap = () => {
         source: 'waypoints',
         paint: {
           'circle-radius': 6,
-          'circle-color': '#FF5733',
+          'circle-color': '#ff7b00',
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 2,
         },

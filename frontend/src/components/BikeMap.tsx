@@ -48,7 +48,7 @@ const Map = () => {
         source: 'waypoints',
         paint: {
           'circle-radius': 6,
-          'circle-color': '#FF5733',
+          'circle-color': '#3B82F6',
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 2,
         },
