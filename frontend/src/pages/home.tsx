@@ -1,4 +1,4 @@
-import Map from '../components/Map';
+import Map from '../components/StationsMap';
 import ebike from '../assets/ebike.png';
 import BikeMap from '../components/BikeMap';
 

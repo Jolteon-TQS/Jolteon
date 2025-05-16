@@ -1,6 +1,6 @@
 import { useState } from "react";
 import BikeList from "../components/BikeList";
-import Map from "../components/Map";
+import Map from "../components/StationsMap";
 
 function Bikes() {
     const [wantsRoute, setWantsRoute] = useState(false);

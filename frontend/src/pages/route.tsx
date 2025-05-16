@@ -1,13 +1,11 @@
-import Map from '../components/Map';
-import ebike from '../assets/ebike.png';
-import MyMap from '../components/MyMap';
+import RouteMap from '../components/RouteMap';
 
 function Home() {
   return (
     <main className="flex flex-col items-center p-4 mt-30">
       <div className="card card-side bg-blue-50 shadow-sm flex-row-reverse w-full max-w-4xl">
         <figure className="w-1/2">
-          <MyMap />
+          <RouteMap />
         </figure>
         <div className="card-body w-1/2">
           <h2 className="card-title">Route</h2>
