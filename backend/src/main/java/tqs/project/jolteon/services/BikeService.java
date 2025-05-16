@@ -24,6 +24,11 @@ public class BikeService {
         return bikeRepository.findById(id);
     }
 
+    //TODO: Check if method is correctly implemented
+    public List<Bike> getAvailableBikesNearLocation(float latitude, float longitude) {
+        return bikeRepository.findAvailableBikesNearLocation(latitude, longitude);
+    }
+
     public Bike saveBike(Bike bike) {
         return bikeRepository.save(bike);
     }
