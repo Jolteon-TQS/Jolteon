@@ -7,6 +7,8 @@ import Navbar from './components/Navbar.tsx';
 import About from './pages/about.tsx';
 import Login from './pages/login.tsx';
 import ChosenRoute from './pages/route.tsx';
+import Operator from './pages/control_panel.tsx';
+import CityAdmin from './pages/city_admin.tsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,6 +28,8 @@ function App() {
           <Route path="/about"  element={<About/>}/>
           <Route path="/login"  element={<Login/>}/>
           <Route path="/route"  element={<ChosenRoute/>}/>
+          <Route path="/operator"  element={<Operator/>}/>
+          <Route path="/cityadmin"  element={<CityAdmin/>}/>
       </Routes>
     </>
   );

@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { Bell } from "lucide-react"; // If you're using lucide icons
 import NotificationBell from "./ShowNotification";
 import jolteon from "../assets/jolteon.png";
 
@@ -19,6 +18,8 @@ function Navbar() {
           <li><NavLink to="/" className={navLinkClass}>Home</NavLink></li>
           <li><NavLink to="/bikes" className={navLinkClass}>Rent Bike</NavLink></li>
           <li><NavLink to="/routes" className={navLinkClass}>Routes</NavLink></li>
+          <li><NavLink to="/operator" className={navLinkClass}>Control Panel</NavLink></li>
+          <li><NavLink to="/cityadmin" className={navLinkClass}>City Admin</NavLink></li>
           <li><NavLink to="/about" className={navLinkClass}>About Us</NavLink></li>
         </ul>
       </div>
