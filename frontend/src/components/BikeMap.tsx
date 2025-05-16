@@ -12,7 +12,7 @@ const Map = () => {
       container: mapContainer.current!,
       style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
       center: [-8.6530, 40.6410],
-      zoom: 14,
+      zoom: 16,
     });
 
     mapRef.current = map;
@@ -26,30 +26,10 @@ const Map = () => {
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [-8.6455, 40.6405],
-            },
-            properties: {
-              title: 'Start',
-            },
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
               coordinates: [-8.6530, 40.6410],
             },
             properties: {
-              title: 'Waypoint 1',
-            },
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [-8.6600, 40.6430],
-            },
-            properties: {
-              title: 'Waypoint 2',
+              title: 'Your Bike',
             },
           },
         ],

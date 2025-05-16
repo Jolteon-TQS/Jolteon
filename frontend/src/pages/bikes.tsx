@@ -7,7 +7,7 @@ function Bikes() {
     const [selectedDestination, setSelectedDestination] = useState("");
 
     return (
-        <main className="flex flex-col lg:flex-row gap-6 p-6">
+        <main className="flex flex-col lg:flex-row gap-6 p-6 bg-blue-50 mt-5">
             {/* Left Side */}
             <div className="flex-1 space-y-4">
                 <h1 className="text-3xl font-bold text-primary">Rent a Bike</h1>

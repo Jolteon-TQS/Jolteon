@@ -11,7 +11,7 @@ interface RouteCardProps {
 function RouteCard({ title, description, location, distance, estimatedTime, spots, image }: RouteCardProps) {
   return (
     <main className="flex flex-col items-center p-4">
-      <div className="card card-side bg-base-100 shadow-sm flex-row-reverse w-full max-w-4xl">
+      <div className="card card-side bg-blue-50 shadow-sm flex-row-reverse w-full max-w-4xl">
         <figure className="w-1/2">
           <img src={image} alt={title} className="w-full h-full object-cover rounded-l-lg" />
         </figure>
@@ -34,7 +34,7 @@ function RouteCard({ title, description, location, distance, estimatedTime, spot
             </ul>
           </p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Start Route</button>
+            <a href="route" className="btn btn-primary">Open</a>
           </div>
         </div>
       </div>

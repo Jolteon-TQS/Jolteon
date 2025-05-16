@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Bell } from "lucide-react"; // If you're using lucide icons
+import NotificationBell from "./ShowNotification";
 import jolteon from "../assets/jolteon.png";
 
 function Navbar() {
@@ -32,9 +33,8 @@ function Navbar() {
 
         {/* Notification Bell */}
         <div className="indicator">
-          <span className="indicator-item badge badge-secondary">3</span>
           <button className="btn btn-ghost btn-circle">
-            <Bell className="w-5 h-5" />
+          <NotificationBell />
           </button>
         </div>
 
