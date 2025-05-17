@@ -29,7 +29,7 @@ class BikeServiceTest {
     }
 
     @Test
-    void testGetAllBikes() {
+    void whenGetAllBikesIsCalled_thenAllBikesShouldBeReturned() {
         Bike bike1 = new Bike();
         Bike bike2 = new Bike();
         when(bikeRepository.findAll()).thenReturn(Arrays.asList(bike1, bike2));
@@ -41,7 +41,7 @@ class BikeServiceTest {
     }
 
     @Test
-    void testGetBikeById() {
+    void whenGetBikeByIdIsCalled_thenCorrectBikeShouldBeReturned() {
         Bike bike = new Bike();
         bike.setId(1L);
         when(bikeRepository.findById(1L)).thenReturn(Optional.of(bike));
@@ -54,24 +54,20 @@ class BikeServiceTest {
     }
 
     @Test
-    @Disabled("Disabled until method is implemented")
-    void testGetAvailableBikesNearLocation() {
+    void whenGetAvailableBikesNearLocationIsCalled_thenOnlyAvailableBikesWithinRangeShouldBeReturned() {
         float centerLatitude = 40.0f;
         float centerLongitude = -8.0f;
 
-        // Available bike within range (should be found)
         Bike bike1 = new Bike();
         bike1.setIsAvailable(true);
         bike1.setLatitude(40.0f);
         bike1.setLongitude(-8.0f);
 
-        // Available bike outside range (should not be found)
         Bike bike2 = new Bike();
         bike2.setIsAvailable(true);
         bike2.setLatitude(55.0f);
         bike2.setLongitude(-15.0f);
 
-        // Unavailable bike within range (should not be found)
         Bike bike3 = new Bike();
         bike3.setIsAvailable(false);
         bike3.setLatitude(40.1f);
@@ -80,19 +76,13 @@ class BikeServiceTest {
         when(bikeRepository.findAvailableBikesNearLocation(centerLatitude, centerLongitude)).thenReturn(Arrays.asList(bike1));
         List<Bike> availableBikes = bikeService.getAvailableBikesNearLocation(centerLatitude, centerLongitude);
 
-        // List<Bike> bikes = bikeService.getAllBikes();
-        // List<Bike> availableBikes = bikes.stream()
-        //     .filter(Bike::getIsAvailable)
-        //     .filter(bike -> Math.abs(bike.getLatitude() - 40.0f) <= 0.1f && Math.abs(bike.getLongitude() - -8.0f) <= 0.1f)
-        //     .toList();
-
         assertEquals(1, availableBikes.size());
         assertTrue(availableBikes.get(0).getIsAvailable());
         verify(bikeRepository, times(1)).findAll();
     }
 
     @Test
-    void testSaveBike() {
+    void whenSaveBikeIsCalled_thenBikeShouldBeSaved() {
         Bike bike = new Bike();
         when(bikeRepository.save(bike)).thenReturn(bike);
 
@@ -103,7 +93,7 @@ class BikeServiceTest {
     }
 
     @Test
-    void testDeleteBike() {
+    void whenDeleteBikeIsCalled_thenBikeShouldBeDeleted() {
         Long bikeId = 1L;
 
         doNothing().when(bikeRepository).deleteById(bikeId);
@@ -114,7 +104,7 @@ class BikeServiceTest {
     }
 
     @Test
-    void testUpdateBike_successful() {
+    void whenUpdateBikeIsCalledWithValidData_thenBikeShouldBeUpdated() {
         Long bikeId = 1L;
         Bike existingBike = new Bike();
         existingBike.setId(bikeId);
@@ -139,7 +129,7 @@ class BikeServiceTest {
     }
 
     @Test
-    void testUpdateBike_invalidBattery() {
+    void whenUpdateBikeIsCalledWithInvalidBattery_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
         updatedBike.setBattery(150);  // Invalid
 
@@ -151,7 +141,7 @@ class BikeServiceTest {
     }
 
     @Test
-    void testUpdateBike_invalidAutonomy() {
+    void whenUpdateBikeIsCalledWithInvalidAutonomy_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
         updatedBike.setBattery(80);
         updatedBike.setAutonomy(0L);  // Invalid
