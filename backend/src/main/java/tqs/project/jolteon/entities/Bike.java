@@ -13,8 +13,8 @@ public class Bike {
     private Long id;
 
     private Float battery;
-    private Long autonomy;
+    private Integer autonomy;
     private Boolean isAvailable;
-    private Float latitude;
-    private Float longitude;
+    private Double latitude;
+    private Double longitude;
 }

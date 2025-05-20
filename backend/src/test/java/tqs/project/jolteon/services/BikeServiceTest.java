@@ -60,18 +60,18 @@ class BikeServiceTest {
 
         Bike bike1 = new Bike();
         bike1.setIsAvailable(true);
-        bike1.setLatitude(40.0f);
-        bike1.setLongitude(-8.0f);
+        bike1.setLatitude(40.0);
+        bike1.setLongitude(-8.0);
 
         Bike bike2 = new Bike();
         bike2.setIsAvailable(true);
-        bike2.setLatitude(55.0f);
-        bike2.setLongitude(-15.0f);
+        bike2.setLatitude(55.0);
+        bike2.setLongitude(-15.0);
 
         Bike bike3 = new Bike();
         bike3.setIsAvailable(false);
-        bike3.setLatitude(40.1f);
-        bike3.setLongitude(-8.1f);
+        bike3.setLatitude(40.1);
+        bike3.setLongitude(-8.1);
 
         when(bikeRepository.findAvailableBikesNearLocation(centerLatitude, centerLongitude)).thenReturn(Arrays.asList(bike1));
         List<Bike> availableBikes = bikeService.getAvailableBikesNearLocation(centerLatitude, centerLongitude);
@@ -111,10 +111,10 @@ class BikeServiceTest {
 
         Bike updatedBike = new Bike();
         updatedBike.setBattery(90.0f);
-        updatedBike.setAutonomy(20L);
+        updatedBike.setAutonomy(20);
         updatedBike.setIsAvailable(true);
-        updatedBike.setLatitude(40.0f);
-        updatedBike.setLongitude(-8.0f);
+        updatedBike.setLatitude(40.0);
+        updatedBike.setLongitude(-8.0);
 
         when(bikeRepository.findById(bikeId)).thenReturn(Optional.of(existingBike));
         when(bikeRepository.save(any(Bike.class))).thenReturn(updatedBike);
@@ -131,7 +131,8 @@ class BikeServiceTest {
     @Test
     void whenUpdateBikeIsCalledWithInvalidBattery_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(15.0f);  // Invalid
+        updatedBike.setBattery(-15.0f);  // Invalid
+
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             bikeService.updateBike(1L, updatedBike);
@@ -144,7 +145,7 @@ class BikeServiceTest {
     void whenUpdateBikeIsCalledWithInvalidAutonomy_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
         updatedBike.setBattery(80.0f);
-        updatedBike.setAutonomy(0L);  // Invalid
+        updatedBike.setAutonomy(0);  // Invalid
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             bikeService.updateBike(1L, updatedBike);
