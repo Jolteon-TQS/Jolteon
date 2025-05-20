@@ -25,7 +25,7 @@ public class BikeRepositoryTest {
     @Test
     void whenFindBikeById_thenReturnBike() {
         Bike bike = new Bike();
-        bike.setBattery(80);
+        bike.setBattery(80.0f);
         bike.setIsAvailable(true);
         bike.setLatitude(40.0f);
         bike.setLongitude(-8.0f);
@@ -46,13 +46,13 @@ public class BikeRepositoryTest {
     @Test
     void givenBikesSaved_whenFindAllBikes_thenBikesAreFound() {
         Bike bike1 = new Bike();
-        bike1.setBattery(80);
+        bike1.setBattery(80.0f);
         bike1.setIsAvailable(true);
         bike1.setLatitude(40.0f);
         bike1.setLongitude(-8.0f);
 
         Bike bike2 = new Bike();
-        bike2.setBattery(60);
+        bike2.setBattery(60.0f);
         bike2.setIsAvailable(false);
         bike2.setLatitude(41.0f);
         bike2.setLongitude(-9.0f);
@@ -75,21 +75,21 @@ public class BikeRepositoryTest {
 
         // Available bike within range (should be found)
         Bike bike1 = new Bike();
-        bike1.setBattery(80);
+        bike1.setBattery(80.0f);
         bike1.setIsAvailable(true);
         bike1.setLatitude(40.0f);
         bike1.setLongitude(-8.0f);
 
         // Unavailable bike within range (should not be found)
         Bike bike2 = new Bike();
-        bike2.setBattery(60);
+        bike2.setBattery(60.0f);
         bike2.setIsAvailable(false);
         bike2.setLatitude(40.1f);
         bike2.setLongitude(-8.1f);
 
         // Available bike out of range (should not be found)
         Bike bike3 = new Bike();
-        bike3.setBattery(70);
+        bike3.setBattery(70.0f);
         bike3.setIsAvailable(true);
         bike3.setLatitude(41.0f);
         bike3.setLongitude(-9.0f);

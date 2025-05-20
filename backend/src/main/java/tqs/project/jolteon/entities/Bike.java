@@ -12,7 +12,7 @@ public class Bike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer battery;
+    private Float battery;
     private Long autonomy;
     private Boolean isAvailable;
     private Float latitude;

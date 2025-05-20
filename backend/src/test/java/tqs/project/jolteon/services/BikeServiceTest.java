@@ -110,7 +110,7 @@ class BikeServiceTest {
         existingBike.setId(bikeId);
 
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(90);
+        updatedBike.setBattery(90.0f);
         updatedBike.setAutonomy(20L);
         updatedBike.setIsAvailable(true);
         updatedBike.setLatitude(40.0f);
@@ -131,7 +131,7 @@ class BikeServiceTest {
     @Test
     void whenUpdateBikeIsCalledWithInvalidBattery_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(150);  // Invalid
+        updatedBike.setBattery(15.0f);  // Invalid
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             bikeService.updateBike(1L, updatedBike);
@@ -143,7 +143,7 @@ class BikeServiceTest {
     @Test
     void whenUpdateBikeIsCalledWithInvalidAutonomy_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(80);
+        updatedBike.setBattery(80.0f);
         updatedBike.setAutonomy(0L);  // Invalid
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
