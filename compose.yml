@@ -3,8 +3,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    # ports:
-    #   - ${SPRING_PORTS}
+    ports:
+      - ${SPRING_PORTS}
     env_file:
       - .env
     depends_on:
@@ -13,7 +13,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - ${FRONTEND_PORT}
 
 
   postgres:
