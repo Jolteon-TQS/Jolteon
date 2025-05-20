@@ -78,7 +78,7 @@ class BikeServiceTest {
 
         assertEquals(1, availableBikes.size());
         assertTrue(availableBikes.get(0).getIsAvailable());
-        verify(bikeRepository, times(1)).findAll();
+        verify(bikeRepository, times(1)).findAvailableBikesNearLocation(centerLatitude, centerLongitude);
     }
 
     @Test
