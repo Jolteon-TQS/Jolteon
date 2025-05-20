@@ -17,4 +17,5 @@ public class Bike {
     private Boolean isAvailable;
     private Double latitude;
     private Double longitude;
+    private String city;
 }

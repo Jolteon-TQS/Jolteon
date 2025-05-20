@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.junit.jupiter.api.Disabled;
 import org.mockito.MockitoAnnotations;
 import tqs.project.jolteon.entities.Bike;
 import tqs.project.jolteon.repositories.BikeRepository;
@@ -73,7 +72,8 @@ class BikeServiceTest {
         bike3.setLatitude(40.1);
         bike3.setLongitude(-8.1);
 
-        when(bikeRepository.findAvailableBikesNearLocation(centerLatitude, centerLongitude)).thenReturn(Arrays.asList(bike1));
+        when(bikeRepository.findAvailableBikesNearLocation(centerLatitude, centerLongitude))
+                .thenReturn(Arrays.asList(bike1));
         List<Bike> availableBikes = bikeService.getAvailableBikesNearLocation(centerLatitude, centerLongitude);
 
         assertEquals(1, availableBikes.size());
@@ -84,11 +84,13 @@ class BikeServiceTest {
     @Test
     void whenSaveBikeIsCalled_thenBikeShouldBeSaved() {
         Bike bike = new Bike();
+        bike.setCity("Porto");
         when(bikeRepository.save(bike)).thenReturn(bike);
 
         Bike saved = bikeService.saveBike(bike);
 
         assertNotNull(saved);
+        assertEquals("Porto", saved.getCity());
         verify(bikeRepository, times(1)).save(bike);
     }
 
@@ -115,6 +117,7 @@ class BikeServiceTest {
         updatedBike.setIsAvailable(true);
         updatedBike.setLatitude(40.0);
         updatedBike.setLongitude(-8.0);
+        updatedBike.setCity("Aveiro");
 
         when(bikeRepository.findById(bikeId)).thenReturn(Optional.of(existingBike));
         when(bikeRepository.save(any(Bike.class))).thenReturn(updatedBike);
@@ -124,6 +127,7 @@ class BikeServiceTest {
         assertEquals(90, resultingBike.getBattery());
         assertEquals(20, resultingBike.getAutonomy());
         assertTrue(resultingBike.getIsAvailable());
+        assertEquals("Aveiro", resultingBike.getCity());
         verify(bikeRepository, times(1)).findById(bikeId);
         verify(bikeRepository, times(1)).save(existingBike);
     }
@@ -131,8 +135,7 @@ class BikeServiceTest {
     @Test
     void whenUpdateBikeIsCalledWithInvalidBattery_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(-15.0f);  // Invalid
-
+        updatedBike.setBattery(-15.0f); // Invalid
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             bikeService.updateBike(1L, updatedBike);
@@ -145,7 +148,7 @@ class BikeServiceTest {
     void whenUpdateBikeIsCalledWithInvalidAutonomy_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
         updatedBike.setBattery(80.0f);
-        updatedBike.setAutonomy(0);  // Invalid
+        updatedBike.setAutonomy(0); // Invalid
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             bikeService.updateBike(1L, updatedBike);
