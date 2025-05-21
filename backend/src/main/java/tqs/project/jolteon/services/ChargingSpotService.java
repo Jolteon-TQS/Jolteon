@@ -3,7 +3,10 @@ package tqs.project.jolteon.services;
 import tqs.project.jolteon.entities.ChargingSpot;
 import tqs.project.jolteon.repositories.ChargingSpotRepository;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class ChargingSpotService {
 
     private final ChargingSpotRepository chargingSpotRepository;

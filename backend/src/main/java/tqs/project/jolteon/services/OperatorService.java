@@ -7,8 +7,10 @@ import tqs.project.jolteon.entities.ChargingSpot;
 
 import java.util.Optional;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 
+@Service
 public class OperatorService {
 
     private final OperatorRepository operatorRepository;
