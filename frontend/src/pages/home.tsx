@@ -6,12 +6,12 @@ import { getBikeById } from '../api/get-bike';
 
 interface Bike {
   id: number;
-  battery: number;
   autonomy: number;
   isAvailable: boolean;
   latitude: number;
   longitude: number;
   city: string;
+  chargingSpot: string
 }
 
 function Home() {
@@ -45,19 +45,9 @@ function Home() {
             <div className="flex-1 space-y-4 w-full">
               <div className="text-lg space-y-1">
                 <p><strong>Remaining Time:</strong> {bike.autonomy} minutes</p>
-                <p><strong>Location:</strong> {bike.city}</p>
-                {/* <p><strong>Availability:</strong> {bike.isAvailable ? 'Available' : 'Unavailable'}</p> */}
-              </div>
-              <div className="flex items-center gap-4">
-                <strong>Battery Level</strong>
-                <div
-                  className="radial-progress text-info"
-                  style={{ '--value': bike.battery } as React.CSSProperties}
-                  role="progressbar"
-                  aria-valuenow={bike.battery}
-                >
-                  {bike.battery}%
-                </div>
+                <p><strong>City:</strong> {bike.city}</p>
+                <p><strong>Latitude:</strong> {bike.latitude}</p>
+                <p><strong>Longitude:</strong> {bike.longitude}</p>
               </div>
               <div className="card-actions mt-4">
                 <button className="btn btn-info">End Trip</button>
