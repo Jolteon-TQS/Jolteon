@@ -42,7 +42,7 @@ public class OperatorController {
     }
 
 
-    @GetMapping("/bikeStatus")
+    @GetMapping("/bikeStatus/{id}")
     public  ResponseEntity<Bike> getBikeStatus(@PathVariable Long id) {
         return operatorService.getBikeStatus(id)
                 .map(ResponseEntity::ok)
