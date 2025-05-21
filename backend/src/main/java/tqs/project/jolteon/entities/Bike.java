@@ -12,10 +12,14 @@ public class Bike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Float battery;
     private Integer autonomy;
     private Boolean isAvailable;
     private Double latitude;
     private Double longitude;
     private String city;
+
+    @ManyToOne
+    @JoinColumn(name = "charging_spot_id")
+    private ChargingSpot chargingSpot;
+
 }
