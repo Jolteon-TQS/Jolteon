@@ -13,7 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  function notify(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  function notify(): void {
     toast('Battery low! Please charge your bike.',);
   }
   return (
