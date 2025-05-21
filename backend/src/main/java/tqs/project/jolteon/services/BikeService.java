@@ -60,5 +60,9 @@ public class BikeService {
             })
             .orElseThrow(() -> new RuntimeException("Bike not found with id " + id));
     }
+
+    public List<Bike> getBikesByCity(String city) {
+        return bikeRepository.findByCity(city);
+    }
 }
 

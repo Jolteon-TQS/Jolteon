@@ -8,4 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Operator extends BaseUser {
+    private String city;
 }
