@@ -1,15 +1,15 @@
 import { useState } from "react";
 import BikeList from "../components/BikeList";
-import Map from "../components/Map";
+import Map from "../components/StationsMap";
 
 function Bikes() {
     const [wantsRoute, setWantsRoute] = useState(false);
     const [selectedDestination, setSelectedDestination] = useState("");
 
     return (
-        <main className="flex flex-col lg:flex-row gap-6 p-6">
+        <main className="flex flex-col lg:flex-row gap-6 p-6 bg-orange-50 mt-5 mockup-window border-base-300">
             {/* Left Side */}
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-4 mt-5">
                 <h1 className="text-3xl font-bold text-primary">Rent a Bike</h1>
 
                 {/* Time Picker */}
