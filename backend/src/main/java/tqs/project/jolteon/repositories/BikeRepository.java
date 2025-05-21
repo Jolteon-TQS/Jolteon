@@ -21,4 +21,7 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
     "(6371 * ACOS(COS(RADIANS(:latitude)) * COS(RADIANS(b.latitude)) * " +
     "COS(RADIANS(b.longitude) - RADIANS(:longitude)) + SIN(RADIANS(:latitude)) * SIN(RADIANS(b.latitude)))) < 1")
     List<Bike> findAvailableBikesNearLocation(@Param("latitude") float latitude, @Param("longitude") float longitude);
+
+
+    List<Bike> findByCity(String city);
 }
