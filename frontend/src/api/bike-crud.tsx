@@ -2,11 +2,11 @@ import axios from 'axios';
 
 export interface Bike {
   id?: number;
-  model: string;
   city: string;
-  isAvailable: boolean;
   latitude: number;
   longitude: number;
+  chargingSpot: number;
+  autonomy: number;
 }
 
 const base_api_url = import.meta.env.VITE_API_URL;
