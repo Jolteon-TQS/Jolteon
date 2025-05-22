@@ -44,7 +44,8 @@ function Home() {
             {/* Left: Info */}
             <div className="flex-1 space-y-4 w-full">
               <div className="text-lg space-y-1">
-                <p><strong>Remaining Time:</strong> {bike.autonomy} minutes</p>
+                <p><strong>Remaining Time:</strong> {bike.autonomy} minutes
+                (Please return until <strong>{new Date(Date.now() + bike.autonomy * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}h</strong>)</p>
                 <p><strong>City:</strong> {bike.city}</p>
                 <p><strong>Latitude:</strong> {bike.latitude}</p>
                 <p><strong>Longitude:</strong> {bike.longitude}</p>
@@ -55,7 +56,7 @@ function Home() {
             </div>
             {/* Right: Biker Image */}
             <div className="flex-shrink-0">
-              <img src={biker} alt="E-Bike" className="h-55 rounded mr-50" />
+              <img src={biker} alt="E-Bike" className="h-55 rounded mr-10" />
             </div>
           </div>
         </div>
