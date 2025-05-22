@@ -1,36 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PanelMap from "../components/PanelMap";
+import { getAllBikes, createBike, deleteBike } from "../api/bike-crud";
 
-interface Bike {
-  id: number;
-  name: string;
-  lat: number;
-  lng: number;
-  status: string;
+export interface Bike {
+  id?: number;
+  city: string;
+  latitude: number;
+  longitude: number;
+  chargingSpotId: number;
+  autonomy: number;
 }
 
 interface Station {
   id: number;
   name: string;
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 }
 
 function Panel() {
   // State for bikes and stations
-  const [bikes, setBikes] = useState<Bike[]>([
-    { id: 1, name: "Bike 1", lat: 40.6408, lng: -8.6515, status: "Active - Battery: 70%" },
-    { id: 2, name: "Bike 2", lat: 40.642, lng: -8.648, status: "Idle - Battery: 45%" },
-  ]);
+  const [bikes, setBikes] = useState<Bike[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [stations, setStations] = useState<Station[]>([
-    { id: 1, name: "Central Station", lat: 40.6410, lng: -8.6530 },
-    { id: 2, name: "North Hub", lat: 40.6430, lng: -8.6600 },
+    { id: 1, name: "Central Station", latitude: 40.6410, longitude: -8.6530 },
+    { id: 2, name: "North Hub", latitude: 40.6430, longitude: -8.6600 },
   ]);
 
   // State for new bike/station forms
-  const [newBike, setNewBike] = useState({ name: "", lat: "", lng: "" });
-  const [newStation, setNewStation] = useState({ name: "", lat: "", lng: "" });
+  const [newBike, setNewBike] = useState({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
+  const [newStation, setNewStation] = useState({ name: "", latitude: "", longitude: "" });
 
   // Modal state
   const [showModal, setShowModal] = useState<"bikes" | "stations" | null>(null);
@@ -38,41 +39,71 @@ function Panel() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Add new bike
-  const addBike = () => {
-    if (!newBike.name || !newBike.lat || !newBike.lng) return;
+  // Fetch bikes on component mount
+  useEffect(() => {
+    const fetchBikes = async () => {
+      try {
+        const fetchedBikes = await getAllBikes();
+        setBikes(fetchedBikes);
+        setIsLoading(false);
+      } catch (err) {
+        setError("Failed to fetch bikes. Please try again later.");
+        setIsLoading(false);
+        console.error("Error fetching bikes:", err);
+      }
+    };
+
+    fetchBikes();
+  }, []);
+
+  // Add new bike using API
+  const addBike = async () => {
+    if (!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy) return;
     
-    const id = bikes.length > 0 ? Math.max(...bikes.map(b => b.id)) + 1 : 1;
-    setBikes([...bikes, { 
-      id,
-      name: newBike.name, 
-      lat: parseFloat(newBike.lat), 
-      lng: parseFloat(newBike.lng), 
-      status: "Idle - Battery: 100%" 
-    }]);
-    setNewBike({ name: "", lat: "", lng: "" });
+    try {
+      const bikeToCreate = {
+        city: newBike.city,
+        latitude: parseFloat(newBike.latitude),
+        longitude: parseFloat(newBike.longitude),
+        chargingSpotId: parseInt(newBike.chargingSpotId),
+        autonomy: parseInt(newBike.autonomy)
+      };
+
+      const createdBike = await createBike(bikeToCreate);
+      setBikes([...bikes, createdBike]);
+      setNewBike({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
+    } catch (err) {
+      setError("Failed to create bike. Please try again.");
+      console.error("Error creating bike:", err);
+    }
   };
 
-  // Add new station
+  // Add new station (keeping this static as no API was provided)
   const addStation = () => {
-    if (!newStation.name || !newStation.lat || !newStation.lng) return;
+    if (!newStation.name || !newStation.latitude || !newStation.longitude) return;
     
     const id = stations.length > 0 ? Math.max(...stations.map(s => s.id)) + 1 : 1;
     setStations([...stations, { 
       id,
       name: newStation.name, 
-      lat: parseFloat(newStation.lat), 
-      lng: parseFloat(newStation.lng)
+      latitude: parseFloat(newStation.latitude), 
+      longitude: parseFloat(newStation.longitude)
     }]);
-    setNewStation({ name: "", lat: "", lng: "" });
+    setNewStation({ name: "", latitude: "", longitude: "" });
   };
 
-  // Delete bike
-  const deleteBike = (id: number) => {
-    setBikes(bikes.filter(bike => bike.id !== id));
+  // Delete bike using API
+  const handleDeleteBike = async (id: number) => {
+    try {
+      await deleteBike(id);
+      setBikes(bikes.filter(bike => bike.id !== id));
+    } catch (err) {
+      setError("Failed to delete bike. Please try again.");
+      console.error("Error deleting bike:", err);
+    }
   };
 
-  // Delete station
+  // Delete station (keeping this static as no API was provided)
   const deleteStation = (id: number) => {
     setStations(stations.filter(station => station.id !== id));
   };
@@ -80,8 +111,9 @@ function Panel() {
   // Filter items based on search term
   const filteredItems = showModal === "bikes" 
     ? bikes.filter(bike => 
-        bike.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bike.status.toLowerCase().includes(searchTerm.toLowerCase())
+        bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bike.chargingSpotId.toString().includes(searchTerm.toLowerCase()) ||
+        bike.autonomy.toString().includes(searchTerm.toLowerCase())
       )
     : stations.filter(station => 
         station.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -106,6 +138,14 @@ function Panel() {
     setShowModal(null);
   };
 
+  if (isLoading) {
+    return <div className="p-6">Loading bikes...</div>;
+  }
+
+  if (error) {
+    return <div className="p-6 text-error">{error}</div>;
+  }
+
   return (
     <main className="flex flex-col lg:flex-row gap-6 p-6 bg-orange-100 mt-5 mockup-window border-base-300">
       {/* Left Side - Forms and Controls */}
@@ -118,32 +158,48 @@ function Panel() {
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
-              placeholder="Bike Name"
+              placeholder="City"
               className="input input-bordered flex-1"
-              value={newBike.name}
-              onChange={(e) => setNewBike({ ...newBike, name: e.target.value })}
+              value={newBike.city}
+              onChange={(e) => setNewBike({ ...newBike, city: e.target.value })}
             />
             <input
               type="number"
               placeholder="Latitude"
               className="input input-bordered flex-1"
-              value={newBike.lat}
-              onChange={(e) => setNewBike({ ...newBike, lat: e.target.value })}
+              value={newBike.latitude}
+              onChange={(e) => setNewBike({ ...newBike, latitude: e.target.value })}
               step="0.000001"
             />
             <input
               type="number"
               placeholder="Longitude"
               className="input input-bordered flex-1"
-              value={newBike.lng}
-              onChange={(e) => setNewBike({ ...newBike, lng: e.target.value })}
+              value={newBike.longitude}
+              onChange={(e) => setNewBike({ ...newBike, longitude: e.target.value })}
               step="0.000001"
+            />
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="number"
+              placeholder="Charging Spot ID"
+              className="input input-bordered flex-1"
+              value={newBike.chargingSpotId}
+              onChange={(e) => setNewBike({ ...newBike, chargingSpotId: e.target.value })}
+            />
+            <input
+              type="number"
+              placeholder="Autonomy (km)"
+              className="input input-bordered flex-1"
+              value={newBike.autonomy}
+              onChange={(e) => setNewBike({ ...newBike, autonomy: e.target.value })}
             />
           </div>
           <button 
             onClick={addBike} 
             className="btn btn-secondary"
-            disabled={!newBike.name || !newBike.lat || !newBike.lng}
+            disabled={!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy}
           >
             Add Bike
           </button>
@@ -164,23 +220,23 @@ function Panel() {
               type="number"
               placeholder="Latitude"
               className="input input-bordered flex-1"
-              value={newStation.lat}
-              onChange={(e) => setNewStation({ ...newStation, lat: e.target.value })}
+              value={newStation.latitude}
+              onChange={(e) => setNewStation({ ...newStation, latitude: e.target.value })}
               step="0.000001"
             />
             <input
               type="number"
               placeholder="Longitude"
               className="input input-bordered flex-1"
-              value={newStation.lng}
-              onChange={(e) => setNewStation({ ...newStation, lng: e.target.value })}
+              value={newStation.longitude}
+              onChange={(e) => setNewStation({ ...newStation, longitude: e.target.value })}
               step="0.000001"
             />
           </div>
           <button 
             onClick={addStation} 
             className="btn btn-secondary"
-            disabled={!newStation.name || !newStation.lat || !newStation.lng}
+            disabled={!newStation.name || !newStation.latitude || !newStation.longitude}
           >
             Add Station
           </button>
@@ -214,7 +270,7 @@ function Panel() {
         <PanelMap 
           bikes={bikes} 
           stations={stations} 
-          onDeleteBike={deleteBike} 
+          onDeleteBike={handleDeleteBike} 
           onDeleteStation={deleteStation} 
         />
       </div>
@@ -232,17 +288,16 @@ function Panel() {
             
             {/* Search Bar */}
             <div className="my-4">
-<input
-  type="text"
-  placeholder={`Search ${showModal}...`}
-  className="input input-bordered w-full"
-  value={searchTerm}
-  onChange={(e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  }}
-/>
-
+              <input
+                type="text"
+                placeholder={`Search ${showModal}...`}
+                className="input input-bordered w-full"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
             </div>
 
             {/* Table */}
@@ -251,8 +306,15 @@ function Panel() {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    {showModal === "bikes" && <th>Status</th>}
+                    {showModal === "bikes" ? (
+                      <>
+                        <th>City</th>
+                        <th>Charging Spot</th>
+                        <th>Autonomy (km)</th>
+                      </>
+                    ) : (
+                      <th>Name</th>
+                    )}
                     <th>Location</th>
                     <th>Actions</th>
                   </tr>
@@ -262,17 +324,23 @@ function Panel() {
                     currentItems.map((item) => (
                       <tr key={item.id}>
                         <td>{item.id}</td>
-                        <td>{item.name}</td>
-                        {showModal === "bikes" && <td>{(item as Bike).status}</td>}
-                        <td>{item.lat.toFixed(4)}, {item.lng.toFixed(4)}</td>
+                        {showModal === "bikes" ? (
+                          <>
+                            <td>{(item as Bike).city}</td>
+                            <td>{(item as Bike).chargingSpotId}</td>
+                            <td>{(item as Bike).autonomy}</td>
+                          </>
+                        ) : (
+                          <td>{(item as Station).name}</td>
+                        )}
+                        <td>{item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</td>
                         <td>
                           <button 
-                            onClick={() => {
-                              showModal === "bikes" 
-                                ? deleteBike(item.id) 
-                                : deleteStation(item.id);
-                            }}
                             className="btn btn-error btn-xs"
+                            onClick={() => showModal === "bikes" 
+                              ? handleDeleteBike(item.id!) 
+                              : item.id !== undefined && deleteStation(item.id)
+                            }
                           >
                             Delete
                           </button>
@@ -281,7 +349,7 @@ function Panel() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={showModal === "bikes" ? 5 : 4} className="text-center">
+                      <td colSpan={showModal === "bikes" ? 6 : 5} className="text-center">
                         No {showModal} found
                       </td>
                     </tr>
@@ -314,14 +382,13 @@ function Panel() {
                     }
                     
                     return (
-<button
-  key={pageNum}
-  className={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
-  onClick={() => setCurrentPage(pageNum)}
->
-  {pageNum}
-</button>
-
+                      <button
+                        key={pageNum}
+                        className={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
+                        onClick={() => setCurrentPage(pageNum)}
+                      >
+                        {pageNum}
+                      </button>
                     );
                   })}
                   <button 
