@@ -17,6 +17,7 @@ public class ChargingSpot {
     private String city;
     private float latitude;
     private float longitude;
+    private int capacity;
 
     @OneToMany
     private Set<Bike> bikes;

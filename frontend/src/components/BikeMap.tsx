@@ -1,8 +1,12 @@
-// MyMap.tsx
 import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 
-const Map = () => {
+interface Props {
+  latitude: number;
+  longitude: number;
+}
+
+const Map = ({ latitude, longitude }: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const apikey = import.meta.env.VITE_API_KEY;
@@ -11,14 +15,14 @@ const Map = () => {
     const map = new maplibregl.Map({
       container: mapContainer.current!,
       style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
-      center: [-8.6530, 40.6410],
+      center: [longitude, latitude],
       zoom: 16,
     });
 
     mapRef.current = map;
 
     map.on('load', () => {
-      // GeoJSON with multiple waypoint markers
+      // GeoJSON using props
       const waypointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
         type: 'FeatureCollection',
         features: [
@@ -26,7 +30,7 @@ const Map = () => {
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [-8.6530, 40.6410],
+              coordinates: [longitude, latitude],
             },
             properties: {
               title: 'Your Bike',
@@ -35,13 +39,11 @@ const Map = () => {
         ],
       };
 
-      // Add source
       map.addSource('waypoints', {
         type: 'geojson',
         data: waypointData,
       });
 
-      // Add circle layer to show waypoints
       map.addLayer({
         id: 'waypoints-layer',
         type: 'circle',
@@ -54,7 +56,6 @@ const Map = () => {
         },
       });
 
-      // Optionally add popup on click
       map.on('click', 'waypoints-layer', (e) => {
         const coordinates = (e.features?.[0]?.geometry as GeoJSON.Point)?.coordinates;
         const title = e.features?.[0]?.properties?.title;
@@ -66,7 +67,6 @@ const Map = () => {
         }
       });
 
-      // Cursor change on hover
       map.on('mouseenter', 'waypoints-layer', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
@@ -76,10 +76,9 @@ const Map = () => {
     });
 
     return () => map.remove();
-  }, []);
+  }, [latitude, longitude]);
 
   return <div ref={mapContainer} style={{ height: '500px' }} />;
-        
 };
 
 export default Map;

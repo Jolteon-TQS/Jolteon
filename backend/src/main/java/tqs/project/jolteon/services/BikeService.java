@@ -38,10 +38,6 @@ public class BikeService {
     }
 
     private void validateBike(Bike bike) {
-        if (bike.getBattery() < 0 || bike.getBattery() > 100) {
-            throw new IllegalArgumentException("Battery must be between 0 and 100");
-        }
-
         if (bike.getAutonomy() <= 0) {
             throw new IllegalArgumentException("Autonomy must be greater than 0");
         }
@@ -51,7 +47,6 @@ public class BikeService {
         validateBike(updatedBike);
         return bikeRepository.findById(id)
             .map(bike -> {
-                bike.setBattery(updatedBike.getBattery());
                 bike.setAutonomy(updatedBike.getAutonomy());
                 bike.setIsAvailable(updatedBike.getIsAvailable());
                 bike.setLatitude(updatedBike.getLatitude());

@@ -1,19 +1,20 @@
 import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 
-interface Bike {
-  id: number;
-  name: string;
-  lat: number;
-  lng: number;
-  status: string;
+export interface Bike {
+  id?: number;
+  city: string;
+  latitude: number;
+  longitude: number;
+  chargingSpotId: number;
+  autonomy: number;
 }
 
 interface Station {
   id: number;
   name: string;
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 }
 
 interface Props {
@@ -31,19 +32,28 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
   const convertToGeoJSON = (
     items: (Bike | Station)[],
     type: "bike" | "station"
-  ): GeoJSON.FeatureCollection<GeoJSON.Point, { id: number; name: string; status: string; itemType: "bike" | "station" }> => ({
+  ): GeoJSON.FeatureCollection<GeoJSON.Point, { 
+    id: number; 
+    name: string; 
+    city?: string;
+    chargingSpotId?: number;
+    autonomy?: number;
+    itemType: "bike" | "station" 
+  }> => ({
     type: "FeatureCollection",
     features: items.map((item) => ({
       type: "Feature",
       properties: {
-        id: item.id,
-        name: item.name,
-        status: (type === "bike" && "status" in item) ? item.status : "",
+        id: item.id || 0,
+        name: type === "bike" ? `Bike ${item.id}` : (item as Station).name,
+        city: type === "bike" ? (item as Bike).city : undefined,
+        chargingSpotId: type === "bike" ? (item as Bike).chargingSpotId : undefined,
+        autonomy: type === "bike" ? (item as Bike).autonomy : undefined,
         itemType: type,
       },
       geometry: {
         type: "Point",
-        coordinates: [item.lng, item.lat],
+        coordinates: [item.longitude, item.latitude],
       },
     })),
   });
@@ -101,14 +111,17 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
         if (!feature) return;
 
         const id = feature.properties?.id;
-        const name = feature.properties?.name;
-        const status = feature.properties?.status;
+        const city = feature.properties?.city;
+        const chargingSpotId = feature.properties?.chargingSpotId;
+        const autonomy = feature.properties?.autonomy;
 
         new maplibregl.Popup()
           .setLngLat(e.lngLat)
           .setHTML(`
-            <strong>${name}</strong><br/>
-            ${status}<br/>
+            <strong>Bike ${id}</strong><br/>
+            City: ${city}<br/>
+            Charging Spot: ${chargingSpotId}<br/>
+            Autonomy: ${autonomy} km<br/>
             <button onclick="window.deleteBike(${id})" style="color: red;">Delete</button>
           `)
           .addTo(map);
