@@ -2,15 +2,7 @@ import { useEffect, useState } from 'react';
 import biker from '../assets/biker.gif';
 import BikeMap from '../components/BikeMap';
 import { getBikeById } from '../api/bike-crud';
-
-interface Bike {
-  id?: number;
-  city: string;
-  latitude: number;
-  longitude: number;
-  chargingSpotId: number;
-  autonomy: number;
-}
+import { Bike } from '../api/bike-crud';
 
 function Home() {
   const [bike, setBike] = useState<Bike | null>(null);
