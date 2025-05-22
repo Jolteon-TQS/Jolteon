@@ -3,7 +3,10 @@ package tqs.project.jolteon.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import tqs.project.jolteon.entities.Bike;
 import tqs.project.jolteon.entities.ChargingSpot;
+import tqs.project.jolteon.repositories.BikeRepository;
 import tqs.project.jolteon.repositories.ChargingSpotRepository;
 
 import java.util.Arrays;
@@ -16,12 +19,13 @@ import static org.mockito.Mockito.*;
 class ChargingSpotServiceTest {
 
     private ChargingSpotRepository chargingSpotRepository;
+    private BikeRepository bikeRepository;
     private ChargingSpotService chargingSpotService;
 
     @BeforeEach
     void setUp() {
         chargingSpotRepository = mock(ChargingSpotRepository.class);
-        chargingSpotService = new ChargingSpotService(chargingSpotRepository);
+        chargingSpotService = new ChargingSpotService(chargingSpotRepository, bikeRepository);
     }
 
     @Test
