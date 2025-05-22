@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
 import PanelMap from "../components/PanelMap";
 import { getAllBikes, createBike, deleteBike } from "../api/bike-crud";
+import { Bike } from "../api/bike-crud";
 
-export interface Bike {
-  id?: number;
-  city: string;
-  latitude: number;
-  longitude: number;
-  chargingSpotId: number;
-  autonomy: number;
-}
 
 interface Station {
   id: number;
