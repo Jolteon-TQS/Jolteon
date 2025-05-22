@@ -1,37 +1,51 @@
 import { useEffect, useState } from 'react';
-// import ebike from '../assets/ebike.png';
 import biker from '../assets/biker.gif';
 import BikeMap from '../components/BikeMap';
-import { getBikeById } from '../api/get-bike';
+import { getBikeById } from '../api/bike-crud';
 
 interface Bike {
-  id: number;
-  autonomy: number;
-  isAvailable: boolean;
+  id?: number;
+  city: string;
   latitude: number;
   longitude: number;
-  city: string;
-  chargingSpot: string
+  chargingSpotId: number;
+  autonomy: number;
 }
 
 function Home() {
   const [bike, setBike] = useState<Bike | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBike = async () => {
       try {
-        const data = await getBikeById(); // you can pass a dynamic ID if needed
-        setBike(data as Bike);
+        // You'll need to get the bike ID from somewhere - 
+        // this could be from props, URL params, or a hardcoded value for demo purposes
+        const bikeId = 3; // Replace with actual ID source
+        const data = await getBikeById(bikeId);
+        setBike(data);
       } catch (error) {
         console.error('Failed to fetch bike:', error);
+        setError('Failed to load bike data');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchBike();
   }, []);
 
-  if (!bike) {
+  if (loading) {
     return <p className="p-6">Loading bike...</p>;
+  }
+
+  if (error) {
+    return <p className="p-6 text-red-500">{error}</p>;
+  }
+
+  if (!bike) {
+    return <p className="p-6">No bike data available</p>;
   }
 
   return (
@@ -46,6 +60,7 @@ function Home() {
               <div className="text-lg space-y-1">
                 <p><strong>Remaining Time:</strong> {bike.autonomy} minutes</p>
                 <p><strong>City:</strong> {bike.city}</p>
+                <p><strong>Charging Spot ID:</strong> {bike.chargingSpotId}</p>
                 <p><strong>Latitude:</strong> {bike.latitude}</p>
                 <p><strong>Longitude:</strong> {bike.longitude}</p>
               </div>

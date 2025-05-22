@@ -5,7 +5,7 @@ export interface Bike {
   city: string;
   latitude: number;
   longitude: number;
-  chargingSpot: number;
+  chargingSpotId: number;
   autonomy: number;
 }
 
