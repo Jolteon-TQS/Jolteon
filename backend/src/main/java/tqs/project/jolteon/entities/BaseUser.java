@@ -1,5 +1,7 @@
 package tqs.project.jolteon.entities;
 
+import org.checkerframework.checker.units.qual.C;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
@@ -12,6 +14,7 @@ import lombok.Setter;
 public abstract class BaseUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("user_id")  
     @JsonProperty("user_id")  
     protected Long id;
 
