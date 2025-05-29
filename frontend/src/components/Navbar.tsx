@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import NotificationBell from "./ShowNotification";
+import NotificationBell from "./ShowNotifications";
 import jolteon from "../assets/jolteon.png";
 import Clock from "./Clock";
 import 'react-clock/dist/Clock.css';
