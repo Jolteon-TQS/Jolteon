@@ -9,8 +9,9 @@ function LandmarkPanel() {
       city: "Aveiro",
       description: "Historic building in the city center.",
       lat: 40.6405,
-      lng: -8.6530,
-      image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Aveiro_town_hall.jpg",
+      lng: -8.653,
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/2/2f/Aveiro_town_hall.jpg",
     },
   ]);
 
@@ -37,7 +38,14 @@ function LandmarkPanel() {
         image: newLandmark.image,
       },
     ]);
-    setNewLandmark({ name: "", city: "", description: "", lat: "", lng: "", image: "" });
+    setNewLandmark({
+      name: "",
+      city: "",
+      description: "",
+      lat: "",
+      lng: "",
+      image: "",
+    });
   };
 
   const deleteLandmark = (id: number) => {
@@ -58,43 +66,57 @@ function LandmarkPanel() {
             placeholder="Name"
             className="input input-bordered w-full max-w-xs mr-10"
             value={newLandmark.name}
-            onChange={(e) => setNewLandmark({ ...newLandmark, name: e.target.value })}
+            onChange={(e) =>
+              setNewLandmark({ ...newLandmark, name: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="City"
             className="input input-bordered w-full max-w-xs"
             value={newLandmark.city}
-            onChange={(e) => setNewLandmark({ ...newLandmark, city: e.target.value })}
+            onChange={(e) =>
+              setNewLandmark({ ...newLandmark, city: e.target.value })
+            }
           />
           <textarea
             placeholder="Description"
             className="textarea textarea-bordered w-full max-w-xs mr-10"
             value={newLandmark.description}
-            onChange={(e) => setNewLandmark({ ...newLandmark, description: e.target.value })}
+            onChange={(e) =>
+              setNewLandmark({ ...newLandmark, description: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Latitude"
             className="input input-bordered w-full max-w-xs"
             value={newLandmark.lat}
-            onChange={(e) => setNewLandmark({ ...newLandmark, lat: e.target.value })}
+            onChange={(e) =>
+              setNewLandmark({ ...newLandmark, lat: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Longitude"
             className="input input-bordered w-full max-w-xs mr-10"
             value={newLandmark.lng}
-            onChange={(e) => setNewLandmark({ ...newLandmark, lng: e.target.value })}
+            onChange={(e) =>
+              setNewLandmark({ ...newLandmark, lng: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Image URL"
             className="input input-bordered w-full max-w-xs"
             value={newLandmark.image}
-            onChange={(e) => setNewLandmark({ ...newLandmark, image: e.target.value })}
+            onChange={(e) =>
+              setNewLandmark({ ...newLandmark, image: e.target.value })
+            }
           />
-          <button onClick={addLandmark} className="btn btn-success ml-10">Add Landmark</button>
+          <button onClick={addLandmark} className="btn btn-success ml-10">
+            Add Landmark
+          </button>
         </div>
 
         {/* Landmark List */}

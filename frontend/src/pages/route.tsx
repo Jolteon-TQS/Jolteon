@@ -1,4 +1,4 @@
-import RouteMap from '../components/RouteMap';
+import RouteMap from "../components/RouteMap";
 
 function Home() {
   return (
@@ -10,7 +10,8 @@ function Home() {
         <div className="card-body w-1/2">
           <h2 className="card-title">Route</h2>
           <p>
-            <strong>Start Location:</strong> Bairro de Santiago, Aveiro, Portugal
+            <strong>Start Location:</strong> Bairro de Santiago, Aveiro,
+            Portugal
             <br />
             <strong>End Location:</strong> Costa Nova, Aveiro, Portugal
             <br />

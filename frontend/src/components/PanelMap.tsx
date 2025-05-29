@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
 
 export interface Bike {
   id?: number;
@@ -24,22 +24,30 @@ interface Props {
   onDeleteStation?: (id: number) => void;
 }
 
-const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => {
+const PanelMap = ({
+  bikes,
+  stations,
+  onDeleteBike,
+  onDeleteStation,
+}: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const apikey = import.meta.env.VITE_API_KEY;
 
   const convertToGeoJSON = (
     items: (Bike | Station)[],
-    type: "bike" | "station"
-  ): GeoJSON.FeatureCollection<GeoJSON.Point, { 
-    id: number; 
-    name: string; 
-    city?: string;
-    chargingSpotId?: number;
-    autonomy?: number;
-    itemType: "bike" | "station" 
-  }> => ({
+    type: "bike" | "station",
+  ): GeoJSON.FeatureCollection<
+    GeoJSON.Point,
+    {
+      id: number;
+      name: string;
+      city?: string;
+      chargingSpotId?: number;
+      autonomy?: number;
+      itemType: "bike" | "station";
+    }
+  > => ({
     type: "FeatureCollection",
     features: items.map((item) => ({
       type: "Feature",
@@ -47,7 +55,8 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
         id: item.id || 0,
         name: type === "bike" ? `Bike ${item.id}` : (item as Station).name,
         city: type === "bike" ? (item as Bike).city : undefined,
-        chargingSpotId: type === "bike" ? (item as Bike).chargingSpotId : undefined,
+        chargingSpotId:
+          type === "bike" ? (item as Bike).chargingSpotId : undefined,
         autonomy: type === "bike" ? (item as Bike).autonomy : undefined,
         itemType: type,
       },
@@ -62,7 +71,7 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
     const map = new maplibregl.Map({
       container: mapContainer.current!,
       style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
-      center: [-8.6530, 40.6410],
+      center: [-8.653, 40.641],
       zoom: 15,
     });
 
@@ -117,13 +126,15 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
 
         new maplibregl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(`
+          .setHTML(
+            `
             <strong>Bike ${id}</strong><br/>
             City: ${city}<br/>
             Charging Spot: ${chargingSpotId}<br/>
             Autonomy: ${autonomy} km<br/>
             <button onclick="window.deleteBike(${id})" style="color: red;">Delete</button>
-          `)
+          `,
+          )
           .addTo(map);
       });
 
@@ -136,10 +147,12 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
 
         new maplibregl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(`
+          .setHTML(
+            `
             <strong>${name}</strong><br/>
             <button onclick="window.deleteStation(${id})" style="color: red;">Delete</button>
-          `)
+          `,
+          )
           .addTo(map);
       });
 
@@ -171,13 +184,15 @@ const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => 
     if (!map || !map.isStyleLoaded()) return;
 
     const bikesSource = map.getSource("bikes") as maplibregl.GeoJSONSource;
-    const stationsSource = map.getSource("stations") as maplibregl.GeoJSONSource;
+    const stationsSource = map.getSource(
+      "stations",
+    ) as maplibregl.GeoJSONSource;
 
     bikesSource?.setData(convertToGeoJSON(bikes, "bike"));
     stationsSource?.setData(convertToGeoJSON(stations, "station"));
   }, [bikes, stations]);
 
-  return <div ref={mapContainer} style={{ height: '600px' }} />;
+  return <div ref={mapContainer} style={{ height: "600px" }} />;
 };
 
 export default PanelMap;
