@@ -16,7 +16,7 @@ jobs:
         run: cp .env_example .env
 
       - name: Copy nginx public config
-        run: cp frontend/.nginx_conf_deploy
+        run: cp frontend/.nginx_conf_deploy frontend/nginx.conf
 
       - name: Copy frontend .env_example to .env
         run: cp frontend/.env_example_deploy frontend/.env
