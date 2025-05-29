@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import biker from '../assets/biker.gif';
-import BikeMap from '../components/BikeMap';
-import { getBikeById } from '../api/bike-crud';
-import { Bike } from '../api/bike-crud';
+import { useEffect, useState } from "react";
+import biker from "../assets/biker.gif";
+import BikeMap from "../components/BikeMap";
+import { getBikeById } from "../api/bike-crud";
+import { Bike } from "../api/bike-crud";
 
 function Home() {
   const [bike, setBike] = useState<Bike | null>(null);
@@ -12,14 +12,14 @@ function Home() {
   useEffect(() => {
     const fetchBike = async () => {
       try {
-        // You'll need to get the bike ID from somewhere - 
+        // You'll need to get the bike ID from somewhere -
         // this could be from props, URL params, or a hardcoded value for demo purposes
         const bikeId = 3; // Replace with actual ID source
         const data = await getBikeById(bikeId);
         setBike(data);
       } catch (error) {
-        console.error('Failed to fetch bike:', error);
-        setError('Failed to load bike data');
+        console.error("Failed to fetch bike:", error);
+        setError("Failed to load bike data");
       } finally {
         setLoading(false);
       }
@@ -50,11 +50,21 @@ function Home() {
             {/* Left: Info */}
             <div className="flex-1 space-y-4 w-full">
               <div className="text-lg space-y-1">
-                <p><strong>Remaining Time:</strong> {bike.autonomy} minutes</p>
-                <p><strong>City:</strong> {bike.city}</p>
-                <p><strong>Charging Spot ID:</strong> {bike.chargingSpotId}</p>
-                <p><strong>Latitude:</strong> {bike.latitude}</p>
-                <p><strong>Longitude:</strong> {bike.longitude}</p>
+                <p>
+                  <strong>Remaining Time:</strong> {bike.autonomy} minutes
+                </p>
+                <p>
+                  <strong>City:</strong> {bike.city}
+                </p>
+                <p>
+                  <strong>Charging Spot ID:</strong> {bike.chargingSpotId}
+                </p>
+                <p>
+                  <strong>Latitude:</strong> {bike.latitude}
+                </p>
+                <p>
+                  <strong>Longitude:</strong> {bike.longitude}
+                </p>
               </div>
               <div className="card-actions mt-4">
                 <button className="btn btn-info">End Trip</button>

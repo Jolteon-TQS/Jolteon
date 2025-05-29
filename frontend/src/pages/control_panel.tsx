@@ -3,7 +3,6 @@ import PanelMap from "../components/PanelMap";
 import { getAllBikes, createBike, deleteBike } from "../api/bike-crud";
 import { Bike } from "../api/bike-crud";
 
-
 interface Station {
   id: number;
   name: string;
@@ -18,13 +17,23 @@ function Panel() {
   const [error, setError] = useState<string | null>(null);
 
   const [stations, setStations] = useState<Station[]>([
-    { id: 1, name: "Central Station", latitude: 40.6410, longitude: -8.6530 },
-    { id: 2, name: "North Hub", latitude: 40.6430, longitude: -8.6600 },
+    { id: 1, name: "Central Station", latitude: 40.641, longitude: -8.653 },
+    { id: 2, name: "North Hub", latitude: 40.643, longitude: -8.66 },
   ]);
 
   // State for new bike/station forms
-  const [newBike, setNewBike] = useState({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
-  const [newStation, setNewStation] = useState({ name: "", latitude: "", longitude: "" });
+  const [newBike, setNewBike] = useState({
+    city: "",
+    latitude: "",
+    longitude: "",
+    chargingSpotId: "",
+    autonomy: "",
+  });
+  const [newStation, setNewStation] = useState({
+    name: "",
+    latitude: "",
+    longitude: "",
+  });
 
   // Modal state
   const [showModal, setShowModal] = useState<"bikes" | "stations" | null>(null);
@@ -51,20 +60,33 @@ function Panel() {
 
   // Add new bike using API
   const addBike = async () => {
-    if (!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy) return;
-    
+    if (
+      !newBike.city ||
+      !newBike.latitude ||
+      !newBike.longitude ||
+      !newBike.chargingSpotId ||
+      !newBike.autonomy
+    )
+      return;
+
     try {
       const bikeToCreate = {
         city: newBike.city,
         latitude: parseFloat(newBike.latitude),
         longitude: parseFloat(newBike.longitude),
         chargingSpotId: parseInt(newBike.chargingSpotId),
-        autonomy: parseInt(newBike.autonomy)
+        autonomy: parseInt(newBike.autonomy),
       };
 
       const createdBike = await createBike(bikeToCreate);
       setBikes([...bikes, createdBike]);
-      setNewBike({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
+      setNewBike({
+        city: "",
+        latitude: "",
+        longitude: "",
+        chargingSpotId: "",
+        autonomy: "",
+      });
     } catch (err) {
       setError("Failed to create bike. Please try again.");
       console.error("Error creating bike:", err);
@@ -73,15 +95,20 @@ function Panel() {
 
   // Add new station (keeping this static as no API was provided)
   const addStation = () => {
-    if (!newStation.name || !newStation.latitude || !newStation.longitude) return;
-    
-    const id = stations.length > 0 ? Math.max(...stations.map(s => s.id)) + 1 : 1;
-    setStations([...stations, { 
-      id,
-      name: newStation.name, 
-      latitude: parseFloat(newStation.latitude), 
-      longitude: parseFloat(newStation.longitude)
-    }]);
+    if (!newStation.name || !newStation.latitude || !newStation.longitude)
+      return;
+
+    const id =
+      stations.length > 0 ? Math.max(...stations.map((s) => s.id)) + 1 : 1;
+    setStations([
+      ...stations,
+      {
+        id,
+        name: newStation.name,
+        latitude: parseFloat(newStation.latitude),
+        longitude: parseFloat(newStation.longitude),
+      },
+    ]);
     setNewStation({ name: "", latitude: "", longitude: "" });
   };
 
@@ -89,7 +116,7 @@ function Panel() {
   const handleDeleteBike = async (id: number) => {
     try {
       await deleteBike(id);
-      setBikes(bikes.filter(bike => bike.id !== id));
+      setBikes(bikes.filter((bike) => bike.id !== id));
     } catch (err) {
       setError("Failed to delete bike. Please try again.");
       console.error("Error deleting bike:", err);
@@ -98,25 +125,27 @@ function Panel() {
 
   // Delete station (keeping this static as no API was provided)
   const deleteStation = (id: number) => {
-    setStations(stations.filter(station => station.id !== id));
+    setStations(stations.filter((station) => station.id !== id));
   };
 
   // Filter items based on search term
-  const filteredItems = showModal === "bikes" 
-    ? bikes.filter(bike => 
-        bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bike.chargingSpotId.toString().includes(searchTerm.toLowerCase()) ||
-        bike.autonomy.toString().includes(searchTerm.toLowerCase())
-      )
-    : stations.filter(station => 
-        station.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  const filteredItems =
+    showModal === "bikes"
+      ? bikes.filter(
+          (bike) =>
+            bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            bike.chargingSpotId.toString().includes(searchTerm.toLowerCase()) ||
+            bike.autonomy.toString().includes(searchTerm.toLowerCase()),
+        )
+      : stations.filter((station) =>
+          station.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const currentItems = filteredItems.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   // Open modal handler
@@ -161,7 +190,9 @@ function Panel() {
               placeholder="Latitude"
               className="input input-bordered flex-1"
               value={newBike.latitude}
-              onChange={(e) => setNewBike({ ...newBike, latitude: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, latitude: e.target.value })
+              }
               step="0.000001"
             />
             <input
@@ -169,7 +200,9 @@ function Panel() {
               placeholder="Longitude"
               className="input input-bordered flex-1"
               value={newBike.longitude}
-              onChange={(e) => setNewBike({ ...newBike, longitude: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, longitude: e.target.value })
+              }
               step="0.000001"
             />
           </div>
@@ -179,20 +212,30 @@ function Panel() {
               placeholder="Charging Spot ID"
               className="input input-bordered flex-1"
               value={newBike.chargingSpotId}
-              onChange={(e) => setNewBike({ ...newBike, chargingSpotId: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, chargingSpotId: e.target.value })
+              }
             />
             <input
               type="number"
               placeholder="Autonomy (km)"
               className="input input-bordered flex-1"
               value={newBike.autonomy}
-              onChange={(e) => setNewBike({ ...newBike, autonomy: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, autonomy: e.target.value })
+              }
             />
           </div>
-          <button 
-            onClick={addBike} 
+          <button
+            onClick={addBike}
             className="btn btn-secondary"
-            disabled={!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy}
+            disabled={
+              !newBike.city ||
+              !newBike.latitude ||
+              !newBike.longitude ||
+              !newBike.chargingSpotId ||
+              !newBike.autonomy
+            }
           >
             Add Bike
           </button>
@@ -207,14 +250,18 @@ function Panel() {
               placeholder="Station Name"
               className="input input-bordered flex-1"
               value={newStation.name}
-              onChange={(e) => setNewStation({ ...newStation, name: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, name: e.target.value })
+              }
             />
             <input
               type="number"
               placeholder="Latitude"
               className="input input-bordered flex-1"
               value={newStation.latitude}
-              onChange={(e) => setNewStation({ ...newStation, latitude: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, latitude: e.target.value })
+              }
               step="0.000001"
             />
             <input
@@ -222,14 +269,18 @@ function Panel() {
               placeholder="Longitude"
               className="input input-bordered flex-1"
               value={newStation.longitude}
-              onChange={(e) => setNewStation({ ...newStation, longitude: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, longitude: e.target.value })
+              }
               step="0.000001"
             />
           </div>
-          <button 
-            onClick={addStation} 
+          <button
+            onClick={addStation}
             className="btn btn-secondary"
-            disabled={!newStation.name || !newStation.latitude || !newStation.longitude}
+            disabled={
+              !newStation.name || !newStation.latitude || !newStation.longitude
+            }
           >
             Add Station
           </button>
@@ -238,8 +289,8 @@ function Panel() {
         {/* Bikes Summary */}
         <div className="space-y-2 mt-6">
           <h2 className="font-semibold text-lg">All Bikes ({bikes.length})</h2>
-          <button 
-            onClick={() => openModal("bikes")} 
+          <button
+            onClick={() => openModal("bikes")}
             className="btn btn-primary w-full"
           >
             View/Manage Bikes
@@ -248,9 +299,11 @@ function Panel() {
 
         {/* Stations Summary */}
         <div className="space-y-2 mt-6">
-          <h2 className="font-semibold text-lg">All Stations ({stations.length})</h2>
-          <button 
-            onClick={() => openModal("stations")} 
+          <h2 className="font-semibold text-lg">
+            All Stations ({stations.length})
+          </h2>
+          <button
+            onClick={() => openModal("stations")}
             className="btn btn-primary w-full"
           >
             View/Manage Stations
@@ -260,11 +313,11 @@ function Panel() {
 
       {/* Right Side - Map */}
       <div className="w-full lg:w-1/2">
-        <PanelMap 
-          bikes={bikes} 
-          stations={stations} 
-          onDeleteBike={handleDeleteBike} 
-          onDeleteStation={deleteStation} 
+        <PanelMap
+          bikes={bikes}
+          stations={stations}
+          onDeleteBike={handleDeleteBike}
+          onDeleteStation={deleteStation}
         />
       </div>
 
@@ -273,12 +326,14 @@ function Panel() {
         <div className="modal modal-open">
           <div className="modal-box max-w-5xl max-h-[90vh] flex flex-col">
             <h3 className="font-bold text-lg">
-              {showModal === "bikes" ? "Bikes Management" : "Stations Management"}
+              {showModal === "bikes"
+                ? "Bikes Management"
+                : "Stations Management"}
               <span className="ml-2 text-sm font-normal">
                 ({filteredItems.length} items)
               </span>
             </h3>
-            
+
             {/* Search Bar */}
             <div className="my-4">
               <input
@@ -326,13 +381,18 @@ function Panel() {
                         ) : (
                           <td>{(item as Station).name}</td>
                         )}
-                        <td>{item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</td>
                         <td>
-                          <button 
+                          {item.latitude.toFixed(4)},{" "}
+                          {item.longitude.toFixed(4)}
+                        </td>
+                        <td>
+                          <button
                             className="btn btn-error btn-xs"
-                            onClick={() => showModal === "bikes" 
-                              ? handleDeleteBike(item.id!) 
-                              : item.id !== undefined && deleteStation(item.id)
+                            onClick={() =>
+                              showModal === "bikes"
+                                ? handleDeleteBike(item.id!)
+                                : item.id !== undefined &&
+                                  deleteStation(item.id)
                             }
                           >
                             Delete
@@ -342,7 +402,10 @@ function Panel() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={showModal === "bikes" ? 6 : 5} className="text-center">
+                      <td
+                        colSpan={showModal === "bikes" ? 6 : 5}
+                        className="text-center"
+                      >
                         No {showModal} found
                       </td>
                     </tr>
@@ -355,10 +418,10 @@ function Panel() {
             {totalPages > 1 && (
               <div className="flex justify-center mt-4">
                 <div className="join">
-                  <button 
+                  <button
                     className="join-item btn"
                     disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(p => p - 1)}
+                    onClick={() => setCurrentPage((p) => p - 1)}
                   >
                     «
                   </button>
@@ -373,21 +436,21 @@ function Panel() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-                    
+
                     return (
                       <button
                         key={pageNum}
-                        className={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
+                        className={`join-item btn ${currentPage === pageNum ? "btn-active" : ""}`}
                         onClick={() => setCurrentPage(pageNum)}
                       >
                         {pageNum}
                       </button>
                     );
                   })}
-                  <button 
+                  <button
                     className="join-item btn"
                     disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(p => p + 1)}
+                    onClick={() => setCurrentPage((p) => p + 1)}
                   >
                     »
                   </button>
@@ -396,7 +459,9 @@ function Panel() {
             )}
 
             <div className="modal-action">
-              <button onClick={closeModal} className="btn">Close</button>
+              <button onClick={closeModal} className="btn">
+                Close
+              </button>
             </div>
           </div>
         </div>
