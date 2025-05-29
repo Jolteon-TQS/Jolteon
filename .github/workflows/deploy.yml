@@ -6,38 +6,10 @@ on:
       - deploy
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push frontend image
-        run: |
-          docker build -t ghcr.io/jolteon-tqs/myfrontend:latest ./frontend
-          docker push ghcr.io/jolteon-tqs/myfrontend:latest
-
-      - name: Build and push backend image
-        run: |
-          docker build -t ghcr.io/jolteon-tqs/mybackend:latest ./backend
-          docker push ghcr.io/jolteon-tqs/mybackend:latest
-
-  deploy:
-    needs: build-and-push
-    runs-on: self-hosted
-    steps:
-      - name: Log in to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Deploy with docker-compose
-        run: echo "deployment"
+        run: echo "hey from the other side"
