@@ -22,5 +22,11 @@ jobs:
       - name: Configure Nginx for deployment
         run: cp frontend/.nginx_conf_deploy frontend/nginx.conf
 
+      - name: Clean up unused Docker resources (containers, images, networks, volumes)
+        run: |
+          docker compose down --remove-orphans --volumes
+          docker system prune -af
+          docker volume prune -f
+
       - name: Deploy with Docker Compose
         run: docker compose -f compose.yml up -d --build --remove-orphans

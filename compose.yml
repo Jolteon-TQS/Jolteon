@@ -10,10 +10,10 @@ services:
     depends_on:
       - postgres
 
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - ${FRONTEND_PORT}
+  frontend:
+    build: ./frontend
+    ports:
+      - ${FRONTEND_PORT}
 
 
   postgres:
