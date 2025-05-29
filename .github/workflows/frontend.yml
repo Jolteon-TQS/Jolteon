@@ -2,12 +2,8 @@ name: Lint and Format Check Frontend
 
 on:
   push:
-    paths:
-      - 'frontend/**'
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'frontend/**'
 
 jobs:
   lint-and-format:
