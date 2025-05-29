@@ -3,13 +3,11 @@ name: Deploy on deploy branch
 on:
   push:
     branches:
-      - deploy
-      - JOLTEON-120-deployment-pipeline
+      - develop
 
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
