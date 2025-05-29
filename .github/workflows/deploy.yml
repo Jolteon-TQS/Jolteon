@@ -11,25 +11,28 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build and push frontend image
         run: |
-          docker build -t ghcr.io/jolteon-tqs/myapp:latest .
+          docker build -t ghcr.io/jolteon-tqs/myfrontend:latest ./frontend
+          docker push ghcr.io/jolteon-tqs/myfrontend:latest
 
-      - name: Push Docker image
-        run: docker push ghcr.io/jolteon-tqs/myapp:latest
+      - name: Build and push backend image
+        run: |
+          docker build -t ghcr.io/jolteon-tqs/mybackend:latest ./backend
+          docker push ghcr.io/jolteon-tqs/mybackend:latest
 
   deploy:
     needs: build-and-push
     runs-on: self-hosted
     steps:
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
@@ -37,10 +40,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy with docker-compose
-        run: echo "Deploy job is running on self-hosted runner ✅"
-        # run: |
-        #   docker compose -f docker-compose.prod.yml pull
-        #   docker compose -f docker-compose.prod.yml up -d --remove-orphans
-        #   docker container prune -f
-        #   docker image prune -af
-        #   docker builder prune
+        run: echo "deployment"
