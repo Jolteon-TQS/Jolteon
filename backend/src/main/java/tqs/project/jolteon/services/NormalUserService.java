@@ -1,6 +1,5 @@
 package tqs.project.jolteon.services;
 
-import org.checkerframework.checker.units.qual.N;
 import org.springframework.stereotype.Service;
 import tqs.project.jolteon.entities.NormalUser;
 import tqs.project.jolteon.repositories.NormalUserRepository;
