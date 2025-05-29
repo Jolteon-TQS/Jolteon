@@ -11,7 +11,7 @@ INSERT INTO bike (autonomy, is_available, latitude, longitude, city, charging_sp
   (150, true, 51.5074, -0.1278, 'London', 3),
   (50, true, 48.8566, 2.3522, 'Paris', 5),
   (110, false, 35.6895, 139.6917, 'Tokyo', 4);
-
+  
 INSERT INTO normal_user (username, email, balance) VALUES
 ('andredora', 'andre@dora.com', 1000),
 ('pedrosalgado', 'pedro@sal.com', 50);
