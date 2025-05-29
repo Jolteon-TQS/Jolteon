@@ -7,6 +7,7 @@ import tqs.project.jolteon.entities.CulturalLandmark;
 public class ReviewMapper {
     public static ReviewDTO toDTO(Review review) {
         return new ReviewDTO(
+                review.getId(),
                 review.getStars(),
                 review.getDescription(),
                 review.getUser().getId(),
