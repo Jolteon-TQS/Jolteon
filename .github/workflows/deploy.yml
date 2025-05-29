@@ -11,5 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Copy root .env_example to .env
+        run: cp .env_example .env
+
+      - name: Copy frontend .env_example to .env
+        run: cp frontend/.env_example frontend/.env
+
       - name: Deploy with docker-compose
         run: docker compose -f compose.yml up -d --build --remove-orphans
