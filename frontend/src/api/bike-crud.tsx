@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export interface Bike {
   id?: number;
@@ -31,7 +31,7 @@ export const searchBikesByCity = async (city: string): Promise<Bike[]> => {
 
 export const getAvailableBikesNearLocation = async (
   latitude: number,
-  longitude: number
+  longitude: number,
 ): Promise<Bike[]> => {
   const response = await axios.get<Bike[]>(`${API_BASE}/available`, {
     params: { latitude, longitude },
@@ -44,7 +44,10 @@ export const createBike = async (bike: Bike): Promise<Bike> => {
   return response.data;
 };
 
-export const updateBike = async (id: number, updatedBike: Bike): Promise<Bike> => {
+export const updateBike = async (
+  id: number,
+  updatedBike: Bike,
+): Promise<Bike> => {
   const response = await axios.put<Bike>(`${API_BASE}/${id}`, updatedBike);
   return response.data;
 };

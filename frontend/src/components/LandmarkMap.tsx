@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
 
 interface Landmark {
   id: number;
@@ -23,11 +23,11 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
 
   // Convert landmarks to GeoJSON
   const getLandmarkGeoJSON = (): GeoJSON.FeatureCollection => ({
-    type: 'FeatureCollection',
+    type: "FeatureCollection",
     features: landmarks.map((lm) => ({
-      type: 'Feature',
+      type: "Feature",
       geometry: {
-        type: 'Point',
+        type: "Point",
         coordinates: [lm.lng, lm.lat],
       },
       properties: {
@@ -44,32 +44,32 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
     const map = new maplibregl.Map({
       container: mapContainer.current!,
       style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
-      center: [-8.6530, 40.6410],
+      center: [-8.653, 40.641],
       zoom: 14,
     });
 
     mapRef.current = map;
 
-    map.on('load', () => {
-      map.addSource('landmarks', {
-        type: 'geojson',
+    map.on("load", () => {
+      map.addSource("landmarks", {
+        type: "geojson",
         data: getLandmarkGeoJSON(),
       });
 
       map.addLayer({
-        id: 'landmarks-layer',
-        type: 'circle',
-        source: 'landmarks',
+        id: "landmarks-layer",
+        type: "circle",
+        source: "landmarks",
         paint: {
-          'circle-radius': 8,
-          'circle-color': '#10B981', // green
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 2,
+          "circle-radius": 8,
+          "circle-color": "#10B981", // green
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 2,
         },
       });
 
       // Add popup on click
-      map.on('click', 'landmarks-layer', (e) => {
+      map.on("click", "landmarks-layer", (e) => {
         const feature = e.features?.[0];
         if (!feature) return;
 
@@ -84,18 +84,15 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
           <br/><button onclick="window.deleteLandmark(${props.id})" style="color:red;">Delete</button>
         `;
 
-        new maplibregl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(html)
-          .addTo(map);
+        new maplibregl.Popup().setLngLat(coordinates).setHTML(html).addTo(map);
       });
 
       // Change cursor on hover
-      map.on('mouseenter', 'landmarks-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.on("mouseenter", "landmarks-layer", () => {
+        map.getCanvas().style.cursor = "pointer";
       });
-      map.on('mouseleave', 'landmarks-layer', () => {
-        map.getCanvas().style.cursor = '';
+      map.on("mouseleave", "landmarks-layer", () => {
+        map.getCanvas().style.cursor = "";
       });
 
       (window as any).deleteLandmark = (id: number) => {
@@ -108,13 +105,13 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded() || !map.getSource('landmarks')) return;
+    if (!map || !map.isStyleLoaded() || !map.getSource("landmarks")) return;
 
-    const source = map.getSource('landmarks') as maplibregl.GeoJSONSource;
+    const source = map.getSource("landmarks") as maplibregl.GeoJSONSource;
     source.setData(getLandmarkGeoJSON());
   }, [landmarks]);
 
-  return <div ref={mapContainer} style={{ height: '500px' }} />;
+  return <div ref={mapContainer} style={{ height: "500px" }} />;
 };
 
 export default PanelMap;

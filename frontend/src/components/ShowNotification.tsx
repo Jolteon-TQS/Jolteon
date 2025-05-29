@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { useNotificationCenter } from 'react-toastify/addons/use-notification-center';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useRef, useEffect } from "react";
+import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
+import "react-toastify/dist/ReactToastify.css";
 
 const NotificationBell = () => {
   const { notifications, unreadCount, markAsRead } = useNotificationCenter();
@@ -15,13 +15,16 @@ const NotificationBell = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -51,12 +54,18 @@ const NotificationBell = () => {
                 <li
                   key={notification.id}
                   className={`p-4 border-b border-gray-200 cursor-pointer ${
-                    notification.read ? 'bg-gray-100' : 'bg-white'
+                    notification.read ? "bg-gray-100" : "bg-white"
                   }`}
-                  onClick={() => handleNotificationClick(notification.id.toString())}
+                  onClick={() =>
+                    handleNotificationClick(notification.id.toString())
+                  }
                 >
-                  <p className="font-semibold">{notification.reason || 'Notification'}</p>
-                  <p className="text-sm text-gray-600">{String(notification.content) || 'Test'}</p>
+                  <p className="font-semibold">
+                    {notification.reason || "Notification"}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {String(notification.content) || "Test"}
+                  </p>
                   <p className="text-xs text-gray-400">
                     {new Date(notification.createdAt).toLocaleString()}
                   </p>
