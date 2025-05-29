@@ -9,6 +9,9 @@ import tqs.project.jolteon.entities.CulturalLandmark;
 import tqs.project.jolteon.services.CityAdminService;
 import tqs.project.jolteon.services.CulturalLandmarkService;
 
+import tqs.project.jolteon.entities.DTOs.CulturalLandmarkDTO;
+import tqs.project.jolteon.entities.DTOs.CulturalLandmarkMapper;
+
 import java.util.List;
 
 @RestController
@@ -38,8 +41,9 @@ public class CityAdminController {
 
     // this doesnt work, i have NO IDEA WHY, it always throws a 415 Unsupported Media Type error
     @PostMapping("/cultural-landmarks")      
-    public ResponseEntity<CulturalLandmark> addCulturalLandmark(@RequestBody CulturalLandmark culturalLandmark) {
-        return ResponseEntity.ok(culturalLandmarkService.addCulturalLandmark(culturalLandmark));
+    public ResponseEntity<CulturalLandmarkDTO> addCulturalLandmark(@RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
+        CulturalLandmark saved = culturalLandmarkService.addCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
+        return ResponseEntity.ok(CulturalLandmarkMapper.toDTO(saved));
     }
 
     @DeleteMapping("/cultural-landmarks/{id}")
