@@ -24,8 +24,8 @@ public class CulturalLandmark {
     private String description;
     private String imageUrl;
 
-    private float latitude;
-    private float longitude;
+    private Double latitude;
+    private Double longitude;
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true, mappedBy = "culturalLandmark")
     @JsonManagedReference

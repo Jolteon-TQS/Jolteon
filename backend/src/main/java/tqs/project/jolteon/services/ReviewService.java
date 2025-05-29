@@ -23,7 +23,7 @@ public class ReviewService {
 
     public Review addReview(Review review) {
         if (review.getUser() == null) {
-            throw new IllegalArgumentException("Review must have a user.");
+            throw new IllegalArgumentException("User cannot be null");
         }
         CulturalLandmark culturalLandmark = review.getCulturalLandmark();
         culturalLandmark.getReviews().add(review);
