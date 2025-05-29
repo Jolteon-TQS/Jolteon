@@ -19,6 +19,11 @@ public class ChargingSpotService {
         return chargingSpotRepository.save(chargingSpot);
     }
 
+    public ChargingSpot getChargingSpotById(Long id) {
+        return chargingSpotRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Charging spot not found"));
+    }
+
     public void deleteChargingSpot(Long id) {
         chargingSpotRepository.deleteById(id);
     }

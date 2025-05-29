@@ -36,6 +36,18 @@ class ChargingSpotServiceTest {
     }
 
     @Test
+    void testGetChargingSpotById() {
+        Long id = 1L;
+        ChargingSpot spot = new ChargingSpot();
+        when(chargingSpotRepository.findById(id)).thenReturn(Optional.of(spot));
+
+        ChargingSpot result = chargingSpotService.getChargingSpotById(id);
+
+        assertEquals(spot, result);
+        verify(chargingSpotRepository, times(1)).findById(id);
+    }
+
+    @Test
     void testDeleteChargingSpot() {
         Long id = 1L;
 
