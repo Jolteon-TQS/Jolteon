@@ -10,7 +10,9 @@ function Navbar() {
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
         <img src={jolteon} className="h-8 w-8 ml-5" />
-        <NavLink to="/" className="btn btn-ghost text-xl">Jolteon</NavLink>
+        <NavLink to="/" className="btn btn-ghost text-xl">
+          Jolteon
+        </NavLink>
       </div>
 
       <div className="navbar-center hidden lg:flex">

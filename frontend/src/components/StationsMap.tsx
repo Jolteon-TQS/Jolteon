@@ -1,6 +1,6 @@
 // MyMap.tsx
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
 
 const StationsMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -17,66 +17,67 @@ const StationsMap = () => {
 
     mapRef.current = map;
 
-    map.on('load', () => {
+    map.on("load", () => {
       // GeoJSON with multiple waypoint markers
       const waypointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-        type: 'FeatureCollection',
+        type: "FeatureCollection",
         features: [
           {
-            type: 'Feature',
+            type: "Feature",
             geometry: {
-              type: 'Point',
+              type: "Point",
               coordinates: [-8.6455, 40.6405],
             },
             properties: {
-              title: 'Start',
+              title: "Start",
             },
           },
           {
-            type: 'Feature',
+            type: "Feature",
             geometry: {
-              type: 'Point',
-              coordinates: [-8.6530, 40.6410],
+              type: "Point",
+              coordinates: [-8.653, 40.641],
             },
             properties: {
-              title: 'Waypoint 1',
+              title: "Waypoint 1",
             },
           },
           {
-            type: 'Feature',
+            type: "Feature",
             geometry: {
-              type: 'Point',
-              coordinates: [-8.6600, 40.6430],
+              type: "Point",
+              coordinates: [-8.66, 40.643],
             },
             properties: {
-              title: 'Waypoint 2',
+              title: "Waypoint 2",
             },
           },
         ],
       };
 
       // Add source
-      map.addSource('waypoints', {
-        type: 'geojson',
+      map.addSource("waypoints", {
+        type: "geojson",
         data: waypointData,
       });
 
       // Add circle layer to show waypoints
       map.addLayer({
-        id: 'waypoints-layer',
-        type: 'circle',
-        source: 'waypoints',
+        id: "waypoints-layer",
+        type: "circle",
+        source: "waypoints",
         paint: {
-          'circle-radius': 6,
-          'circle-color': '#ff7b00',
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 2,
+          "circle-radius": 6,
+          "circle-color": "#ff7b00",
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 2,
         },
       });
 
       // Optionally add popup on click
-      map.on('click', 'waypoints-layer', (e) => {
-        const coordinates = (e.features?.[0]?.geometry as GeoJSON.Point)?.coordinates;
+      map.on("click", "waypoints-layer", (e) => {
+        const coordinates = (e.features?.[0]?.geometry as GeoJSON.Point)
+          ?.coordinates;
         const title = e.features?.[0]?.properties?.title;
         if (coordinates) {
           new maplibregl.Popup()
@@ -87,19 +88,18 @@ const StationsMap = () => {
       });
 
       // Cursor change on hover
-      map.on('mouseenter', 'waypoints-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.on("mouseenter", "waypoints-layer", () => {
+        map.getCanvas().style.cursor = "pointer";
       });
-      map.on('mouseleave', 'waypoints-layer', () => {
-        map.getCanvas().style.cursor = '';
+      map.on("mouseleave", "waypoints-layer", () => {
+        map.getCanvas().style.cursor = "";
       });
     });
 
     return () => map.remove();
   }, []);
 
-  return <div ref={mapContainer} style={{ height: '500px' }} />;
-        
+  return <div ref={mapContainer} style={{ height: "500px" }} />;
 };
 
 export default StationsMap;

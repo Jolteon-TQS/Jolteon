@@ -47,12 +47,18 @@ function Panel() {
         latitude: parseFloat(newBike.latitude),
         longitude: parseFloat(newBike.longitude),
         chargingSpotId: parseInt(newBike.chargingSpotId),
-        autonomy: parseInt(newBike.autonomy)
+        autonomy: parseInt(newBike.autonomy),
       };
       const createdBike = await createBike(bikeToCreate);
       console.log("Created Bike:", createdBike);
       setBikes([...bikes, createdBike]);
-      setNewBike({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
+      setNewBike({
+        city: "",
+        latitude: "",
+        longitude: "",
+        chargingSpotId: "",
+        autonomy: "",
+      });
     } catch (err) {
       setError("Failed to create bike.");
       console.error(err);
@@ -172,7 +178,7 @@ function Panel() {
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const currentItems = filteredItems.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const openModal = (type: "bikes" | "stations") => {
@@ -236,7 +242,9 @@ function Panel() {
               placeholder="Latitude"
               className="input input-bordered flex-1"
               value={newBike.latitude}
-              onChange={(e) => setNewBike({ ...newBike, latitude: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, latitude: e.target.value })
+              }
               step="0.000001"
             />
             <input
@@ -244,7 +252,9 @@ function Panel() {
               placeholder="Longitude"
               className="input input-bordered flex-1"
               value={newBike.longitude}
-              onChange={(e) => setNewBike({ ...newBike, longitude: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, longitude: e.target.value })
+              }
               step="0.000001"
             />
           </div>
@@ -254,20 +264,30 @@ function Panel() {
               placeholder="Charging Spot ID"
               className="input input-bordered flex-1"
               value={newBike.chargingSpotId}
-              onChange={(e) => setNewBike({ ...newBike, chargingSpotId: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, chargingSpotId: e.target.value })
+              }
             />
             <input
               type="number"
               placeholder="Autonomy (km)"
               className="input input-bordered flex-1"
               value={newBike.autonomy}
-              onChange={(e) => setNewBike({ ...newBike, autonomy: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, autonomy: e.target.value })
+              }
             />
           </div>
           <button
             onClick={addBike}
             className="btn btn-secondary"
-            disabled={!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy}
+            disabled={
+              !newBike.city ||
+              !newBike.latitude ||
+              !newBike.longitude ||
+              !newBike.chargingSpotId ||
+              !newBike.autonomy
+            }
           >
             Add Bike
           </button>
@@ -301,7 +321,9 @@ function Panel() {
               placeholder="Latitude *"
               className="input input-bordered flex-1"
               value={newStation.latitude}
-              onChange={(e) => setNewStation({ ...newStation, latitude: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, latitude: e.target.value })
+              }
               step="0.000001"
             />
             <input
@@ -309,7 +331,9 @@ function Panel() {
               placeholder="Longitude *"
               className="input input-bordered flex-1"
               value={newStation.longitude}
-              onChange={(e) => setNewStation({ ...newStation, longitude: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, longitude: e.target.value })
+              }
               step="0.000001"
             />
             <input
@@ -383,7 +407,9 @@ function Panel() {
         <div className="modal modal-open">
           <div className="modal-box max-w-5xl max-h-[90vh] flex flex-col">
             <h3 className="font-bold text-lg">
-              {showModal === "bikes" ? "Bikes Management" : "Stations Management"}
+              {showModal === "bikes"
+                ? "Bikes Management"
+                : "Stations Management"}
               <span className="ml-2 text-sm font-normal">
                 ({filteredItems.length} items)
               </span>
@@ -574,7 +600,10 @@ function Panel() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={showModal === "bikes" ? 6 : 5} className="text-center">
+                      <td
+                        colSpan={showModal === "bikes" ? 6 : 5}
+                        className="text-center"
+                      >
                         No {showModal} found
                       </td>
                     </tr>
@@ -590,7 +619,7 @@ function Panel() {
                   <button
                     className="join-item btn"
                     disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(p => p - 1)}
+                    onClick={() => setCurrentPage((p) => p - 1)}
                   >
                     «
                   </button>
@@ -609,7 +638,7 @@ function Panel() {
                     return (
                       <button
                         key={pageNum}
-                        className={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
+                        className={`join-item btn ${currentPage === pageNum ? "btn-active" : ""}`}
                         onClick={() => setCurrentPage(pageNum)}
                       >
                         {pageNum}
@@ -619,7 +648,7 @@ function Panel() {
                   <button
                     className="join-item btn"
                     disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(p => p + 1)}
+                    onClick={() => setCurrentPage((p) => p + 1)}
                   >
                     »
                   </button>
@@ -628,7 +657,9 @@ function Panel() {
             )}
 
             <div className="modal-action">
-              <button onClick={closeModal} className="btn">Close</button>
+              <button onClick={closeModal} className="btn">
+                Close
+              </button>
             </div>
           </div>
         </div>

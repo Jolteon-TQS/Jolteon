@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
 
 interface Props {
   latitude: number;
@@ -21,43 +21,44 @@ const Map = ({ latitude, longitude }: Props) => {
 
     mapRef.current = map;
 
-    map.on('load', () => {
+    map.on("load", () => {
       // GeoJSON using props
       const waypointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-        type: 'FeatureCollection',
+        type: "FeatureCollection",
         features: [
           {
-            type: 'Feature',
+            type: "Feature",
             geometry: {
-              type: 'Point',
+              type: "Point",
               coordinates: [longitude, latitude],
             },
             properties: {
-              title: 'Your Bike',
+              title: "Your Bike",
             },
           },
         ],
       };
 
-      map.addSource('waypoints', {
-        type: 'geojson',
+      map.addSource("waypoints", {
+        type: "geojson",
         data: waypointData,
       });
 
       map.addLayer({
-        id: 'waypoints-layer',
-        type: 'circle',
-        source: 'waypoints',
+        id: "waypoints-layer",
+        type: "circle",
+        source: "waypoints",
         paint: {
-          'circle-radius': 6,
-          'circle-color': '#3B82F6',
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 2,
+          "circle-radius": 6,
+          "circle-color": "#3B82F6",
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 2,
         },
       });
 
-      map.on('click', 'waypoints-layer', (e) => {
-        const coordinates = (e.features?.[0]?.geometry as GeoJSON.Point)?.coordinates;
+      map.on("click", "waypoints-layer", (e) => {
+        const coordinates = (e.features?.[0]?.geometry as GeoJSON.Point)
+          ?.coordinates;
         const title = e.features?.[0]?.properties?.title;
         if (coordinates) {
           new maplibregl.Popup()
@@ -67,18 +68,18 @@ const Map = ({ latitude, longitude }: Props) => {
         }
       });
 
-      map.on('mouseenter', 'waypoints-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.on("mouseenter", "waypoints-layer", () => {
+        map.getCanvas().style.cursor = "pointer";
       });
-      map.on('mouseleave', 'waypoints-layer', () => {
-        map.getCanvas().style.cursor = '';
+      map.on("mouseleave", "waypoints-layer", () => {
+        map.getCanvas().style.cursor = "";
       });
     });
 
     return () => map.remove();
   }, [latitude, longitude]);
 
-  return <div ref={mapContainer} style={{ height: '500px' }} />;
+  return <div ref={mapContainer} style={{ height: "500px" }} />;
 };
 
 export default Map;
