@@ -9,17 +9,24 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Copy root .env_example to .env
-        run: cp .env_example .env
+      - name: Prepare environment files
+        run: |
+          cp .env_example .env
+          cp frontend/.env_example_deploy frontend/.env
 
-      - name: Copy nginx public config
+      - name: Configure Nginx for deployment
         run: cp frontend/.nginx_conf_deploy frontend/nginx.conf
 
-      - name: Copy frontend .env_example to .env
-        run: cp frontend/.env_example_deploy frontend/.env
+      - name: Clean up unused Docker resources (containers, images, networks, volumes)
+        run: |
+          docker compose down --remove-orphans --volumes
+          docker system prune -af
+          docker volume prune -f
 
-      - name: Deploy with docker-compose
+      - name: Deploy with Docker Compose
         run: docker compose -f compose.yml up -d --build --remove-orphans
