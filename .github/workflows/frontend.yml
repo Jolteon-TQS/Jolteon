@@ -2,8 +2,12 @@ name: Lint and Format Check Frontend
 
 on:
   push:
+    # paths:
+    #   - 'frontend/**'
   pull_request:
     types: [opened, synchronize, reopened]
+    # paths:
+    #   - 'frontend/**'
 
 jobs:
   lint-and-format:
@@ -22,6 +26,10 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      # - name: Run ESLint
+      #   working-directory: frontend
+      #   run: npm run lint
+
       - name: Check formatting with Prettier
         working-directory: frontend
-        run: npm run format
+        run: npm run format-check
