@@ -17,5 +17,5 @@ public class CulturalLandmarkDTO {
     private String imageUrl;
     private Double latitude;
     private Double longitude;
-    private Set<ReviewDTO> reviews; 
+    //private Set<ReviewDTO> reviews; 
 }

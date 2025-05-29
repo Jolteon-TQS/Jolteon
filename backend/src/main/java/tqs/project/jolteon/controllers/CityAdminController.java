@@ -39,7 +39,6 @@ public class CityAdminController {
     }
 
 
-    // this doesnt work, i have NO IDEA WHY, it always throws a 415 Unsupported Media Type error
     @PostMapping("/cultural-landmarks")      
     public ResponseEntity<CulturalLandmarkDTO> addCulturalLandmark(@RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
         CulturalLandmark saved = culturalLandmarkService.addCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
@@ -53,19 +52,25 @@ public class CityAdminController {
     }
 
     @GetMapping("/cultural-landmarks")
-    public ResponseEntity<List<CulturalLandmark>> getAllCulturalLandmarks() {
-        List<CulturalLandmark> landmarks = culturalLandmarkService.getAllCulturalLandmarks();
-        return ResponseEntity.ok(landmarks);
+    public ResponseEntity<List<CulturalLandmarkDTO>> getAllCulturalLandmarks() {
+        List<CulturalLandmarkDTO> dtos = culturalLandmarkService.getAllCulturalLandmarks()
+                .stream()
+                .map(CulturalLandmarkMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}/cultural-landmarks")
-    public ResponseEntity<List<CulturalLandmark>> getCulturalLandmarkByCityAdminId(@PathVariable Long id) {
+    public ResponseEntity<List<CulturalLandmarkDTO>> getCulturalLandmarkByCityAdminId(@PathVariable Long id) {
         CityAdmin cityAdmin = cityAdminService.getCityAdminById(id);
         if (cityAdmin == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                  .body(null);
         }
-        List<CulturalLandmark> landmarks = culturalLandmarkService.getCulturalLandmarksByCity(cityAdmin.getCity());
-        return ResponseEntity.ok(landmarks);
+        List<CulturalLandmarkDTO> dtos = culturalLandmarkService.getCulturalLandmarksByCity(cityAdmin.getCity())
+                .stream()
+                .map(CulturalLandmarkMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 }
