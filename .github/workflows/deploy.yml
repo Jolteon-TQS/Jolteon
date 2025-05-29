@@ -1,0 +1,25 @@
+name: Deploy on deploy branch
+
+on:
+  push:
+    branches:
+      - deploy
+      - JOLTEON-120-deployment-pipeline
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Copy root .env_example to .env
+        run: cp .env_example .env
+
+      - name: Copy nginx public config
+        run: cp frontend/.nginx_conf_deploy
+
+      - name: Copy frontend .env_example to .env
+        run: cp frontend/.env_example_deploy frontend/.env
+
+      - name: Deploy with docker-compose
+        run: docker compose -f compose.yml up -d --build --remove-orphans
