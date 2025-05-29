@@ -112,7 +112,6 @@ class BikeServiceTest {
         existingBike.setId(bikeId);
 
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(90.0f);
         updatedBike.setAutonomy(20);
         updatedBike.setIsAvailable(true);
         updatedBike.setLatitude(40.0);
@@ -124,7 +123,6 @@ class BikeServiceTest {
 
         Bike resultingBike = bikeService.updateBike(bikeId, updatedBike);
 
-        assertEquals(90, resultingBike.getBattery());
         assertEquals(20, resultingBike.getAutonomy());
         assertTrue(resultingBike.getIsAvailable());
         assertEquals("Aveiro", resultingBike.getCity());
@@ -132,22 +130,10 @@ class BikeServiceTest {
         verify(bikeRepository, times(1)).save(existingBike);
     }
 
-    @Test
-    void whenUpdateBikeIsCalledWithInvalidBattery_thenExceptionShouldBeThrown() {
-        Bike updatedBike = new Bike();
-        updatedBike.setBattery(-15.0f); // Invalid
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            bikeService.updateBike(1L, updatedBike);
-        });
-
-        assertEquals("Battery must be between 0 and 100", exception.getMessage());
-    }
 
     @Test
     void whenUpdateBikeIsCalledWithInvalidAutonomy_thenExceptionShouldBeThrown() {
         Bike updatedBike = new Bike();
-        updatedBike.setBattery(80.0f);
         updatedBike.setAutonomy(0); // Invalid
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
