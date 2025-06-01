@@ -19,4 +19,5 @@ public abstract class BaseUser {
 
     protected String username;
     protected String email;
+    protected String password;
 }

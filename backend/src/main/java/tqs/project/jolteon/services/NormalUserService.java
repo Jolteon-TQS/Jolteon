@@ -26,5 +26,10 @@ public class NormalUserService {
         return normalUserRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Normal user not found with id: " + id));
     }
+
+    public NormalUser getNormalUserByEmail(String email) {
+        return normalUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Normal user not found with email: " + email));
+    }
     
 }

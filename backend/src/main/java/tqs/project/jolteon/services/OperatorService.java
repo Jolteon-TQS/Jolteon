@@ -60,6 +60,14 @@ public class OperatorService {
         return bikeService.getAllBikes();
     }
 
+    public Operator addOperator(Operator operator) {
+        return operatorRepository.save(operator);
+    }
+
+    public Operator getOperatorByEmail(String email) {
+        return operatorRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Operator not found with email: " + email));
+    }
    
 
     

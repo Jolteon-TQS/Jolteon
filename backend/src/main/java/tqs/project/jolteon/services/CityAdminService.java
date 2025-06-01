@@ -28,6 +28,15 @@ public class CityAdminService {
                 .orElseThrow(() -> new IllegalArgumentException("City admin not found with id: " + id));
     }
 
+    public void deleteCityAdmin(Long id) {
+        cityAdminRepository.deleteById(id);
+    }
+
+    public CityAdmin getCityAdminByEmail(String email) {
+        return cityAdminRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("City admin not found with email: " + email));
+    }
+
     
     
 }
