@@ -19,6 +19,6 @@ public class ChargingSpot {
     private float longitude;
     private int capacity;
 
-    @OneToMany
-    private Set<Bike> bikes;
+    // @OneToMany
+    // private Set<Bike> bikes;
 }

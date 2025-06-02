@@ -1,183 +1,143 @@
 import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 
-export interface Bike {
-  id?: number;
-  city: string;
-  latitude: number;
-  longitude: number;
-  chargingSpotId: number;
-  autonomy: number;
-}
-
-interface Station {
+interface Marker {
   id: number;
-  name: string;
+  type: 'bike' | 'station';
   latitude: number;
   longitude: number;
+  label?: string;
 }
 
 interface Props {
-  bikes: Bike[];
-  stations: Station[];
-  onDeleteBike?: (id: number) => void;
-  onDeleteStation?: (id: number) => void;
+  markers: Marker[];
 }
 
-const PanelMap = ({ bikes, stations, onDeleteBike, onDeleteStation }: Props) => {
+const PanelMap = ({ markers }: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const popupRef = useRef<maplibregl.Popup | null>(null);
   const apikey = import.meta.env.VITE_API_KEY;
 
-  const convertToGeoJSON = (
-    items: (Bike | Station)[],
-    type: "bike" | "station"
-  ): GeoJSON.FeatureCollection<GeoJSON.Point, { 
-    id: number; 
-    name: string; 
-    city?: string;
-    chargingSpotId?: number;
-    autonomy?: number;
-    itemType: "bike" | "station" 
-  }> => ({
-    type: "FeatureCollection",
-    features: items.map((item) => ({
-      type: "Feature",
-      properties: {
-        id: item.id || 0,
-        name: type === "bike" ? `Bike ${item.id}` : (item as Station).name,
-        city: type === "bike" ? (item as Bike).city : undefined,
-        chargingSpotId: type === "bike" ? (item as Bike).chargingSpotId : undefined,
-        autonomy: type === "bike" ? (item as Bike).autonomy : undefined,
-        itemType: type,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [item.longitude, item.latitude],
-      },
-    })),
-  });
-
   useEffect(() => {
+    if (!mapContainer.current) return;
+
     const map = new maplibregl.Map({
-      container: mapContainer.current!,
-      style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
-      center: [-8.6530, 40.6410],
-      zoom: 15,
+      container: mapContainer.current,
+      style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
+      center: markers.length > 0 
+        ? [markers[0].longitude, markers[0].latitude] 
+        : [-8.6530, 40.6410],
+      zoom: 14,
     });
 
     mapRef.current = map;
 
-    map.on("load", () => {
-      map.addSource("bikes", {
-        type: "geojson",
-        data: convertToGeoJSON(bikes, "bike"),
+    map.on('load', () => {
+      const geojson: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+        type: 'FeatureCollection',
+        features: markers.map(marker => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [marker.longitude, marker.latitude],
+          },
+          properties: {
+            id: marker.id,
+            type: marker.type,
+            title: marker.label || marker.type,
+          }
+        })),
+      };
+
+      map.addSource('markers', {
+        type: 'geojson',
+        data: geojson,
       });
 
-      map.addSource("stations", {
-        type: "geojson",
-        data: convertToGeoJSON(stations, "station"),
-      });
-
-      // Bike layer (blue)
       map.addLayer({
-        id: "bikes-layer",
-        type: "circle",
-        source: "bikes",
+        id: 'markers-layer',
+        type: 'circle',
+        source: 'markers',
         paint: {
-          "circle-radius": 8,
-          "circle-color": "#3B82F6",
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 2,
+          'circle-radius': 6,
+          'circle-color': [
+            'match',
+            ['get', 'type'],
+            'bike', '#3B82F6',
+            'station', '#F97316',
+            '#000000'
+          ],
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 2,
         },
       });
 
-      // Station layer (red)
-      map.addLayer({
-        id: "stations-layer",
-        type: "circle",
-        source: "stations",
-        paint: {
-          "circle-radius": 8,
-          "circle-color": "#ff7b00",
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 2,
-        },
+      // Create popup once and reuse it
+      popupRef.current = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        anchor: 'bottom',
+        offset: [0, -10]
       });
 
-      // Handle clicks on either layer
-      map.on("click", "bikes-layer", (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
+      map.on('click', 'markers-layer', (e) => {
+const feature = e.features?.[0];
+if (!feature) return;
 
-        const id = feature.properties?.id;
-        const city = feature.properties?.city;
-        const chargingSpotId = feature.properties?.chargingSpotId;
-        const autonomy = feature.properties?.autonomy;
+const coordinates = (feature.geometry as GeoJSON.Point).coordinates.slice() as [number, number];
+const title = feature.properties?.title || '';
 
-        new maplibregl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(`
-            <strong>Bike ${id}</strong><br/>
-            City: ${city}<br/>
-            Charging Spot: ${chargingSpotId}<br/>
-            Autonomy: ${autonomy} km<br/>
-            <button onclick="window.deleteBike(${id})" style="color: red;">Delete</button>
-          `)
-          .addTo(map);
+        
+        if (coordinates && title && popupRef.current) {
+          // Remove any existing popup first
+          popupRef.current.remove();
+
+          // Fly to the marker position
+          map.flyTo({
+            center: coordinates as [number, number],
+            essential: true
+          });
+
+          // Add popup after the flyTo animation completes
+          map.once('moveend', () => {
+            popupRef.current = new maplibregl.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              anchor: 'bottom',
+              offset: [0, -10]
+            })
+            .setLngLat(coordinates as [number, number])
+            .setHTML(`<strong>${title}</strong>`)
+            .addTo(map);
+          });
+        }
       });
 
-      map.on("click", "stations-layer", (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-
-        const id = feature.properties?.id;
-        const name = feature.properties?.name;
-
-        new maplibregl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(`
-            <strong>${name}</strong><br/>
-            <button onclick="window.deleteStation(${id})" style="color: red;">Delete</button>
-          `)
-          .addTo(map);
+      // Close popup when clicking elsewhere on the map
+      map.on('click', () => {
+        if (popupRef.current) {
+          popupRef.current.remove();
+        }
       });
 
-      // Cursor pointer
-      map.on("mouseenter", "bikes-layer", () => {
-        map.getCanvas().style.cursor = "pointer";
-      });
-      map.on("mouseleave", "bikes-layer", () => {
-        map.getCanvas().style.cursor = "";
-      });
-      map.on("mouseenter", "stations-layer", () => {
-        map.getCanvas().style.cursor = "pointer";
-      });
-      map.on("mouseleave", "stations-layer", () => {
-        map.getCanvas().style.cursor = "";
+      map.on('mouseenter', 'markers-layer', () => {
+        map.getCanvas().style.cursor = 'pointer';
       });
 
-      // Global delete functions
-      (window as any).deleteBike = (id: number) => onDeleteBike?.(id);
-      (window as any).deleteStation = (id: number) => onDeleteStation?.(id);
+      map.on('mouseleave', 'markers-layer', () => {
+        map.getCanvas().style.cursor = '';
+      });
     });
 
-    return () => map.remove();
-  }, []);
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+    };
+  }, [markers]);
 
-  // Update data dynamically
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-
-    const bikesSource = map.getSource("bikes") as maplibregl.GeoJSONSource;
-    const stationsSource = map.getSource("stations") as maplibregl.GeoJSONSource;
-
-    bikesSource?.setData(convertToGeoJSON(bikes, "bike"));
-    stationsSource?.setData(convertToGeoJSON(stations, "station"));
-  }, [bikes, stations]);
-
-  return <div ref={mapContainer} style={{ height: '600px' }} />;
+  return <div ref={mapContainer} style={{ height: '500px', width: '100%' }} />;
 };
 
 export default PanelMap;
