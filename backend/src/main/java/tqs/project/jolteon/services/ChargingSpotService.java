@@ -19,7 +19,7 @@ public class ChargingSpotService {
         return chargingSpotRepository.save(chargingSpot);
     }
 
-    public ChargingSpot getChargingSpotById(Long id) {
+    public <Optional> ChargingSpot getChargingSpotById(Long id) {
         return chargingSpotRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Charging spot not found"));
     }
@@ -32,5 +32,20 @@ public class ChargingSpotService {
         return chargingSpotRepository.findAll();
     }
 
-    
+    public ChargingSpot updateChargingSpot(Long id, ChargingSpot updatedChargingSpot) {
+        return chargingSpotRepository.findById(id)
+                .map(chargingSpot -> {
+                    chargingSpot.setCity(updatedChargingSpot.getCity());
+                    chargingSpot.setLatitude(updatedChargingSpot.getLatitude());
+                    chargingSpot.setLongitude(updatedChargingSpot.getLongitude());
+                    chargingSpot.setCapacity(updatedChargingSpot.getCapacity());
+                    return chargingSpotRepository.save(chargingSpot);
+                })
+                .orElseThrow(() -> new RuntimeException("Charging spot not found with id " + id));
+    }
+
+    public List<ChargingSpot> getChargingSpotsByCity(String city) {
+        return chargingSpotRepository.findByCity(city);
+    }
+
 }

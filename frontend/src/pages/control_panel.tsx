@@ -1,74 +1,46 @@
 import { useState, useEffect } from "react";
 import PanelMap from "../components/PanelMap";
-import { getAllBikes, createBike, deleteBike } from "../api/bike-crud";
-import { Bike } from "../api/bike-crud";
-
-interface Station {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
+import { getAllBikes, createBike, deleteBike, updateBike, Bike } from "../api/bike-crud";
+import { getAllStations, createStation, deleteStation, updateStation, Station } from "../api/station-crud";
 
 function Panel() {
-  // State for bikes and stations
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [stations, setStations] = useState<Station[]>([
-    { id: 1, name: "Central Station", latitude: 40.641, longitude: -8.653 },
-    { id: 2, name: "North Hub", latitude: 40.643, longitude: -8.66 },
-  ]);
-
-  // State for new bike/station forms
-  const [newBike, setNewBike] = useState({
-    city: "",
-    latitude: "",
-    longitude: "",
-    chargingSpotId: "",
-    autonomy: "",
-  });
-  const [newStation, setNewStation] = useState({
-    name: "",
-    latitude: "",
-    longitude: "",
-  });
-
-  // Modal state
+  const [stations, setStations] = useState<Station[]>([]);
+  const [newBike, setNewBike] = useState({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
+  const [newStation, setNewStation] = useState({ city: "", latitude: "", longitude: "", capacity: "" });
   const [showModal, setShowModal] = useState<"bikes" | "stations" | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingItem, setEditingItem] = useState<Partial<Bike> | Partial<Station> | null>(null);
   const itemsPerPage = 10;
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
-  // Fetch bikes on component mount
   useEffect(() => {
-    const fetchBikes = async () => {
+    const fetchData = async () => {
       try {
-        const fetchedBikes = await getAllBikes();
+        const [fetchedBikes, fetchedStations] = await Promise.all([
+          getAllBikes(),
+          getAllStations()
+        ]);
+                  console.log("Fetched Bikes:", fetchedBikes);
+          console.log("Fetched Stations:", fetchedStations)
         setBikes(fetchedBikes);
-        setIsLoading(false);
+        setStations(fetchedStations);
       } catch (err) {
-        setError("Failed to fetch bikes. Please try again later.");
+        setError("Failed to fetch data. Please try again later.");
+        console.error(err);
+      } finally {
         setIsLoading(false);
-        console.error("Error fetching bikes:", err);
       }
     };
-
-    fetchBikes();
+    fetchData();
   }, []);
 
-  // Add new bike using API
   const addBike = async () => {
-    if (
-      !newBike.city ||
-      !newBike.latitude ||
-      !newBike.longitude ||
-      !newBike.chargingSpotId ||
-      !newBike.autonomy
-    )
-      return;
-
+    if (!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy) return;
     try {
       const bikeToCreate = {
         city: newBike.city,
@@ -77,8 +49,8 @@ function Panel() {
         chargingSpotId: parseInt(newBike.chargingSpotId),
         autonomy: parseInt(newBike.autonomy),
       };
-
       const createdBike = await createBike(bikeToCreate);
+      console.log("Created Bike:", createdBike);
       setBikes([...bikes, createdBike]);
       setNewBike({
         city: "",
@@ -88,58 +60,118 @@ function Panel() {
         autonomy: "",
       });
     } catch (err) {
-      setError("Failed to create bike. Please try again.");
-      console.error("Error creating bike:", err);
+      setError("Failed to create bike.");
+      console.error(err);
     }
   };
 
-  // Add new station (keeping this static as no API was provided)
-  const addStation = () => {
-    if (!newStation.name || !newStation.latitude || !newStation.longitude)
+  const addStation = async () => {
+    // Validate all required fields are filled
+    if (!newStation.city || !newStation.latitude || !newStation.longitude || !newStation.capacity) {
+      setError("Please fill all station fields");
       return;
+    }
 
-    const id =
-      stations.length > 0 ? Math.max(...stations.map((s) => s.id)) + 1 : 1;
-    setStations([
-      ...stations,
-      {
-        id,
-        name: newStation.name,
-        latitude: parseFloat(newStation.latitude),
-        longitude: parseFloat(newStation.longitude),
-      },
-    ]);
-    setNewStation({ name: "", latitude: "", longitude: "" });
+    // Validate numeric fields
+    const latitude = parseFloat(newStation.latitude);
+    const longitude = parseFloat(newStation.longitude);
+    const capacity = parseInt(newStation.capacity);
+
+    if (isNaN(latitude) || isNaN(longitude) || isNaN(capacity)) {
+      setError("Please enter valid numbers for latitude, longitude and capacity");
+      return;
+    }
+
+    try {
+      const stationToCreate = {
+        city: newStation.city.trim(), // Trim whitespace
+        latitude,
+        longitude,
+        capacity
+      };
+
+      console.log("Creating station with data:", stationToCreate); // Debug log
+
+      const createdStation = await createStation(stationToCreate);
+      console.log("Created station:", createdStation); // Debug log
+
+      if (!createdStation.id) {
+        throw new Error("Station created but no ID returned");
+      }
+
+      setStations([...stations, createdStation]);
+      setNewStation({ city: "", latitude: "", longitude: "", capacity: "" });
+      setError(null); // Clear any previous errors
+
+      // Reset modal state if stations modal is open
+      if (showModal === "stations") {
+        setSearchTerm("");
+        setCurrentPage(1);
+      }
+    } catch (err) {
+      setError("Failed to create station: " + (err as Error).message);
+      console.error("Station creation error:", err);
+    }
   };
 
-  // Delete bike using API
+  const startEditing = (id: number, item: Bike | Station) => {
+    setEditingId(id);
+    setEditingItem({ ...item });
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditingItem(null);
+  };
+
+  const saveEditing = async () => {
+    if (!editingId || !editingItem) return;
+
+    try {
+      if (showModal === "bikes") {
+        const updatedBike = await updateBike(editingId, editingItem as Bike);
+        setBikes(bikes.map(b => b.id === editingId ? updatedBike : b));
+      } else {
+        const updatedStation = await updateStation(editingId, editingItem as Station);
+        setStations(stations.map(s => s.id === editingId ? updatedStation : s));
+      }
+      setEditingId(null);
+      setEditingItem(null);
+    } catch (err) {
+      setError("Failed to update item.");
+      console.error(err);
+    }
+  };
+
   const handleDeleteBike = async (id: number) => {
     try {
       await deleteBike(id);
-      setBikes(bikes.filter((bike) => bike.id !== id));
+      setBikes(bikes.filter(b => b.id !== id));
     } catch (err) {
-      setError("Failed to delete bike. Please try again.");
-      console.error("Error deleting bike:", err);
+      setError("Failed to delete bike.");
+      console.error(err);
     }
   };
 
-  // Delete station (keeping this static as no API was provided)
-  const deleteStation = (id: number) => {
-    setStations(stations.filter((station) => station.id !== id));
+  const handleDeleteStation = async (id: number) => {
+    try {
+      await deleteStation(id);
+      setStations(stations.filter(s => s.id !== id));
+    } catch (err) {
+      setError("Failed to delete station.");
+      console.error(err);
+    }
   };
 
   // Filter items based on search term
-  const filteredItems =
-    showModal === "bikes"
-      ? bikes.filter(
-          (bike) =>
-            bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            bike.chargingSpotId.toString().includes(searchTerm.toLowerCase()) ||
-            bike.autonomy.toString().includes(searchTerm.toLowerCase()),
-        )
-      : stations.filter((station) =>
-          station.name.toLowerCase().includes(searchTerm.toLowerCase()),
-        );
+  const filteredItems = showModal === "bikes"
+    ? bikes.filter(bike =>
+      bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      bike.autonomy.toString().includes(searchTerm.toLowerCase())
+    )
+    : stations.filter(station =>
+      station.city && station.city.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -148,16 +180,18 @@ function Panel() {
     currentPage * itemsPerPage,
   );
 
-  // Open modal handler
   const openModal = (type: "bikes" | "stations") => {
     setShowModal(type);
     setSearchTerm("");
     setCurrentPage(1);
+    setEditingId(null);
+    setEditingItem(null);
   };
 
-  // Close modal handler
   const closeModal = () => {
     setShowModal(null);
+    setEditingId(null);
+    setEditingItem(null);
   };
 
   if (isLoading) {
@@ -173,6 +207,23 @@ function Panel() {
       {/* Left Side - Forms and Controls */}
       <div className="flex-1 space-y-6 mt-5">
         <h1 className="text-3xl font-bold text-orange-700">Control Panel</h1>
+
+        {/* City Filter */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Filter by City:</label>
+          <select
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border bg-white border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+            value={selectedCity ?? ""}
+            onChange={(e) => setSelectedCity(e.target.value || null)}
+          >
+            <option value="">All Cities</option>
+            {Array.from(new Set(bikes.map((bike) => bike.city))).map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Add New Bike Form */}
         <div className="space-y-2">
@@ -228,6 +279,8 @@ function Panel() {
           </div>
           <button
             onClick={addBike}
+          <button
+            onClick={addBike}
             className="btn btn-secondary"
             disabled={
               !newBike.city ||
@@ -241,22 +294,32 @@ function Panel() {
           </button>
         </div>
 
+        {/* Bikes Summary */}
+        <div className="space-y-2 mt-6">
+          {/* <h2 className="font-semibold text-lg">All Bikes ({bikes.length})</h2> */}
+          <button
+            onClick={() => openModal("bikes")}
+            className="btn btn-primary w-full"
+          >
+            View/Manage Bikes
+          </button>
+        </div>
+
         {/* Add New Station Form */}
         <div className="space-y-2">
-          <h2 className="font-semibold text-lg">Add Charging Station</h2>
+          <h2 className="font-semibold text-lg">Add Charging Station ({stations.length})</h2>
+          {error && <div className="text-error text-sm">{error}</div>}
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
-              placeholder="Station Name"
+              placeholder="City *"
               className="input input-bordered flex-1"
-              value={newStation.name}
-              onChange={(e) =>
-                setNewStation({ ...newStation, name: e.target.value })
-              }
+              value={newStation.city}
+              onChange={(e) => setNewStation({ ...newStation, city: e.target.value })}
             />
             <input
               type="number"
-              placeholder="Latitude"
+              placeholder="Latitude *"
               className="input input-bordered flex-1"
               value={newStation.latitude}
               onChange={(e) =>
@@ -266,7 +329,7 @@ function Panel() {
             />
             <input
               type="number"
-              placeholder="Longitude"
+              placeholder="Longitude *"
               className="input input-bordered flex-1"
               value={newStation.longitude}
               onChange={(e) =>
@@ -274,39 +337,43 @@ function Panel() {
               }
               step="0.000001"
             />
+            <input
+              type="number"
+              placeholder="Capacity *"
+              className="input input-bordered flex-1"
+              value={newStation.capacity}
+              onChange={(e) => setNewStation({ ...newStation, capacity: e.target.value })}
+            />
           </div>
+          <button
+            onClick={addStation}
           <button
             onClick={addStation}
             className="btn btn-secondary"
             disabled={
-              !newStation.name || !newStation.latitude || !newStation.longitude
+              !newStation.city.trim() ||
+              !newStation.latitude ||
+              !newStation.longitude ||
+              !newStation.capacity ||
+              isNaN(parseFloat(newStation.latitude)) ||
+              isNaN(parseFloat(newStation.longitude)) ||
+              isNaN(parseInt(newStation.capacity))
             }
           >
             Add Station
           </button>
         </div>
 
-        {/* Bikes Summary */}
-        <div className="space-y-2 mt-6">
-          <h2 className="font-semibold text-lg">All Bikes ({bikes.length})</h2>
-          <button
-            onClick={() => openModal("bikes")}
-            className="btn btn-primary w-full"
-          >
-            View/Manage Bikes
-          </button>
-        </div>
 
         {/* Stations Summary */}
         <div className="space-y-2 mt-6">
-          <h2 className="font-semibold text-lg">
-            All Stations ({stations.length})
-          </h2>
+          {/* <h2 className="font-semibold text-lg">All Stations ({stations.length})</h2> */}
           <button
             onClick={() => openModal("stations")}
             className="btn btn-primary w-full"
           >
-            View/Manage Stations
+            {/* View/Manage Stations */}
+            NÃO MEXER
           </button>
         </div>
       </div>
@@ -314,10 +381,28 @@ function Panel() {
       {/* Right Side - Map */}
       <div className="w-full lg:w-1/2">
         <PanelMap
-          bikes={bikes}
-          stations={stations}
-          onDeleteBike={handleDeleteBike}
-          onDeleteStation={deleteStation}
+          markers={[
+            ...bikes
+              .filter((bike) => typeof bike.id === "number")
+              .filter((bike) => !selectedCity || bike.city === selectedCity)
+              .map((bike) => ({
+                id: bike.id as number,
+                type: "bike" as const,
+                latitude: bike.latitude,
+                longitude: bike.longitude,
+                label: `Bike #${bike.id}`
+              })),
+            ...stations
+              .filter(station => typeof station.id === "number")
+              .filter(station => !selectedCity || station.city === selectedCity)
+              .map(station => ({
+                id: station.id as number,
+                type: "station" as const,
+                latitude: station.latitude,
+                longitude: station.longitude,
+                label: `Station #${station.id}`
+              }))
+          ]}
         />
       </div>
 
@@ -333,6 +418,7 @@ function Panel() {
                 ({filteredItems.length} items)
               </span>
             </h3>
+
 
             {/* Search Bar */}
             <div className="my-4">
@@ -361,7 +447,10 @@ function Panel() {
                         <th>Autonomy (km)</th>
                       </>
                     ) : (
-                      <th>Name</th>
+                      <>
+                        <th>City</th>
+                        <th>Capacity</th>
+                      </>
                     )}
                     <th>Location</th>
                     <th>Actions</th>
@@ -372,31 +461,145 @@ function Panel() {
                     currentItems.map((item) => (
                       <tr key={item.id}>
                         <td>{item.id}</td>
-                        {showModal === "bikes" ? (
-                          <>
-                            <td>{(item as Bike).city}</td>
-                            <td>{(item as Bike).chargingSpotId}</td>
-                            <td>{(item as Bike).autonomy}</td>
-                          </>
+
+                        {/* Editable Fields */}
+                        {editingId === item.id ? (
+                          showModal === "bikes" ? (
+                            <>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="input input-bordered input-sm"
+                                  value={(editingItem as Bike)?.city || ""}
+                                  onChange={(e) => setEditingItem({ ...editingItem, city: e.target.value })}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  className="input input-bordered input-sm"
+                                  value={(editingItem as Bike)?.chargingSpotId?.toString() || ""}
+                                  onChange={(e) => setEditingItem({ ...editingItem, chargingSpotId: parseInt(e.target.value) || 0 })}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  className="input input-bordered input-sm"
+                                  value={(editingItem as Bike)?.autonomy?.toString() || ""}
+                                  onChange={(e) => setEditingItem({ ...editingItem, autonomy: parseInt(e.target.value) || 0 })}
+                                />
+                              </td>
+                              <td>
+                                <div className="flex gap-1">
+                                  <input
+                                    type="number"
+                                    className="input input-bordered input-sm w-20"
+                                    value={(editingItem as Bike)?.latitude?.toString() || ""}
+                                    onChange={(e) => setEditingItem({ ...editingItem, latitude: parseFloat(e.target.value) || 0 })}
+                                    step="0.000001"
+                                  />
+                                  <input
+                                    type="number"
+                                    className="input input-bordered input-sm w-20"
+                                    value={(editingItem as Bike)?.longitude?.toString() || ""}
+                                    onChange={(e) => setEditingItem({ ...editingItem, longitude: parseFloat(e.target.value) || 0 })}
+                                    step="0.000001"
+                                  />
+                                </div>
+                              </td>
+                            </>
+                          ) : (
+                            <>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="input input-bordered input-sm"
+                                  value={(editingItem as Station)?.city || ""}
+                                  onChange={(e) => setEditingItem({ ...editingItem, city: e.target.value })}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  className="input input-bordered input-sm"
+                                  value={(editingItem as Station)?.capacity?.toString() || ""}
+                                  onChange={(e) => setEditingItem({ ...editingItem, capacity: parseInt(e.target.value) || 0 })}
+                                />
+                              </td>
+                              <td>
+                                <div className="flex gap-1">
+                                  <input
+                                    type="number"
+                                    className="input input-bordered input-sm w-20"
+                                    value={(editingItem as Station)?.latitude?.toString() || ""}
+                                    onChange={(e) => setEditingItem({ ...editingItem, latitude: parseFloat(e.target.value) || 0 })}
+                                    step="0.000001"
+                                  />
+                                  <input
+                                    type="number"
+                                    className="input input-bordered input-sm w-20"
+                                    value={(editingItem as Station)?.longitude?.toString() || ""}
+                                    onChange={(e) => setEditingItem({ ...editingItem, longitude: parseFloat(e.target.value) || 0 })}
+                                    step="0.000001"
+                                  />
+                                </div>
+                              </td>
+                            </>
+                          )
                         ) : (
-                          <td>{(item as Station).name}</td>
+                          showModal === "bikes" ? (
+                            <>
+                              <td>{(item as Bike).city}</td>
+                              <td>{(item as Bike).chargingSpotId}</td>
+                              <td>{(item as Bike).autonomy}</td>
+                              <td>{item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</td>
+                            </>
+                          ) : (
+                            <>
+                              <td>{(item as Station).city}</td>
+                              <td>{(item as Station).capacity}</td>
+                              <td>{item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</td>
+                            </>
+                          )
                         )}
-                        <td>
-                          {item.latitude.toFixed(4)},{" "}
-                          {item.longitude.toFixed(4)}
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-error btn-xs"
-                            onClick={() =>
-                              showModal === "bikes"
-                                ? handleDeleteBike(item.id!)
-                                : item.id !== undefined &&
-                                  deleteStation(item.id)
-                            }
-                          >
-                            Delete
-                          </button>
+
+                        {/* Action Buttons */}
+                        <td className="flex gap-2">
+                          {editingId === item.id ? (
+                            <>
+                              <button
+                                className="btn btn-success btn-xs"
+                                onClick={saveEditing}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="btn btn-error btn-xs"
+                                onClick={cancelEditing}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                className="btn btn-info btn-xs"
+                                onClick={() => startEditing(item.id!, item)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="btn btn-error btn-xs"
+                                onClick={() => showModal === "bikes"
+                                  ? handleDeleteBike(item.id!)
+                                  : handleDeleteStation(item.id!)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </>
+                          )}
                         </td>
                       </tr>
                     ))
@@ -419,6 +622,7 @@ function Panel() {
               <div className="flex justify-center mt-4">
                 <div className="join">
                   <button
+                  <button
                     className="join-item btn"
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage((p) => p - 1)}
@@ -437,6 +641,7 @@ function Panel() {
                       pageNum = currentPage - 2 + i;
                     }
 
+
                     return (
                       <button
                         key={pageNum}
@@ -447,6 +652,7 @@ function Panel() {
                       </button>
                     );
                   })}
+                  <button
                   <button
                     className="join-item btn"
                     disabled={currentPage === totalPages}
