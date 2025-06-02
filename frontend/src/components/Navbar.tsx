@@ -53,6 +53,13 @@ function Navbar() {
             <span className="font-semibold">Balance:</span>
             <span className="text-primary font-bold">120.52€</span>
           </div>
+      <div className="navbar-end">
+        <div className="flex items-center gap-4 pr-4">
+          {/* Balance Display */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-base-200 text-sm">
+            <span className="font-semibold">Balance:</span>
+            <span className="text-primary font-bold">120.52€</span>
+          </div>
 
           {/* Notification Bell - Removed the outer button */}
           <div className="indicator">
@@ -77,9 +84,7 @@ function Navbar() {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <a href="/login">Logout</a>
-              </li>
+              <li><a href="/login">Logout</a></li>
             </ul>
           </div>
         </div>
