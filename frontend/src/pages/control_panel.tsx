@@ -280,6 +280,8 @@ function Panel() {
           </div>
           <button
             onClick={addBike}
+          <button
+            onClick={addBike}
             className="btn btn-secondary"
             disabled={
               !newBike.city ||
@@ -346,6 +348,8 @@ function Panel() {
           </div>
           <button
             onClick={addStation}
+          <button
+            onClick={addStation}
             className="btn btn-secondary"
             disabled={
               !newStation.city.trim() ||
@@ -369,7 +373,8 @@ function Panel() {
             onClick={() => openModal("stations")}
             className="btn btn-primary w-full"
           >
-            View/Manage Stations
+            {/* View/Manage Stations */}
+            NÃO MEXER
           </button>
         </div>
       </div>
@@ -414,6 +419,7 @@ function Panel() {
                 ({filteredItems.length} items)
               </span>
             </h3>
+
 
             {/* Search Bar */}
             <div className="my-4">
@@ -617,6 +623,7 @@ function Panel() {
               <div className="flex justify-center mt-4">
                 <div className="join">
                   <button
+                  <button
                     className="join-item btn"
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage((p) => p - 1)}
@@ -635,6 +642,7 @@ function Panel() {
                       pageNum = currentPage - 2 + i;
                     }
 
+
                     return (
                       <button
                         key={pageNum}
@@ -645,6 +653,7 @@ function Panel() {
                       </button>
                     );
                   })}
+                  <button
                   <button
                     className="join-item btn"
                     disabled={currentPage === totalPages}
