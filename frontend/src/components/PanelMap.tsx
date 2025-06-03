@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 interface Marker {
   id: number;
@@ -15,119 +16,57 @@ interface Props {
 
 const PanelMap = ({ markers }: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
-  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const markerRefs = useRef<L.Marker[]>([]);
   const apikey = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    const map = new maplibregl.Map({
-      container: mapContainer.current,
-      style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
-      center: markers.length > 0 
-        ? [markers[0].longitude, markers[0].latitude] 
-        : [-8.6530, 40.6410],
-      zoom: 14,
-    });
+    // Initialize the map
+    const map = L.map(mapContainer.current).setView(
+      markers.length > 0 
+        ? [markers[0].latitude, markers[0].longitude] 
+        : [40.6410, -8.6530],
+      14
+    );
+
+    // Add tile layer
+    L.tileLayer(`https://maps.geoapify.com/v1/tile/klokantech-basic/{z}/{x}/{y}.png?apiKey=${apikey}`, {
+      attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a>',
+    }).addTo(map);
 
     mapRef.current = map;
 
-    map.on('load', () => {
-      const geojson: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-        type: 'FeatureCollection',
-        features: markers.map(marker => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [marker.longitude, marker.latitude],
-          },
-          properties: {
-            id: marker.id,
-            type: marker.type,
-            title: marker.label || marker.type,
-          }
-        })),
-      };
+    // Clear previous markers
+    markerRefs.current.forEach(marker => map.removeLayer(marker));
+    markerRefs.current = [];
 
-      map.addSource('markers', {
-        type: 'geojson',
-        data: geojson,
+    // Create markers with custom paw icons
+    markers.forEach(marker => {
+      const color = marker.type === 'bike' ? '3B82F6' : 'F97316';
+      const iconName = marker.type === 'bike' ? 'bicycle' : 'charging-station';
+      
+      // Create custom icon
+      const icon = L.icon({
+        iconUrl: `https://api.geoapify.com/v1/icon?size=medium&type=awesome&color=%23${color}&icon=${iconName}&apiKey=${apikey}`,
+        iconSize: [30, 40],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
       });
 
-      map.addLayer({
-        id: 'markers-layer',
-        type: 'circle',
-        source: 'markers',
-        paint: {
-          'circle-radius': 6,
-          'circle-color': [
-            'match',
-            ['get', 'type'],
-            'bike', '#3B82F6',
-            'station', '#F97316',
-            '#000000'
-          ],
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 2,
-        },
+      // Create marker with icon
+      const leafletMarker = L.marker([marker.latitude, marker.longitude], {
+        icon: icon
       });
 
-      // Create popup once and reuse it
-      popupRef.current = new maplibregl.Popup({
-        closeButton: false,
-        closeOnClick: false,
-        anchor: 'bottom',
-        offset: [0, -10]
-      });
+      // Create and bind popup
+      const popup = L.popup().setContent(`<p style="text-align: center">${marker.label || marker.type}</p>`);
+      leafletMarker.bindPopup(popup);
 
-      map.on('click', 'markers-layer', (e) => {
-const feature = e.features?.[0];
-if (!feature) return;
-
-const coordinates = (feature.geometry as GeoJSON.Point).coordinates.slice() as [number, number];
-const title = feature.properties?.title || '';
-
-        
-        if (coordinates && title && popupRef.current) {
-          // Remove any existing popup first
-          popupRef.current.remove();
-
-          // Fly to the marker position
-          map.flyTo({
-            center: coordinates as [number, number],
-            essential: true
-          });
-
-          // Add popup after the flyTo animation completes
-          map.once('moveend', () => {
-            popupRef.current = new maplibregl.Popup({
-              closeButton: false,
-              closeOnClick: false,
-              anchor: 'bottom',
-              offset: [0, -10]
-            })
-            .setLngLat(coordinates as [number, number])
-            .setHTML(`<strong>${title}</strong>`)
-            .addTo(map);
-          });
-        }
-      });
-
-      // Close popup when clicking elsewhere on the map
-      map.on('click', () => {
-        if (popupRef.current) {
-          popupRef.current.remove();
-        }
-      });
-
-      map.on('mouseenter', 'markers-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', 'markers-layer', () => {
-        map.getCanvas().style.cursor = '';
-      });
+      // Add marker to map and store reference
+      leafletMarker.addTo(map);
+      markerRefs.current.push(leafletMarker);
     });
 
     return () => {
@@ -135,7 +74,7 @@ const title = feature.properties?.title || '';
         mapRef.current.remove();
       }
     };
-  }, [markers]);
+  }, [markers, apikey]);
 
   return <div ref={mapContainer} style={{ height: '500px', width: '100%' }} />;
 };
