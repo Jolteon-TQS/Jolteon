@@ -373,8 +373,7 @@ function Panel() {
             onClick={() => openModal("stations")}
             className="btn btn-primary w-full"
           >
-            {/* View/Manage Stations */}
-            NÃO MEXER
+            View/Manage Stations
           </button>
         </div>
       </div>
