@@ -1,5 +1,6 @@
 package tqs.project.jolteon.services;
 
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -102,4 +103,16 @@ class CulturalLandmarkServiceTest {
         verify(culturalLandmarkRepository, times(1)).existsById(999L);
         verify(culturalLandmarkRepository, never()).save(landmark);
     }
+
+
+
+    @Test
+    void testGetCulturalLandmarksByIds() {
+        List<CulturalLandmark> landmarks = Arrays.asList(new CulturalLandmark(), new CulturalLandmark());
+        when(culturalLandmarkRepository.findAllByIdIn(Set.of(1L, 2L))).thenReturn(Set.copyOf(landmarks));
+        Set<CulturalLandmark> result = culturalLandmarkService.getCulturalLandmarksByIds(Set.of(1L, 2L));
+        assertEquals(2, result.size());
+        verify(culturalLandmarkRepository, times(1)).findAllByIdIn(Set.of(1L, 2L));
+    }
+
 }
