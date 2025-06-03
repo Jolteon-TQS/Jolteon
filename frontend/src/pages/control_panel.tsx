@@ -328,8 +328,6 @@ function Panel() {
           </div>
           <button
             onClick={addBike}
-          <button
-            onClick={addBike}
             className="btn btn-secondary"
             disabled={
               !newBike.city ||
@@ -400,8 +398,6 @@ function Panel() {
               }
             />
           </div>
-          <button
-            onClick={addStation}
           <button
             onClick={addStation}
             className="btn btn-secondary"
@@ -761,7 +757,6 @@ function Panel() {
               <div className="flex justify-center mt-4">
                 <div className="join">
                   <button
-                  <button
                     className="join-item btn"
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage((p) => p - 1)}
@@ -791,7 +786,6 @@ function Panel() {
                       </button>
                     );
                   })}
-                  <button
                   <button
                     className="join-item btn"
                     disabled={currentPage === totalPages}
