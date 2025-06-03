@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -20,8 +21,16 @@ public class BikeRenting {
     @ManyToOne
     private NormalUser user;
 
-    @OneToOne(mappedBy = "bikerenting", cascade = CascadeType.ALL)
-    private Route route;
+    @ManyToMany
+    private Set<CulturalLandmark> culturalLandmarks;
 
+    @ManyToOne
+    private ChargingSpot startSpot;
+
+    @ManyToOne
+    private ChargingSpot endSpot;
+
+    
     private LocalDateTime time;
+    private LocalDateTime endTime;
 }
