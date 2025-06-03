@@ -61,6 +61,7 @@ public class BikeRentingServiceTest {
 
     @Test
     public void testCreateBikeRenting_Success() {
+        bike.setIsAvailable(true);
         when(bikeRepository.findById(1L)).thenReturn(Optional.of(bike));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(startSpot));
