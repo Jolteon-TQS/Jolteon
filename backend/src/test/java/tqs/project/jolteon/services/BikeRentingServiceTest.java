@@ -83,6 +83,23 @@ public class BikeRentingServiceTest {
     }
 
     @Test
+    public void testCreateBikeRenting_BikeNotAvailable() {
+        bike.setIsAvailable(false);
+        when(bikeRepository.findById(1L)).thenReturn(Optional.of(bike));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(startSpot));
+        when(chargingSpotRepository.findById(2L)).thenReturn(Optional.of(endSpot));
+        when(culturalLandmarkRepository.findAllByIdIn(Set.of(1L))).thenReturn(landmarks);
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                bikeRentingService.createBikeRenting(1L, 1L, 1L, 2L, Set.of(1L), time, endTime)
+        );
+        assertEquals("Bike is not available for renting", e.getMessage());
+
+        verify(bikeRentingRepository, never()).save(any(BikeRenting.class));
+    }
+
+
+    @Test
     public void testGetById() {
         BikeRenting renting = new BikeRenting();
         renting.setId(5L);
