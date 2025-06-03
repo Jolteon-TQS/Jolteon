@@ -46,6 +46,17 @@ public class BikeRentingService {
                 .orElseThrow(() -> new IllegalArgumentException("End spot not found"));
         } 
 
+        // make bike unavailable
+        if (!bike.getIsAvailable()) {
+            throw new IllegalArgumentException("Bike is not available for renting");
+        }
+        bike.setIsAvailable(false);
+
+        // Remove chargingspot from bike
+        if (bike.getChargingSpot() != null) {
+            bike.setChargingSpot(null);
+        }
+
 
         Set<CulturalLandmark> landmarks = culturalLandmarkRepository.findAllByIdIn(landmarkIds);
 
