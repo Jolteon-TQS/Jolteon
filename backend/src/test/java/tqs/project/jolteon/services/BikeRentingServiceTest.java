@@ -18,10 +18,10 @@ import static org.mockito.Mockito.*;
 public class BikeRentingServiceTest {
 
     @Mock private BikeRentingRepository bikeRentingRepository;
-    @Mock private BikeRepository bikeRepository;
-    @Mock private NormalUserRepository userRepository;
-    @Mock private ChargingSpotRepository chargingSpotRepository;
-    @Mock private CulturalLandmarkRepository culturalLandmarkRepository;
+    @Mock private BikeService bikeService;
+    @Mock private ChargingSpotService chargingSpotService;
+    @Mock private NormalUserService userService;
+    @Mock private CulturalLandmarkService culturalLandmarkService;
 
     @InjectMocks
     private BikeRentingService bikeRentingService;
@@ -59,14 +59,15 @@ public class BikeRentingServiceTest {
         endTime = LocalDateTime.now();
     }
 
+
     @Test
     public void testCreateBikeRenting_Success() {
         bike.setIsAvailable(true);
-        when(bikeRepository.findById(1L)).thenReturn(Optional.of(bike));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(startSpot));
-        when(chargingSpotRepository.findById(2L)).thenReturn(Optional.of(endSpot));
-        when(culturalLandmarkRepository.findAllByIdIn(Set.of(1L))).thenReturn(landmarks);
+        when(bikeService.getBikeById(1L)).thenReturn(Optional.of(bike));
+        when(userService.getNormalUserById(1L)).thenReturn(user);
+        when(chargingSpotService.getChargingSpotById(1L)).thenReturn(startSpot);
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(culturalLandmarkService.getCulturalLandmarksByIds(Set.of(1L))).thenReturn(landmarks);
         when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
 
         BikeRenting result = bikeRentingService.createBikeRenting(
@@ -85,11 +86,11 @@ public class BikeRentingServiceTest {
     @Test
     public void testCreateBikeRenting_BikeNotAvailable() {
         bike.setIsAvailable(false);
-        when(bikeRepository.findById(1L)).thenReturn(Optional.of(bike));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(startSpot));
-        when(chargingSpotRepository.findById(2L)).thenReturn(Optional.of(endSpot));
-        when(culturalLandmarkRepository.findAllByIdIn(Set.of(1L))).thenReturn(landmarks);
+        when(bikeService.getBikeById(1L)).thenReturn(Optional.of(bike));
+        when(userService.getNormalUserById(1L)).thenReturn(user);
+        when(chargingSpotService.getChargingSpotById(1L)).thenReturn(startSpot);
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(culturalLandmarkService.getCulturalLandmarksByIds(Set.of(1L))).thenReturn(landmarks);
         Exception e = assertThrows(IllegalArgumentException.class, () ->
                 bikeRentingService.createBikeRenting(1L, 1L, 1L, 2L, Set.of(1L), time, endTime)
         );
@@ -175,7 +176,7 @@ public class BikeRentingServiceTest {
 
     @Test
     public void testCreateBikeRenting_BikeNotFound() {
-        when(bikeRepository.findById(99L)).thenReturn(Optional.empty());
+        when(bikeService.getBikeById(99L)).thenReturn(Optional.empty());
         Exception e = assertThrows(IllegalArgumentException.class, () ->
                 bikeRentingService.createBikeRenting(99L, 1L, 1L, 2L, Set.of(1L), time, endTime)
         );
