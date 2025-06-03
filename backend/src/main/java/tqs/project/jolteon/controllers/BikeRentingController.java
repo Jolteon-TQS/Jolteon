@@ -9,7 +9,7 @@ import tqs.project.jolteon.entities.DTOs.BikeRentingMapper;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/bike-rentings")
+@RequestMapping("/api/rentings")
 @RequiredArgsConstructor
 public class BikeRentingController {
 
@@ -22,15 +22,18 @@ public class BikeRentingController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-@GetMapping
-public ResponseEntity<List<BikeRentingDTO>> getAllRentings() {
-    List<BikeRentingDTO> dtos = bikeRentingService.getAllRentings()
-        .stream()
-        .map(BikeRentingMapper::toDTO)
-        .toList();
 
-    return ResponseEntity.ok(dtos);
-}
+
+
+    @GetMapping
+    public ResponseEntity<List<BikeRentingDTO>> getAllRentings() {
+        List<BikeRentingDTO> dtos = bikeRentingService.getAllRentings()
+            .stream()
+            .map(BikeRentingMapper::toDTO)
+            .toList();
+
+        return ResponseEntity.ok(dtos);
+    }
 
 
 }
