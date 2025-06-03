@@ -18,17 +18,9 @@ import java.util.List;
 public class BikeRentingService {
 
     private final BikeRentingRepository bikeRentingRepository;
-
-    @Autowired
     private final BikeService bikeService;
-
-    @Autowired
     private final NormalUserService userService;
-
-    @Autowired
     private final ChargingSpotService chargingSpotService;
-
-    @Autowired
     private final CulturalLandmarkService culturalLandmarkService;
 
 
@@ -41,8 +33,6 @@ public class BikeRentingService {
                                          LocalDateTime time,
                                          LocalDateTime endTime) {
 
-        // Bike bike = bikeRepository.findById(bikeId)
-        //         .orElseThrow(() -> new IllegalArgumentException("Bike not found"));
         Bike bike = bikeService.getBikeById(bikeId)
                 .orElseThrow(() -> new IllegalArgumentException("Bike not found"));
 
