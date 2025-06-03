@@ -27,6 +27,8 @@
     <url/>
   </scm>
   <properties>
+
+    <sonar.exclusions>**/*Mapper.java</sonar.exclusions>
     <sonar.organization>jolteon-tqs</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>21</java.version>
