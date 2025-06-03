@@ -61,6 +61,4 @@ public class BikeRentingController {
         BikeRentingDTO createdDto = BikeRentingMapper.toDTO(bikeRenting);
         return ResponseEntity.ok(createdDto);
     }
-
-
 }
