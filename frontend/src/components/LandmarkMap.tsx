@@ -52,7 +52,7 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
     const map = new maplibregl.Map({
       container: mapContainer.current,
       style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
-      center: [-8.6530, 40.6410],
+      center: [-8.653, 40.641],
       zoom: 14,
     });
 
@@ -88,8 +88,10 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
           description: string;
           image: string;
         };
-        
-        const coordinates = (feature.geometry as GeoJSON.Point).coordinates.slice() as [number, number];
+
+        const coordinates = (
+          feature.geometry as GeoJSON.Point
+        ).coordinates.slice() as [number, number];
 
         const html = `
           <strong>${props.name}</strong><br/>
@@ -99,17 +101,14 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
           <br/><button onclick="window.deleteLandmark(${props.id})" style="color:red;">Delete</button>
         `;
 
-        new maplibregl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(html)
-          .addTo(map);
+        new maplibregl.Popup().setLngLat(coordinates).setHTML(html).addTo(map);
       });
 
       // Change cursor on hover
       map.on("mouseenter", "landmarks-layer", () => {
         map.getCanvas().style.cursor = "pointer";
       });
-      
+
       map.on("mouseleave", "landmarks-layer", () => {
         map.getCanvas().style.cursor = "";
       });

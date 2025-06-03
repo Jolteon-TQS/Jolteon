@@ -11,7 +11,7 @@ const StationsMap = () => {
     const map = new maplibregl.Map({
       container: mapContainer.current!,
       style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
-      center: [-8.6530, 40.6410],
+      center: [-8.653, 40.641],
       zoom: 14,
     });
 

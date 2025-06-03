@@ -24,13 +24,21 @@ export const getStationById = async (id: number): Promise<Station> => {
   return response.data;
 };
 
-export const createStation = async (station: Omit<Station, 'id'>): Promise<Station> => {
+export const createStation = async (
+  station: Omit<Station, "id">,
+): Promise<Station> => {
   const response = await axios.post<Station>(API_BASE, station);
   return response.data;
 };
 
-export const updateStation = async (id: number, updatedStation: Omit<Station, 'id'>): Promise<Station> => {
-  const response = await axios.put<Station>(`${API_BASE}/${id}`, updatedStation);
+export const updateStation = async (
+  id: number,
+  updatedStation: Omit<Station, "id">,
+): Promise<Station> => {
+  const response = await axios.put<Station>(
+    `${API_BASE}/${id}`,
+    updatedStation,
+  );
   return response.data;
 };
 
