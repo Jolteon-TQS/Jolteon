@@ -39,8 +39,13 @@ public class BikeRentingService {
         ChargingSpot startSpot = chargingSpotRepository.findById(startSpotId)
                 .orElseThrow(() -> new IllegalArgumentException("Start spot not found"));
 
-        ChargingSpot endSpot = chargingSpotRepository.findById(endSpotId)
+        ChargingSpot endSpot = null;
+
+        if (endSpotId != null) {
+             endSpot = chargingSpotRepository.findById(endSpotId)
                 .orElseThrow(() -> new IllegalArgumentException("End spot not found"));
+        } 
+
 
         Set<CulturalLandmark> landmarks = culturalLandmarkRepository.findAllByIdIn(landmarkIds);
 
@@ -55,6 +60,7 @@ public class BikeRentingService {
 
         return bikeRentingRepository.save(renting);
     }
+
 
     public Optional<BikeRenting> getById(Long id) {
         return bikeRentingRepository.findById(id);
@@ -94,7 +100,5 @@ public class BikeRentingService {
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
     }
-
-
 
 }

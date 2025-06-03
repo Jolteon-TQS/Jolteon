@@ -7,6 +7,14 @@ import tqs.project.jolteon.entities.DTOs.BikeRentingDTO;
 import tqs.project.jolteon.services.BikeRentingService;
 import tqs.project.jolteon.entities.DTOs.BikeRentingMapper;
 import java.util.List;
+import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+import tqs.project.jolteon.entities.BikeRenting;
+import tqs.project.jolteon.entities.DTOs.CulturalLandmarkDTO;
+import tqs.project.jolteon.entities.DTOs.UserDTO;
+import tqs.project.jolteon.entities.DTOs.BikeDTO;
+
 
 @RestController
 @RequestMapping("/api/rentings")
@@ -23,8 +31,6 @@ public class BikeRentingController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
-
     @GetMapping
     public ResponseEntity<List<BikeRentingDTO>> getAllRentings() {
         List<BikeRentingDTO> dtos = bikeRentingService.getAllRentings()
@@ -34,5 +40,27 @@ public class BikeRentingController {
 
         return ResponseEntity.ok(dtos);
     }
+
+    @PostMapping
+    public ResponseEntity<BikeRentingDTO> createRenting(@RequestBody BikeRentingDTO bikeRentingDTO) {
+        Long bikeId = bikeRentingDTO.getBike().getId();
+        Long userId = bikeRentingDTO.getUser().getId();
+        Long startSpotId = bikeRentingDTO.getStartSpot() != null ? bikeRentingDTO.getStartSpot().getId() : null;
+        Long endSpotId = bikeRentingDTO.getEndSpot() != null ? bikeRentingDTO.getEndSpot().getId() : null;
+        Set<Long> landmarkIds = bikeRentingDTO.getCulturalLandmarks() != null
+            ? bikeRentingDTO.getCulturalLandmarks().stream()
+                .map(landmark -> landmark.getId())
+                .collect(Collectors.toSet())
+            : null;
+        LocalDateTime time = bikeRentingDTO.getTime();
+        LocalDateTime endTime = bikeRentingDTO.getEndTime();
+        BikeRenting bikeRenting = bikeRentingService.createBikeRenting(
+            bikeId, userId, startSpotId, endSpotId, landmarkIds, time, endTime
+        );
+
+        BikeRentingDTO createdDto = BikeRentingMapper.toDTO(bikeRenting);
+        return ResponseEntity.ok(createdDto);
+    }
+
 
 }
