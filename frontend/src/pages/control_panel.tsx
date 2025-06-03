@@ -471,7 +471,6 @@ function Panel() {
               </span>
             </h3>
 
-
             {/* Search Bar */}
             <div className="my-4">
               <input
@@ -774,7 +773,6 @@ function Panel() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-
 
                     return (
                       <button
