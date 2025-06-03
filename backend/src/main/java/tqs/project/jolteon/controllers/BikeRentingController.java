@@ -61,4 +61,16 @@ public class BikeRentingController {
         BikeRentingDTO createdDto = BikeRentingMapper.toDTO(bikeRenting);
         return ResponseEntity.ok(createdDto);
     }
+
+
+@PutMapping("{rentingId}/end")
+public ResponseEntity<BikeRentingDTO> endRenting(
+        @PathVariable Long rentingId,
+        @RequestParam LocalDateTime endTime,
+        @RequestParam Long endSpotId) {
+    BikeRenting updatedRenting = bikeRentingService.endBikeRenting(rentingId, endTime, endSpotId);
+    BikeRentingDTO updatedDto = BikeRentingMapper.toDTO(updatedRenting);
+    return ResponseEntity.ok(updatedDto);
+}
+
 }
