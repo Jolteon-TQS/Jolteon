@@ -24,3 +24,29 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - ${PROMETHEUS_PORTS}
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - ${GRAFANA_PORTS}
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana-storage:
+
+
