@@ -1,12 +1,14 @@
 import axios from "axios";
 
+import { Bike } from "./bike-crud"; // Assuming Bike is defined in bike-crud.tsx
+
 export interface Station {
   id: number;
   city: string;
   latitude: number;
   longitude: number;
   capacity: number; //capacity
-  // bikes: Bike[];
+  bikes: Bike[];
 }
 
 const base_api_url = import.meta.env.VITE_API_URL;

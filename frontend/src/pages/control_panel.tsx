@@ -87,7 +87,8 @@ function Panel() {
         city: newStation.city.trim(), // Trim whitespace
         latitude,
         longitude,
-        capacity
+        capacity,
+        bikes: [] // Initialize with an empty array
       };
 
       console.log("Creating station with data:", stationToCreate); // Debug log
@@ -170,7 +171,7 @@ function Panel() {
       bike.autonomy.toString().includes(searchTerm.toLowerCase())
     )
     : stations.filter(station =>
-      station.city && station.city.toLowerCase().includes(searchTerm.toLowerCase())
+      station.city.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   // Pagination calculations
@@ -372,8 +373,7 @@ function Panel() {
             onClick={() => openModal("stations")}
             className="btn btn-primary w-full"
           >
-            {/* View/Manage Stations */}
-            NÃO MEXER
+            View/Manage Stations
           </button>
         </div>
       </div>
@@ -390,7 +390,7 @@ function Panel() {
                 type: "bike" as const,
                 latitude: bike.latitude,
                 longitude: bike.longitude,
-                label: `Bike #${bike.id}`
+                label: `<b>Bike ${bike.id}</b></br>${bike.city}</br>`
               })),
             ...stations
               .filter(station => typeof station.id === "number")
@@ -400,7 +400,7 @@ function Panel() {
                 type: "station" as const,
                 latitude: station.latitude,
                 longitude: station.longitude,
-                label: `Station #${station.id}`
+                label: `<b>Station ${station.id}</b></br>${station.city}</br>(${station.bikes.length}/${station.capacity} bikes)`
               }))
           ]}
         />

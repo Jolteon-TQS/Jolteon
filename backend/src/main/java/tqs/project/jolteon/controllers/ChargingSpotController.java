@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import tqs.project.jolteon.entities.ChargingSpot;
 import tqs.project.jolteon.repositories.ChargingSpotRepository;
 import tqs.project.jolteon.services.ChargingSpotService;

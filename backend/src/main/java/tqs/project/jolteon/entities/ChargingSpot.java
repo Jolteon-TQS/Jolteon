@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.Set;
 
 @Entity
@@ -19,6 +21,8 @@ public class ChargingSpot {
     private float longitude;
     private int capacity;
 
-    // @OneToMany
-    // private Set<Bike> bikes;
+    @OneToMany
+    (cascade = CascadeType.ALL, mappedBy = "chargingSpot")
+    @JsonManagedReference
+    private Set<Bike> bikes;
 }
