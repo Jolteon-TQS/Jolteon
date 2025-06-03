@@ -72,5 +72,29 @@ public class BikeRentingService {
         return bikeRentingRepository.findAll();
 }
 
+    @Transactional
+    public void deleteBikeRenting(Long id) {
+        BikeRenting renting = bikeRentingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
+        bikeRentingRepository.delete(renting);
+    }
+
+    @Transactional
+    public BikeRenting updateBikeRenting(Long id, BikeRenting updatedRenting) {
+        return bikeRentingRepository.findById(id)
+                .map(existingRenting -> {
+                    existingRenting.setBike(updatedRenting.getBike());
+                    existingRenting.setUser(updatedRenting.getUser());
+                    existingRenting.setStartSpot(updatedRenting.getStartSpot());
+                    existingRenting.setEndSpot(updatedRenting.getEndSpot());
+                    existingRenting.setCulturalLandmarks(updatedRenting.getCulturalLandmarks());
+                    existingRenting.setTime(updatedRenting.getTime());
+                    existingRenting.setEndTime(updatedRenting.getEndTime());
+                    return bikeRentingRepository.save(existingRenting);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
+    }
+
+
 
 }

@@ -35,5 +35,4 @@ public class BikeRentingController {
         return ResponseEntity.ok(dtos);
     }
 
-
 }
