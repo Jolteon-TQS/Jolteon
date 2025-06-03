@@ -1,20 +1,45 @@
 import { useState, useEffect } from "react";
 import PanelMap from "../components/PanelMap";
-import { getAllBikes, createBike, deleteBike, updateBike, Bike } from "../api/bike-crud";
-import { getAllStations, createStation, deleteStation, updateStation, Station } from "../api/station-crud";
+import {
+  getAllBikes,
+  createBike,
+  deleteBike,
+  updateBike,
+  Bike,
+} from "../api/bike-crud";
+import {
+  getAllStations,
+  createStation,
+  deleteStation,
+  updateStation,
+  Station,
+} from "../api/station-crud";
 
 function Panel() {
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stations, setStations] = useState<Station[]>([]);
-  const [newBike, setNewBike] = useState({ city: "", latitude: "", longitude: "", chargingSpotId: "", autonomy: "" });
-  const [newStation, setNewStation] = useState({ city: "", latitude: "", longitude: "", capacity: "" });
+  const [newBike, setNewBike] = useState({
+    city: "",
+    latitude: "",
+    longitude: "",
+    chargingSpotId: "",
+    autonomy: "",
+  });
+  const [newStation, setNewStation] = useState({
+    city: "",
+    latitude: "",
+    longitude: "",
+    capacity: "",
+  });
   const [showModal, setShowModal] = useState<"bikes" | "stations" | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingItem, setEditingItem] = useState<Partial<Bike> | Partial<Station> | null>(null);
+  const [editingItem, setEditingItem] = useState<
+    Partial<Bike> | Partial<Station> | null
+  >(null);
   const itemsPerPage = 10;
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
@@ -23,10 +48,10 @@ function Panel() {
       try {
         const [fetchedBikes, fetchedStations] = await Promise.all([
           getAllBikes(),
-          getAllStations()
+          getAllStations(),
         ]);
-                  console.log("Fetched Bikes:", fetchedBikes);
-          console.log("Fetched Stations:", fetchedStations)
+        console.log("Fetched Bikes:", fetchedBikes);
+        console.log("Fetched Stations:", fetchedStations);
         setBikes(fetchedBikes);
         setStations(fetchedStations);
       } catch (err) {
@@ -40,7 +65,14 @@ function Panel() {
   }, []);
 
   const addBike = async () => {
-    if (!newBike.city || !newBike.latitude || !newBike.longitude || !newBike.chargingSpotId || !newBike.autonomy) return;
+    if (
+      !newBike.city ||
+      !newBike.latitude ||
+      !newBike.longitude ||
+      !newBike.chargingSpotId ||
+      !newBike.autonomy
+    )
+      return;
     try {
       const bikeToCreate = {
         city: newBike.city,
@@ -67,7 +99,12 @@ function Panel() {
 
   const addStation = async () => {
     // Validate all required fields are filled
-    if (!newStation.city || !newStation.latitude || !newStation.longitude || !newStation.capacity) {
+    if (
+      !newStation.city ||
+      !newStation.latitude ||
+      !newStation.longitude ||
+      !newStation.capacity
+    ) {
       setError("Please fill all station fields");
       return;
     }
@@ -78,7 +115,9 @@ function Panel() {
     const capacity = parseInt(newStation.capacity);
 
     if (isNaN(latitude) || isNaN(longitude) || isNaN(capacity)) {
-      setError("Please enter valid numbers for latitude, longitude and capacity");
+      setError(
+        "Please enter valid numbers for latitude, longitude and capacity",
+      );
       return;
     }
 
@@ -88,7 +127,7 @@ function Panel() {
         latitude,
         longitude,
         capacity,
-        bikes: [] // Initialize with an empty array
+        bikes: [], // Initialize with an empty array
       };
 
       console.log("Creating station with data:", stationToCreate); // Debug log
@@ -131,10 +170,15 @@ function Panel() {
     try {
       if (showModal === "bikes") {
         const updatedBike = await updateBike(editingId, editingItem as Bike);
-        setBikes(bikes.map(b => b.id === editingId ? updatedBike : b));
+        setBikes(bikes.map((b) => (b.id === editingId ? updatedBike : b)));
       } else {
-        const updatedStation = await updateStation(editingId, editingItem as Station);
-        setStations(stations.map(s => s.id === editingId ? updatedStation : s));
+        const updatedStation = await updateStation(
+          editingId,
+          editingItem as Station,
+        );
+        setStations(
+          stations.map((s) => (s.id === editingId ? updatedStation : s)),
+        );
       }
       setEditingId(null);
       setEditingItem(null);
@@ -147,7 +191,7 @@ function Panel() {
   const handleDeleteBike = async (id: number) => {
     try {
       await deleteBike(id);
-      setBikes(bikes.filter(b => b.id !== id));
+      setBikes(bikes.filter((b) => b.id !== id));
     } catch (err) {
       setError("Failed to delete bike.");
       console.error(err);
@@ -157,7 +201,7 @@ function Panel() {
   const handleDeleteStation = async (id: number) => {
     try {
       await deleteStation(id);
-      setStations(stations.filter(s => s.id !== id));
+      setStations(stations.filter((s) => s.id !== id));
     } catch (err) {
       setError("Failed to delete station.");
       console.error(err);
@@ -165,14 +209,16 @@ function Panel() {
   };
 
   // Filter items based on search term
-  const filteredItems = showModal === "bikes"
-    ? bikes.filter(bike =>
-      bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      bike.autonomy.toString().includes(searchTerm.toLowerCase())
-    )
-    : stations.filter(station =>
-      station.city.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const filteredItems =
+    showModal === "bikes"
+      ? bikes.filter(
+          (bike) =>
+            bike.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            bike.autonomy.toString().includes(searchTerm.toLowerCase()),
+        )
+      : stations.filter((station) =>
+          station.city.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -211,7 +257,9 @@ function Panel() {
 
         {/* City Filter */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Filter by City:</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Filter by City:
+          </label>
           <select
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border bg-white border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
             value={selectedCity ?? ""}
@@ -306,7 +354,9 @@ function Panel() {
 
         {/* Add New Station Form */}
         <div className="space-y-2">
-          <h2 className="font-semibold text-lg">Add Charging Station ({stations.length})</h2>
+          <h2 className="font-semibold text-lg">
+            Add Charging Station ({stations.length})
+          </h2>
           {error && <div className="text-error text-sm">{error}</div>}
           <div className="flex flex-col sm:flex-row gap-2">
             <input
@@ -314,7 +364,9 @@ function Panel() {
               placeholder="City *"
               className="input input-bordered flex-1"
               value={newStation.city}
-              onChange={(e) => setNewStation({ ...newStation, city: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, city: e.target.value })
+              }
             />
             <input
               type="number"
@@ -341,7 +393,9 @@ function Panel() {
               placeholder="Capacity *"
               className="input input-bordered flex-1"
               value={newStation.capacity}
-              onChange={(e) => setNewStation({ ...newStation, capacity: e.target.value })}
+              onChange={(e) =>
+                setNewStation({ ...newStation, capacity: e.target.value })
+              }
             />
           </div>
           <button
@@ -360,7 +414,6 @@ function Panel() {
             Add Station
           </button>
         </div>
-
 
         {/* Stations Summary */}
         <div className="space-y-2 mt-6">
@@ -386,18 +439,20 @@ function Panel() {
                 type: "bike" as const,
                 latitude: bike.latitude,
                 longitude: bike.longitude,
-                label: `<b>Bike ${bike.id}</b></br>${bike.city}</br>`
+                label: `<b>Bike ${bike.id}</b></br>${bike.city}</br>`,
               })),
             ...stations
-              .filter(station => typeof station.id === "number")
-              .filter(station => !selectedCity || station.city === selectedCity)
-              .map(station => ({
+              .filter((station) => typeof station.id === "number")
+              .filter(
+                (station) => !selectedCity || station.city === selectedCity,
+              )
+              .map((station) => ({
                 id: station.id as number,
                 type: "station" as const,
                 latitude: station.latitude,
                 longitude: station.longitude,
-                label: `<b>Station ${station.id}</b></br>${station.city}</br>(${station.bikes.length}/${station.capacity} bikes)`
-              }))
+                label: `<b>Station ${station.id}</b></br>${station.city}</br>(${station.bikes.length}/${station.capacity} bikes)`,
+              })),
           ]}
         />
       </div>
@@ -414,7 +469,6 @@ function Panel() {
                 ({filteredItems.length} items)
               </span>
             </h3>
-
 
             {/* Search Bar */}
             <div className="my-4">
@@ -467,23 +521,47 @@ function Panel() {
                                   type="text"
                                   className="input input-bordered input-sm"
                                   value={(editingItem as Bike)?.city || ""}
-                                  onChange={(e) => setEditingItem({ ...editingItem, city: e.target.value })}
+                                  onChange={(e) =>
+                                    setEditingItem({
+                                      ...editingItem,
+                                      city: e.target.value,
+                                    })
+                                  }
                                 />
                               </td>
                               <td>
                                 <input
                                   type="number"
                                   className="input input-bordered input-sm"
-                                  value={(editingItem as Bike)?.chargingSpotId?.toString() || ""}
-                                  onChange={(e) => setEditingItem({ ...editingItem, chargingSpotId: parseInt(e.target.value) || 0 })}
+                                  value={
+                                    (
+                                      editingItem as Bike
+                                    )?.chargingSpotId?.toString() || ""
+                                  }
+                                  onChange={(e) =>
+                                    setEditingItem({
+                                      ...editingItem,
+                                      chargingSpotId:
+                                        parseInt(e.target.value) || 0,
+                                    })
+                                  }
                                 />
                               </td>
                               <td>
                                 <input
                                   type="number"
                                   className="input input-bordered input-sm"
-                                  value={(editingItem as Bike)?.autonomy?.toString() || ""}
-                                  onChange={(e) => setEditingItem({ ...editingItem, autonomy: parseInt(e.target.value) || 0 })}
+                                  value={
+                                    (
+                                      editingItem as Bike
+                                    )?.autonomy?.toString() || ""
+                                  }
+                                  onChange={(e) =>
+                                    setEditingItem({
+                                      ...editingItem,
+                                      autonomy: parseInt(e.target.value) || 0,
+                                    })
+                                  }
                                 />
                               </td>
                               <td>
@@ -491,15 +569,35 @@ function Panel() {
                                   <input
                                     type="number"
                                     className="input input-bordered input-sm w-20"
-                                    value={(editingItem as Bike)?.latitude?.toString() || ""}
-                                    onChange={(e) => setEditingItem({ ...editingItem, latitude: parseFloat(e.target.value) || 0 })}
+                                    value={
+                                      (
+                                        editingItem as Bike
+                                      )?.latitude?.toString() || ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingItem({
+                                        ...editingItem,
+                                        latitude:
+                                          parseFloat(e.target.value) || 0,
+                                      })
+                                    }
                                     step="0.000001"
                                   />
                                   <input
                                     type="number"
                                     className="input input-bordered input-sm w-20"
-                                    value={(editingItem as Bike)?.longitude?.toString() || ""}
-                                    onChange={(e) => setEditingItem({ ...editingItem, longitude: parseFloat(e.target.value) || 0 })}
+                                    value={
+                                      (
+                                        editingItem as Bike
+                                      )?.longitude?.toString() || ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingItem({
+                                        ...editingItem,
+                                        longitude:
+                                          parseFloat(e.target.value) || 0,
+                                      })
+                                    }
                                     step="0.000001"
                                   />
                                 </div>
@@ -512,15 +610,29 @@ function Panel() {
                                   type="text"
                                   className="input input-bordered input-sm"
                                   value={(editingItem as Station)?.city || ""}
-                                  onChange={(e) => setEditingItem({ ...editingItem, city: e.target.value })}
+                                  onChange={(e) =>
+                                    setEditingItem({
+                                      ...editingItem,
+                                      city: e.target.value,
+                                    })
+                                  }
                                 />
                               </td>
                               <td>
                                 <input
                                   type="number"
                                   className="input input-bordered input-sm"
-                                  value={(editingItem as Station)?.capacity?.toString() || ""}
-                                  onChange={(e) => setEditingItem({ ...editingItem, capacity: parseInt(e.target.value) || 0 })}
+                                  value={
+                                    (
+                                      editingItem as Station
+                                    )?.capacity?.toString() || ""
+                                  }
+                                  onChange={(e) =>
+                                    setEditingItem({
+                                      ...editingItem,
+                                      capacity: parseInt(e.target.value) || 0,
+                                    })
+                                  }
                                 />
                               </td>
                               <td>
@@ -528,36 +640,60 @@ function Panel() {
                                   <input
                                     type="number"
                                     className="input input-bordered input-sm w-20"
-                                    value={(editingItem as Station)?.latitude?.toString() || ""}
-                                    onChange={(e) => setEditingItem({ ...editingItem, latitude: parseFloat(e.target.value) || 0 })}
+                                    value={
+                                      (
+                                        editingItem as Station
+                                      )?.latitude?.toString() || ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingItem({
+                                        ...editingItem,
+                                        latitude:
+                                          parseFloat(e.target.value) || 0,
+                                      })
+                                    }
                                     step="0.000001"
                                   />
                                   <input
                                     type="number"
                                     className="input input-bordered input-sm w-20"
-                                    value={(editingItem as Station)?.longitude?.toString() || ""}
-                                    onChange={(e) => setEditingItem({ ...editingItem, longitude: parseFloat(e.target.value) || 0 })}
+                                    value={
+                                      (
+                                        editingItem as Station
+                                      )?.longitude?.toString() || ""
+                                    }
+                                    onChange={(e) =>
+                                      setEditingItem({
+                                        ...editingItem,
+                                        longitude:
+                                          parseFloat(e.target.value) || 0,
+                                      })
+                                    }
                                     step="0.000001"
                                   />
                                 </div>
                               </td>
                             </>
                           )
+                        ) : showModal === "bikes" ? (
+                          <>
+                            <td>{(item as Bike).city}</td>
+                            <td>{(item as Bike).chargingSpotId}</td>
+                            <td>{(item as Bike).autonomy}</td>
+                            <td>
+                              {item.latitude.toFixed(4)},{" "}
+                              {item.longitude.toFixed(4)}
+                            </td>
+                          </>
                         ) : (
-                          showModal === "bikes" ? (
-                            <>
-                              <td>{(item as Bike).city}</td>
-                              <td>{(item as Bike).chargingSpotId}</td>
-                              <td>{(item as Bike).autonomy}</td>
-                              <td>{item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</td>
-                            </>
-                          ) : (
-                            <>
-                              <td>{(item as Station).city}</td>
-                              <td>{(item as Station).capacity}</td>
-                              <td>{item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</td>
-                            </>
-                          )
+                          <>
+                            <td>{(item as Station).city}</td>
+                            <td>{(item as Station).capacity}</td>
+                            <td>
+                              {item.latitude.toFixed(4)},{" "}
+                              {item.longitude.toFixed(4)}
+                            </td>
+                          </>
                         )}
 
                         {/* Action Buttons */}
@@ -587,9 +723,10 @@ function Panel() {
                               </button>
                               <button
                                 className="btn btn-error btn-xs"
-                                onClick={() => showModal === "bikes"
-                                  ? handleDeleteBike(item.id!)
-                                  : handleDeleteStation(item.id!)
+                                onClick={() =>
+                                  showModal === "bikes"
+                                    ? handleDeleteBike(item.id!)
+                                    : handleDeleteStation(item.id!)
                                 }
                               >
                                 Delete
@@ -635,7 +772,6 @@ function Panel() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-
 
                     return (
                       <button
