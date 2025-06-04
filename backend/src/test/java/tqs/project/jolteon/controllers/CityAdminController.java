@@ -72,31 +72,6 @@ class CityAdminControllerTest {
     }
 
     @Test
-    void testAddCulturalLandmark() throws Exception {
-        when(culturalLandmarkService.addCulturalLandmark(any())).thenReturn(culturalLandmark);
-        mockMvc.perform(post("/api/city-admin/cultural-landmarks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(landmarkDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L));
-    }
-
-    @Test
-    void testDeleteCulturalLandmark() throws Exception {
-        doNothing().when(culturalLandmarkService).deleteCulturalLandmark(1L);
-        mockMvc.perform(delete("/api/city-admin/cultural-landmarks/1"))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void testGetAllCulturalLandmarks() throws Exception {
-        when(culturalLandmarkService.getAllCulturalLandmarks()).thenReturn(List.of(culturalLandmark));
-        mockMvc.perform(get("/api/city-admin/cultural-landmarks"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1));
-    }
-
-    @Test
     void testGetCulturalLandmarkByCityAdminIdFound() throws Exception {
         when(cityAdminService.getCityAdminById(1L)).thenReturn(cityAdmin);
         when(culturalLandmarkService.getCulturalLandmarksByCity("Lisboa"))

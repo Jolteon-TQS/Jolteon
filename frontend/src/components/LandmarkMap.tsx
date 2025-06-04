@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 interface Landmark {
   id: number;
@@ -24,117 +25,75 @@ declare global {
 
 const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const markerRefs = useRef<L.Marker[]>([]);
   const apikey = import.meta.env.VITE_API_KEY;
-
-  // Convert landmarks to GeoJSON with proper typing
-  const getLandmarkGeoJSON = (): GeoJSON.FeatureCollection<GeoJSON.Point> => ({
-    type: "FeatureCollection",
-    features: landmarks.map((lm) => ({
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [lm.lng, lm.lat],
-      },
-      properties: {
-        id: lm.id,
-        name: lm.name,
-        city: lm.city,
-        description: lm.description,
-        image: lm.image,
-      },
-    })),
-  });
 
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    const map = new maplibregl.Map({
-      container: mapContainer.current,
-      style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
-      center: [-8.653, 40.641],
-      zoom: 14,
-    });
+    const map = L.map(mapContainer.current).setView(
+      landmarks.length > 0
+        ? [landmarks[0].lat, landmarks[0].lng]
+        : [40.641, -8.653],
+      14,
+    );
+
+    L.tileLayer(
+      `https://maps.geoapify.com/v1/tile/klokantech-basic/{z}/{x}/{y}.png?apiKey=${apikey}`,
+      {
+        attribution:
+          'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a>',
+      },
+    ).addTo(map);
 
     mapRef.current = map;
 
-    map.on("load", () => {
-      map.addSource("landmarks", {
-        type: "geojson",
-        data: getLandmarkGeoJSON(),
-      });
-
-      map.addLayer({
-        id: "landmarks-layer",
-        type: "circle",
-        source: "landmarks",
-        paint: {
-          "circle-radius": 8,
-          "circle-color": "#10B981",
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 2,
-        },
-      });
-
-      // Add popup on click
-      map.on("click", "landmarks-layer", (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-
-        const props = feature.properties as {
-          id: number;
-          name: string;
-          city: string;
-          description: string;
-          image: string;
-        };
-
-        const coordinates = (
-          feature.geometry as GeoJSON.Point
-        ).coordinates.slice() as [number, number];
-
-        const html = `
-          <strong>${props.name}</strong><br/>
-          <em>${props.city}</em><br/>
-          ${props.description}<br/>
-          ${props.image ? `<img src="${props.image}" alt="${props.name}" style="max-width: 100px;" />` : ""}
-          <br/><button onclick="window.deleteLandmark(${props.id})" style="color:red;">Delete</button>
-        `;
-
-        new maplibregl.Popup().setLngLat(coordinates).setHTML(html).addTo(map);
-      });
-
-      // Change cursor on hover
-      map.on("mouseenter", "landmarks-layer", () => {
-        map.getCanvas().style.cursor = "pointer";
-      });
-
-      map.on("mouseleave", "landmarks-layer", () => {
-        map.getCanvas().style.cursor = "";
-      });
-
-      // Properly type the window extension
-      window.deleteLandmark = (id: number) => {
-        if (onDeleteLandmark) onDeleteLandmark(id);
-      };
-    });
+    window.deleteLandmark = (id: number) => {
+      if (onDeleteLandmark) onDeleteLandmark(id);
+    };
 
     return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-      }
+      map.remove();
     };
-  }, []);
+  }, [apikey, landmarks, onDeleteLandmark]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map) return;
 
-    const source = map.getSource("landmarks");
-    if (source && source.type === "geojson") {
-      (source as maplibregl.GeoJSONSource).setData(getLandmarkGeoJSON());
-    }
-  }, [landmarks]);
+    // Remove old markers
+    markerRefs.current.forEach((marker) => map.removeLayer(marker));
+    markerRefs.current = [];
+
+    // Add new markers
+    landmarks.forEach((lm) => {
+      const color = "4bd176"; 
+      const iconName = "landmark"; 
+      const icon = L.icon({
+        iconUrl: `https://api.geoapify.com/v1/icon?size=medium&type=awesome&color=%23${color}&icon=${iconName}&apiKey=${apikey}`,
+        iconSize: [30, 40],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30],
+      });
+
+      const marker = L.marker([lm.lat, lm.lng], { icon });
+
+      const popupHtml = `
+        <div style="text-align:center;">
+          <strong>${lm.name}</strong><br/>
+          <em>${lm.city}</em><br/>
+          ${lm.description}<br/>
+          ${lm.image ? `<img src="${lm.image}" alt="${lm.name}" style="max-width: 100px; margin-top: 5px;" />` : ""}
+          <br/><button onclick="window.deleteLandmark(${lm.id})" style="color:red; margin-top:5px;">Delete</button>
+        </div>
+      `;
+
+      marker.bindPopup(popupHtml);
+      marker.addTo(map);
+      markerRefs.current.push(marker);
+    });
+  }, [landmarks, apikey]);
 
   return <div ref={mapContainer} style={{ height: "500px", width: "100%" }} />;
 };
