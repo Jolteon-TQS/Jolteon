@@ -3,6 +3,7 @@ package tqs.project.jolteon.services;
 import org.springframework.stereotype.Service;
 import tqs.project.jolteon.entities.CulturalLandmark;
 import tqs.project.jolteon.repositories.CulturalLandmarkRepository;
+import java.util.Set;
 
 import java.util.List;
 
@@ -44,5 +45,9 @@ public class CulturalLandmarkService {
             throw new IllegalArgumentException("Cultural landmark not found with id: " + culturalLandmark.getId());
         }
         return culturalLandmarkRepository.save(culturalLandmark);
+    }
+
+    public Set<CulturalLandmark> getCulturalLandmarksByIds(Set<Long> ids) {
+        return culturalLandmarkRepository.findAllByIdIn(ids);
     }
 }

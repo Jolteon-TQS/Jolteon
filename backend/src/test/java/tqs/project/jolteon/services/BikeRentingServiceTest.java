@@ -17,11 +17,16 @@ import static org.mockito.Mockito.*;
 
 public class BikeRentingServiceTest {
 
-    @Mock private BikeRentingRepository bikeRentingRepository;
-    @Mock private BikeRepository bikeRepository;
-    @Mock private NormalUserRepository userRepository;
-    @Mock private ChargingSpotRepository chargingSpotRepository;
-    @Mock private CulturalLandmarkRepository culturalLandmarkRepository;
+    @Mock
+    private BikeRentingRepository bikeRentingRepository;
+    @Mock
+    private BikeService bikeService;
+    @Mock
+    private ChargingSpotService chargingSpotService;
+    @Mock
+    private NormalUserService userService;
+    @Mock
+    private CulturalLandmarkService culturalLandmarkService;
 
     @InjectMocks
     private BikeRentingService bikeRentingService;
@@ -61,16 +66,18 @@ public class BikeRentingServiceTest {
 
     @Test
     public void testCreateBikeRenting_Success() {
-        when(bikeRepository.findById(1L)).thenReturn(Optional.of(bike));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(startSpot));
-        when(chargingSpotRepository.findById(2L)).thenReturn(Optional.of(endSpot));
-        when(culturalLandmarkRepository.findAllByIdIn(Set.of(1L))).thenReturn(landmarks);
+        bike.setIsAvailable(true);
+        bike.setChargingSpot(startSpot);
+
+        when(bikeService.getBikeById(1L)).thenReturn(Optional.of(bike));
+        when(userService.getNormalUserById(1L)).thenReturn(user);
+        when(chargingSpotService.getChargingSpotById(1L)).thenReturn(startSpot);
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(culturalLandmarkService.getCulturalLandmarksByIds(Set.of(1L))).thenReturn(landmarks);
         when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
 
         BikeRenting result = bikeRentingService.createBikeRenting(
-                1L, 1L, 1L, 2L, Set.of(1L), time, endTime
-        );
+                1L, 1L, 1L, 2L, Set.of(1L), time, endTime);
 
         assertThat(result.getBike()).isEqualTo(bike);
         assertThat(result.getUser()).isEqualTo(user);
@@ -79,6 +86,24 @@ public class BikeRentingServiceTest {
         assertThat(result.getCulturalLandmarks()).contains(landmark);
         assertThat(result.getTime()).isEqualTo(time);
         assertThat(result.getEndTime()).isEqualTo(endTime);
+
+        assertThat(bike.getIsAvailable()).isFalse();
+        assertThat(bike.getChargingSpot()).isNull();
+    }
+
+    @Test
+    public void testCreateBikeRenting_BikeNotAvailable() {
+        bike.setIsAvailable(false);
+        when(bikeService.getBikeById(1L)).thenReturn(Optional.of(bike));
+        when(userService.getNormalUserById(1L)).thenReturn(user);
+        when(chargingSpotService.getChargingSpotById(1L)).thenReturn(startSpot);
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(culturalLandmarkService.getCulturalLandmarksByIds(Set.of(1L))).thenReturn(landmarks);
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> bikeRentingService.createBikeRenting(1L, 1L, 1L, 2L, Set.of(1L), time, endTime));
+        assertEquals("Bike is not available for renting", e.getMessage());
+
+        verify(bikeRentingRepository, never()).save(any(BikeRenting.class));
     }
 
     @Test
@@ -157,12 +182,29 @@ public class BikeRentingServiceTest {
 
     @Test
     public void testCreateBikeRenting_BikeNotFound() {
-        when(bikeRepository.findById(99L)).thenReturn(Optional.empty());
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                bikeRentingService.createBikeRenting(99L, 1L, 1L, 2L, Set.of(1L), time, endTime)
-        );
+        when(bikeService.getBikeById(99L)).thenReturn(Optional.empty());
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> bikeRentingService.createBikeRenting(99L, 1L, 1L, 2L, Set.of(1L), time, endTime));
         assertEquals("Bike not found", e.getMessage());
     }
 
-    // Add similar negative tests for user not found, start spot not found, etc.
+    @Test
+    public void testEndBikeRenting_Success() {
+        BikeRenting renting = new BikeRenting();
+        renting.setId(1L);
+        renting.setBike(bike);
+        renting.setEndTime(null);
+        renting.setEndSpot(null);
+
+        when(bikeRentingRepository.findById(1L)).thenReturn(Optional.of(renting));
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
+
+        BikeRenting result = bikeRentingService.endBikeRenting(1L, endTime, 2L);
+
+        assertThat(result.getEndTime()).isEqualTo(endTime);
+        assertThat(result.getEndSpot()).isEqualTo(endSpot);
+        assertThat(result.getBike().getIsAvailable()).isTrue();
+    }
+
 }

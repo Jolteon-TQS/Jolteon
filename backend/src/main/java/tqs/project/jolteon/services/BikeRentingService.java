@@ -2,6 +2,8 @@ package tqs.project.jolteon.services;
 
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tqs.project.jolteon.entities.*;
@@ -16,10 +18,11 @@ import java.util.List;
 public class BikeRentingService {
 
     private final BikeRentingRepository bikeRentingRepository;
-    private final BikeRepository bikeRepository;
-    private final NormalUserRepository userRepository;
-    private final ChargingSpotRepository chargingSpotRepository;
-    private final CulturalLandmarkRepository culturalLandmarkRepository;
+    private final BikeService bikeService;
+    private final NormalUserService userService;
+    private final ChargingSpotService chargingSpotService;
+    private final CulturalLandmarkService culturalLandmarkService;
+
 
     @Transactional
     public BikeRenting createBikeRenting(Long bikeId,
@@ -30,24 +33,32 @@ public class BikeRentingService {
                                          LocalDateTime time,
                                          LocalDateTime endTime) {
 
-        Bike bike = bikeRepository.findById(bikeId)
+        Bike bike = bikeService.getBikeById(bikeId)
                 .orElseThrow(() -> new IllegalArgumentException("Bike not found"));
 
-        NormalUser user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        NormalUser user = userService.getNormalUserById(userId);
 
-        ChargingSpot startSpot = chargingSpotRepository.findById(startSpotId)
-                .orElseThrow(() -> new IllegalArgumentException("Start spot not found"));
+        ChargingSpot startSpot = chargingSpotService.getChargingSpotById(startSpotId);
 
         ChargingSpot endSpot = null;
 
         if (endSpotId != null) {
-             endSpot = chargingSpotRepository.findById(endSpotId)
-                .orElseThrow(() -> new IllegalArgumentException("End spot not found"));
+             endSpot = chargingSpotService.getChargingSpotById(endSpotId);
         } 
 
+        // make bike unavailable
+        if (!bike.getIsAvailable()) {
+            throw new IllegalArgumentException("Bike is not available for renting");
+        }
+        bike.setIsAvailable(false);
 
-        Set<CulturalLandmark> landmarks = culturalLandmarkRepository.findAllByIdIn(landmarkIds);
+        // Remove chargingspot from bike
+        if (bike.getChargingSpot() != null) {
+            bike.setChargingSpot(null);
+        }
+
+
+        Set<CulturalLandmark> landmarks = culturalLandmarkService.getCulturalLandmarksByIds(landmarkIds);
 
         BikeRenting renting = new BikeRenting();
         renting.setBike(bike);
@@ -99,6 +110,19 @@ public class BikeRentingService {
                     return bikeRentingRepository.save(existingRenting);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
+    }
+
+
+    @Transactional
+    public BikeRenting endBikeRenting(Long id, LocalDateTime endTime, Long endSpotId) {
+        BikeRenting renting = bikeRentingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
+        ChargingSpot endSpot = chargingSpotService.getChargingSpotById(endSpotId);
+        renting.setEndTime(endTime);
+        renting.setEndSpot(endSpot);
+        renting.getBike().setIsAvailable(true);
+        renting.getBike().setChargingSpot(endSpot);
+        return bikeRentingRepository.save(renting);
     }
 
 }
