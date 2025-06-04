@@ -5,10 +5,10 @@ import Map from "../components/StationsMap";
 function Bikes() {
   const [duration, setDuration] = useState<number | null>(null); // null means indefinite
 
-const handleDurationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const value = e.target.value;
-  setDuration(value === "indefinite" ? null : parseInt(value));
-};
+  const handleDurationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setDuration(value === "indefinite" ? null : parseInt(value));
+  };
 
   return (
     <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-50 mt-5 window border-base-300 mt-40">
@@ -19,10 +19,10 @@ const handleDurationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         {/* Rental Duration */}
         <div className="space-y-2">
           <label className="label">
-            <span className="label-text">Rental Duration</span>
+            <span className="label-text mr-3">Rental Duration</span>
           </label>
-          
-          <select 
+
+          <select
             className="select select-primary w-full max-w-xs"
             value={duration === null ? "indefinite" : duration}
             onChange={handleDurationChange}

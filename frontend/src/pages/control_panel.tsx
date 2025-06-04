@@ -130,7 +130,7 @@ function Panel() {
         latitude,
         longitude,
         capacity,
-        bikes: [], 
+        bikes: [],
       };
 
       console.log("Creating station with data:", stationToCreate); // Debug log
