@@ -81,7 +81,7 @@ function Panel() {
         longitude: parseFloat(newBike.longitude),
         chargingSpotId: parseInt(newBike.chargingSpotId),
         autonomy: parseInt(newBike.autonomy),
-        isAvailable: true, 
+        isAvailable: true,
       };
       const createdBike = await createBike(bikeToCreate);
       console.log("Created Bike:", createdBike);

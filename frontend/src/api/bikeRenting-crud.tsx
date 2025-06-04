@@ -3,10 +3,9 @@ import { LandMark } from "./landmark-crud";
 import { Station } from "./station-crud";
 import { Bike } from "./bike-crud";
 
-
 export interface User {
-    id: number;
-    username: string;
+  id: number;
+  username: string;
 }
 
 export interface BikeRentingDTO {
@@ -22,8 +21,10 @@ export interface BikeRentingDTO {
 const base_api_url = import.meta.env.VITE_API_URL;
 const API_BASE = `${base_api_url}/rentings`;
 
-export const createBikeRenting = async (rentingData: BikeRentingDTO): Promise<BikeRentingDTO> => {
-    console.log("Creating bike renting with data:", rentingData);
+export const createBikeRenting = async (
+  rentingData: BikeRentingDTO,
+): Promise<BikeRentingDTO> => {
+  console.log("Creating bike renting with data:", rentingData);
   const response = await axios.post<BikeRentingDTO>(API_BASE, rentingData);
   return response.data;
 };

@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
 import stationImg from "../assets/station.jpg";
-import { Station, getAllStations, getAvailableBikesAtStation } from "../api/station-crud";
+import {
+  Station,
+  getAllStations,
+  getAvailableBikesAtStation,
+} from "../api/station-crud";
 import { LandMark, getLandmarksByCity } from "../api/landmark-crud";
 import { BikeRentingDTO, createBikeRenting } from "../api/bikeRenting-crud";
 import { Bike } from "../api/bike-crud";
 
 function BikeList() {
   const [stations, setStations] = useState<Station[]>([]);
-  const [availableBikesMap, setAvailableBikesMap] = useState<Record<number, number>>({});
-  const [availableBikes, setAvailableBikes] = useState<Record<number, Bike[]>>({});
+  const [availableBikesMap, setAvailableBikesMap] = useState<
+    Record<number, number>
+  >({});
+  const [availableBikes, setAvailableBikes] = useState<Record<number, Bike[]>>(
+    {},
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
@@ -29,7 +37,7 @@ function BikeList() {
 
         const bikesMap: Record<number, number> = {};
         const availableBikesData: Record<number, Bike[]> = {};
-        
+
         await Promise.all(
           stationsData.map(async (station) => {
             try {
@@ -40,9 +48,9 @@ function BikeList() {
               availableBikesData[station.id] = [];
               bikesMap[station.id] = 0;
             }
-          })
+          }),
         );
-        
+
         setAvailableBikes(availableBikesData);
         setAvailableBikesMap(bikesMap);
       } catch (error) {
@@ -53,24 +61,24 @@ function BikeList() {
     fetchStationsAndBikes();
   }, []);
 
-const handleRentClick = async (station: Station) => {
-  const stationBikes = availableBikes[station.id] || [];
-  const randomBike = stationBikes.length > 0
-    ? stationBikes[Math.floor(Math.random() * stationBikes.length)]
-    : null;
+  const handleRentClick = async (station: Station) => {
+    const stationBikes = availableBikes[station.id] || [];
+    const randomBike =
+      stationBikes.length > 0
+        ? stationBikes[Math.floor(Math.random() * stationBikes.length)]
+        : null;
 
-  setSelectedBike(randomBike);
-  setSelectedStation(station);
-  setShowModal(true);
-  setShowRouteOptions(false);
-  setLandmarks([]);
-  setSelectedLandmarks([]);
-};
-
+    setSelectedBike(randomBike);
+    setSelectedStation(station);
+    setShowModal(true);
+    setShowRouteOptions(false);
+    setLandmarks([]);
+    setSelectedLandmarks([]);
+  };
 
   const handleRouteRequest = async () => {
     if (!selectedStation) return;
-    
+
     setShowRouteOptions(true);
     setIsLoadingLandmarks(true);
     try {
@@ -85,10 +93,10 @@ const handleRentClick = async (station: Station) => {
   };
 
   const toggleLandmarkSelection = (landmark: LandMark) => {
-    setSelectedLandmarks(prev => {
-      const isSelected = prev.some(l => l.id === landmark.id);
+    setSelectedLandmarks((prev) => {
+      const isSelected = prev.some((l) => l.id === landmark.id);
       if (isSelected) {
-        return prev.filter(l => l.id !== landmark.id);
+        return prev.filter((l) => l.id !== landmark.id);
       } else {
         return [...prev, landmark];
       }
@@ -101,36 +109,36 @@ const handleRentClick = async (station: Station) => {
     setIsSubmitting(true);
     try {
       // Replace with actual user from your auth context
-      const currentUser = { id: 1 , username: "andredora"}; 
+      const currentUser = { id: 1, username: "andredora" };
 
       const rentingData: BikeRentingDTO = {
         bike: selectedBike,
         user: currentUser,
         startSpot: selectedStation,
         endSpot: null,
-        culturalLandmarks: selectedLandmarks.length > 0 ? selectedLandmarks : null,
+        culturalLandmarks:
+          selectedLandmarks.length > 0 ? selectedLandmarks : null,
         time: new Date().toISOString(),
         endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours later
       };
 
       await createBikeRenting(rentingData);
-      
+
       // Update UI
       setShowModal(false);
       setSelectedLandmarks([]);
       setSelectedBike(null);
-      
+
       // Refresh available bikes
       const updatedBikes = await getAvailableBikesAtStation(selectedStation.id);
-      setAvailableBikes(prev => ({
+      setAvailableBikes((prev) => ({
         ...prev,
-        [selectedStation.id]: updatedBikes
+        [selectedStation.id]: updatedBikes,
       }));
-      setAvailableBikesMap(prev => ({
+      setAvailableBikesMap((prev) => ({
         ...prev,
-        [selectedStation.id]: updatedBikes.length
+        [selectedStation.id]: updatedBikes.length,
       }));
-      
     } catch (error) {
       console.error("Failed to create rental:", error);
     } finally {
@@ -138,14 +146,17 @@ const handleRentClick = async (station: Station) => {
     }
   };
 
-  const filteredStations = stations.filter(station =>
-    station.city.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredStations = stations.filter((station) =>
+    station.city.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredStations.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentStations = filteredStations.slice(indexOfFirstItem, indexOfLastItem);
+  const currentStations = filteredStations.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
 
   return (
     <div className="bg-base-100 rounded-box shadow-md">
@@ -172,9 +183,16 @@ const handleRentClick = async (station: Station) => {
           currentStations.map((station) => {
             const availableCount = availableBikesMap[station.id] ?? 0;
             return (
-              <li key={station.id} className="list-row flex items-center gap-4 p-4 border-t border-base-200">
+              <li
+                key={station.id}
+                className="list-row flex items-center gap-4 p-4 border-t border-base-200"
+              >
                 <div>
-                  <img className="size-10 rounded-box" src={stationImg} alt="Station" />
+                  <img
+                    className="size-10 rounded-box"
+                    src={stationImg}
+                    alt="Station"
+                  />
                 </div>
                 <div className="flex-grow">
                   <div>{station.city}</div>
@@ -184,8 +202,8 @@ const handleRentClick = async (station: Station) => {
                       : "No bikes available"}
                   </div>
                 </div>
-                <button 
-                  className="btn btn-primary" 
+                <button
+                  className="btn btn-primary"
                   disabled={availableCount === 0}
                   onClick={() => handleRentClick(station)}
                 >
@@ -253,11 +271,16 @@ const handleRentClick = async (station: Station) => {
                 <p>You are about to rent a bike from:</p>
                 <div className="mt-2 p-4 bg-base-200 rounded-box">
                   <div className="flex items-center gap-4">
-                    <img className="size-12 rounded-box" src={stationImg} alt="Station" />
+                    <img
+                      className="size-12 rounded-box"
+                      src={stationImg}
+                      alt="Station"
+                    />
                     <div>
                       <div className="font-medium">{selectedStation.city}</div>
                       <div className="text-sm opacity-75">
-                        {availableBikesMap[selectedStation.id] ?? 0} bikes available
+                        {availableBikesMap[selectedStation.id] ?? 0} bikes
+                        available
                       </div>
                     </div>
                   </div>
@@ -268,50 +291,58 @@ const handleRentClick = async (station: Station) => {
               {!showRouteOptions ? (
                 <div className="pt-2">
                   <label className="label cursor-pointer justify-start gap-4">
-                    <input 
-                      type="checkbox" 
-                      className="checkbox" 
+                    <input
+                      type="checkbox"
+                      className="checkbox"
                       onChange={handleRouteRequest}
                     />
-                    <span className="label-text">Would you like a suggested route?</span>
+                    <span className="label-text">
+                      Would you like a suggested route?
+                    </span>
                   </label>
                 </div>
               ) : (
                 <div>
-                  <h4 className="font-medium mb-2">Landmarks in {selectedStation.city}:</h4>
+                  <h4 className="font-medium mb-2">
+                    Landmarks in {selectedStation.city}:
+                  </h4>
                   {isLoadingLandmarks ? (
                     <div className="flex justify-center">
                       <span className="loading loading-spinner loading-md"></span>
                     </div>
                   ) : landmarks.length > 0 ? (
                     <div className="max-h-60 overflow-y-auto space-y-2">
-                      {landmarks.map(landmark => (
-                        <div 
-                          key={landmark.id} 
+                      {landmarks.map((landmark) => (
+                        <div
+                          key={landmark.id}
                           className={`p-3 rounded-box cursor-pointer transition-colors ${
-                            selectedLandmarks.some(l => l.id === landmark.id) 
-                              ? 'bg-primary text-primary-content' 
-                              : 'bg-base-200 hover:bg-base-300'
+                            selectedLandmarks.some((l) => l.id === landmark.id)
+                              ? "bg-primary text-primary-content"
+                              : "bg-base-200 hover:bg-base-300"
                           }`}
                           onClick={() => toggleLandmarkSelection(landmark)}
                         >
                           <div className="font-medium">{landmark.name}</div>
-                          <div className="text-sm opacity-75">{landmark.description}</div>
-                          {selectedLandmarks.some(l => l.id === landmark.id) && (
-                            <div className="text-xs mt-1">✓ Selected</div>
-                          )}
+                          <div className="text-sm opacity-75">
+                            {landmark.description}
+                          </div>
+                          {selectedLandmarks.some(
+                            (l) => l.id === landmark.id,
+                          ) && <div className="text-xs mt-1">✓ Selected</div>}
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-sm opacity-75">No landmarks found for this city</div>
+                    <div className="text-sm opacity-75">
+                      No landmarks found for this city
+                    </div>
                   )}
                 </div>
               )}
             </div>
             <div className="modal-action">
-              <button 
-                className="btn" 
+              <button
+                className="btn"
                 onClick={() => {
                   setShowModal(false);
                   setSelectedLandmarks([]);
@@ -320,15 +351,15 @@ const handleRentClick = async (station: Station) => {
               >
                 Cancel
               </button>
-              <button 
-                className="btn btn-primary" 
+              <button
+                className="btn btn-primary"
                 onClick={handleConfirmRental}
                 disabled={isSubmitting || !selectedBike}
               >
                 {isSubmitting ? (
                   <span className="loading loading-spinner"></span>
                 ) : (
-                  'Confirm Rental'
+                  "Confirm Rental"
                 )}
               </button>
             </div>

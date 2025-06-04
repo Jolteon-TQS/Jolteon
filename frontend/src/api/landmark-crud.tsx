@@ -19,29 +19,25 @@ export const getAllLandmarks = async (): Promise<LandMark[]> => {
 };
 
 export const getLandmarksByCity = async (city: string): Promise<LandMark[]> => {
-    // const response = await axios.get<LandMark[]>(`${API_BASE}/landmarks/search`, {
-    //     params: { city },
-    // });
+  // const response = await axios.get<LandMark[]>(`${API_BASE}/landmarks/search`, {
+  //     params: { city },
+  // });
 
-    console.log(city);
+  console.log(city);
 
+  // return response.data;
 
+  // Make sample data
 
-    // return response.data;
-
-    // Make sample data
-
-    return [
-        {
-            id: 1,
-            name: "Eiffel Tower",
-            city: "Paris",
-            description: "An iconic symbol of Paris.",
-            imageUrl: "https://example.com/eiffel-tower.jpg",
-            latitude: 48.8584,
-            longitude: 2.2945,
-        }
-    ];
-
-}   
-
+  return [
+    {
+      id: 1,
+      name: "Eiffel Tower",
+      city: "Paris",
+      description: "An iconic symbol of Paris.",
+      imageUrl: "https://example.com/eiffel-tower.jpg",
+      latitude: 48.8584,
+      longitude: 2.2945,
+    },
+  ];
+};

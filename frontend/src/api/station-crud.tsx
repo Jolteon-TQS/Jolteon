@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Bike } from "./bike-crud"; 
+import { Bike } from "./bike-crud";
 
 export interface Station {
   id: number;
@@ -46,10 +46,12 @@ export const deleteStation = async (id: number): Promise<void> => {
   await axios.delete(`${API_BASE}/${id}`);
 };
 
-export const searchStationsByCity = async (city: string): Promise<Station[]> => {
+export const searchStationsByCity = async (
+  city: string,
+): Promise<Station[]> => {
   try {
     const response = await axios.get<Station[]>(`${API_BASE}/search`, {
-      params: { city }
+      params: { city },
     });
     return response.data;
   } catch (error) {
@@ -58,8 +60,9 @@ export const searchStationsByCity = async (city: string): Promise<Station[]> => 
   }
 };
 
-export const getAvailableBikesAtStation = async (id: number): Promise<Bike[]> => {
+export const getAvailableBikesAtStation = async (
+  id: number,
+): Promise<Bike[]> => {
   const response = await axios.get<Bike[]>(`${API_BASE}/${id}/available`);
   return response.data;
 };
-

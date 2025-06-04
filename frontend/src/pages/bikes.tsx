@@ -2,7 +2,6 @@ import BikeList from "../components/BikeList";
 import Map from "../components/StationsMap";
 
 function Bikes() {
-
   return (
     <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-50 mt-5 window border-base-300 mt-40">
       {/* Left Side */}
