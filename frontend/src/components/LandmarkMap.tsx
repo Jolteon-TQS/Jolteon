@@ -134,7 +134,7 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
     if (source && source.type === "geojson") {
       (source as maplibregl.GeoJSONSource).setData(getLandmarkGeoJSON());
     }
-  }, [landmarks]);
+  }, [landmarks, apikey]);
 
   return <div ref={mapContainer} style={{ height: "500px", width: "100%" }} />;
 };

@@ -53,7 +53,7 @@ function LandmarkPanel() {
   };
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6 p-6 bg-green-50 mt-5 mockup-window border-base-300">
+    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-green-50 mt-5 window border-base-300 mt-40 shadow-sm">
       {/* Left */}
       <div className="flex-1 space-y-6 mt-5">
         <h1 className="text-3xl font-bold text-green-800">City Admin Panel</h1>
@@ -133,7 +133,7 @@ function LandmarkPanel() {
       </div>
 
       {/* Right: Map */}
-      <div className="w-full lg:w-1/2">
+      <div className="w-full lg:w-1/2 z-10">
         <LandmarkMap landmarks={landmarks} onDeleteLandmark={deleteLandmark} />
       </div>
     </main>
