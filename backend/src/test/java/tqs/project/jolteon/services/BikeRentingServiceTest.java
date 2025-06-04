@@ -183,5 +183,40 @@ public class BikeRentingServiceTest {
         assertEquals("Bike not found", e.getMessage());
     }
 
-    // Add similar negative tests for user not found, start spot not found, etc.
+    // @Transactional
+    // public BikeRenting endBikeRenting(Long id, LocalDateTime endTime, Long endSpotId) {
+    //     BikeRenting renting = bikeRentingRepository.findById(id)
+    //             .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
+    //     ChargingSpot endSpot = chargingSpotService.getChargingSpotById(endSpotId);
+    //     renting.setEndTime(endTime);
+    //     renting.setEndSpot(endSpot);
+    //     renting.getBike().setIsAvailable(true);
+    //     renting.getBike().setChargingSpot(endSpot);
+    //     return bikeRentingRepository.save(renting);
+    // }
+
+
+
+    @Test
+    public void testEndBikeRenting_Success() {
+        BikeRenting renting = new BikeRenting();
+        renting.setId(1L);
+        renting.setBike(bike);
+        renting.setEndTime(null);
+        renting.setEndSpot(null);
+
+        when(bikeRentingRepository.findById(1L)).thenReturn(Optional.of(renting));
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
+
+        BikeRenting result = bikeRentingService.endBikeRenting(1L, endTime, 2L);
+
+        assertThat(result.getEndTime()).isEqualTo(endTime);
+        assertThat(result.getEndSpot()).isEqualTo(endSpot);
+        assertThat(result.getBike().getIsAvailable()).isTrue();
+    }
+
+
+
+
 }
