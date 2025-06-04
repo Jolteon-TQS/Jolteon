@@ -59,4 +59,5 @@ export const updateCulturalLandmark = async (
 
 export const deleteCulturalLandmark = async (id: number): Promise<void> => {
   await axios.delete(`${API_BASE}/${id}`);
+
 };

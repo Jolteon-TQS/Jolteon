@@ -3,7 +3,6 @@ package tqs.project.jolteon.services;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tqs.project.jolteon.entities.*;
@@ -32,6 +31,11 @@ public class BikeRentingService {
                                          Set<Long> landmarkIds,
                                          LocalDateTime time,
                                          LocalDateTime endTime) {
+
+        // If there's alredy an active renting for the user, throw an exception
+        if (bikeRentingRepository.findActiveRentingByUserId(userId).isPresent()) {
+            throw new IllegalArgumentException("User already has an active bike renting");
+        }
 
         Bike bike = bikeService.getBikeById(bikeId)
                 .orElseThrow(() -> new IllegalArgumentException("Bike not found"));

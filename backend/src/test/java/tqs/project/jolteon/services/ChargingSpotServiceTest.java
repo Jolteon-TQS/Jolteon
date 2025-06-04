@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tqs.project.jolteon.entities.ChargingSpot;
 import tqs.project.jolteon.repositories.ChargingSpotRepository;
+import tqs.project.jolteon.entities.Bike;
+import java.util.Set;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,11 +82,11 @@ class ChargingSpotServiceTest {
         ChargingSpot existingSpot = new ChargingSpot();
         existingSpot.setId(1L);
         existingSpot.setCity("Old City");
-        
+
         ChargingSpot updatedSpot = new ChargingSpot();
         updatedSpot.setCity("New City");
-        updatedSpot.setLatitude((float)40.0);
-        updatedSpot.setLongitude((float)-8.0);
+        updatedSpot.setLatitude((float) 40.0);
+        updatedSpot.setLongitude((float) -8.0);
         updatedSpot.setCapacity(10);
 
         when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(existingSpot));
@@ -116,7 +118,7 @@ class ChargingSpotServiceTest {
         spot1.setCity("Porto");
         ChargingSpot spot2 = new ChargingSpot();
         spot2.setCity("Porto");
-        
+
         when(chargingSpotRepository.findByCity("Porto")).thenReturn(Arrays.asList(spot1, spot2));
 
         List<ChargingSpot> result = chargingSpotService.getChargingSpotsByCity("Porto");
@@ -136,4 +138,62 @@ class ChargingSpotServiceTest {
         assertTrue(result.isEmpty());
         verify(chargingSpotRepository, times(1)).findByCity("Lisbon");
     }
+
+    @Test
+    void testGetAvailableBikes() {
+        ChargingSpot spot = new ChargingSpot();
+        spot.setId(1L);
+        Bike bike1 = new Bike();
+        bike1.setIsAvailable(true);
+        Bike bike2 = new Bike();
+        bike2.setIsAvailable(false);
+        spot.setBikes(Set.of(bike1, bike2));
+
+        when(chargingSpotRepository.findById(1L)).thenReturn(Optional.of(spot));
+
+        Set<Bike> availableBikes = chargingSpotService.getAvailableBikes(1L);
+
+        assertEquals(1, availableBikes.size());
+        assertTrue(availableBikes.contains(bike1));
+        assertFalse(availableBikes.contains(bike2));
+    }
+
+    @Test
+    void testFindNearestOrRandom_SameCity() {
+        ChargingSpot spot1 = new ChargingSpot();
+        spot1.setCity("Porto");
+        ChargingSpot spot2 = new ChargingSpot();
+        spot2.setCity("Porto");
+        when(chargingSpotRepository.findByCity("Porto")).thenReturn(Arrays.asList(spot1, spot2));
+
+        ChargingSpot result = chargingSpotService.findNearestOrRandom("Porto");
+
+        assertTrue(result.getCity().equals("Porto"));
+        verify(chargingSpotRepository, times(1)).findByCity("Porto");
+    }
+
+    @Test
+    void testFindNearestOrRandom_NoSpotsInCity() {
+        when(chargingSpotRepository.findByCity("Lisbon")).thenReturn(Arrays.asList());
+        ChargingSpot spot1 = new ChargingSpot();
+        spot1.setCity("Madrid");
+        when(chargingSpotRepository.findAll()).thenReturn(Arrays.asList(spot1));
+
+        ChargingSpot result = chargingSpotService.findNearestOrRandom("Lisbon");
+
+        assertEquals("Madrid", result.getCity());
+        verify(chargingSpotRepository, times(1)).findByCity("Lisbon");
+        verify(chargingSpotRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testFindNearestOrRandom_NoSpotsAvailable() {
+        when(chargingSpotRepository.findByCity("Lisbon")).thenReturn(Arrays.asList());
+        when(chargingSpotRepository.findAll()).thenReturn(Arrays.asList());
+
+        assertThrows(RuntimeException.class, () -> {
+            chargingSpotService.findNearestOrRandom("Lisbon");
+        });
+    }
+
 }

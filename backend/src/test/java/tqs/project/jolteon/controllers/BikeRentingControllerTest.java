@@ -153,36 +153,33 @@ class BikeRentingControllerTest {
                                 .andExpect(jsonPath("$.time").value("2025-06-03T19:37:48.326"));
         }
 
+        @Test
+        void endRenting_updatesAndReturnsBikeRentingDTO() throws Exception {
+                BikeRenting renting = createBikeRentingEntity(1L);
+                renting.setEndTime(LocalDateTime.of(2023, 1, 1, 12, 0));
 
+                ChargingSpot endSpot = new ChargingSpot();
+                endSpot.setId(2L);
+                renting.setEndSpot(endSpot);
 
+                Mockito.when(bikeRentingService.endBikeRenting(
+                                Mockito.eq(1L),
+                                Mockito.any(LocalDateTime.class),
+                                Mockito.eq(2L)))
+                                .thenReturn(renting);
 
-@Test
-void endRenting_updatesAndReturnsBikeRentingDTO() throws Exception {
-    BikeRenting renting = createBikeRentingEntity(1L);
-    renting.setEndTime(LocalDateTime.of(2023, 1, 1, 12, 0));
-
-    ChargingSpot endSpot = new ChargingSpot();
-    endSpot.setId(2L);
-    renting.setEndSpot(endSpot);
-
-    Mockito.when(bikeRentingService.endBikeRenting(
-                    Mockito.eq(1L),
-                    Mockito.any(LocalDateTime.class),
-                    Mockito.eq(2L)))
-            .thenReturn(renting);
-
-    mockMvc.perform(
-            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-                    .put("/api/rentings/1/end")
-                    .param("endTime", "2023-01-01T12:00:00")
-                    .param("endSpotId", "2")
-                    .contentType(MediaType.APPLICATION_JSON))  // contentType here is optional but fine
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(renting.getId()))
-            .andExpect(jsonPath("$.endTime").value("2023-01-01T12:00:00"))
-            .andExpect(jsonPath("$.endSpot.id").value(2));
-}
-
+                mockMvc.perform(
+                                org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                                .put("/api/rentings/1/end")
+                                                .param("endTime", "2023-01-01T12:00:00")
+                                                .param("endSpotId", "2")
+                                                .contentType(MediaType.APPLICATION_JSON)) // contentType here is
+                                                                                          // optional but fine
+                                .andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(jsonPath("$.id").value(renting.getId()))
+                                .andExpect(jsonPath("$.endTime").value("2023-01-01T12:00:00"))
+                                .andExpect(jsonPath("$.endSpot.id").value(2));
+        }
 
 }

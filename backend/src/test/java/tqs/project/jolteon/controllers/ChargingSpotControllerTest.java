@@ -1,5 +1,9 @@
 package tqs.project.jolteon.controllers;
 
+
+import tqs.project.jolteon.entities.Bike;
+import java.util.Set;
+import java.util.HashSet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -117,18 +121,6 @@ class ChargingSpotControllerTest {
                 .andExpect(jsonPath("$[0].city", is("Porto")));
     }
 
-    // @Test
-    // void whenPostValidStation_thenCreateStation() throws Exception {
-    //     when(chargingSpotService.addChargingSpot(any(ChargingSpot.class))).thenReturn(spot1);
-
-    //     mockMvc.perform(post("/api/stations")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //             .content(objectMapper.writeValueAsString(spot1)))
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("$.city", is(spot1.getCity())));
-
-    //     verify(chargingSpotService, times(1)).addChargingSpot(any(ChargingSpot.class));
-    // }
 
     @Test
     void whenPostInvalidStation_thenReturnBadRequest() throws Exception {
@@ -164,6 +156,47 @@ class ChargingSpotControllerTest {
                 .content(objectMapper.writeValueAsString(spot1)))
                 .andExpect(status().isNotFound());
     }
+
+
+
+@Test
+void whenGetAvailableBikes_thenReturnOnlyAvailableBikes() throws Exception {
+    Bike bike1 = new Bike();
+    bike1.setId(1L);
+    bike1.setIsAvailable(true);
+
+    Bike bike2 = new Bike();
+    bike2.setId(2L);
+    bike2.setIsAvailable(true);
+
+    Set<Bike> availableBikes = new HashSet<>(Set.of(bike1, bike2));
+
+    when(chargingSpotRepository.existsById(1L)).thenReturn(true);
+    when(chargingSpotService.getAvailableBikes(1L)).thenReturn(availableBikes);
+
+    mockMvc.perform(get("/api/stations/1/available")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[*].isAvailable", everyItem(is(true))))
+            .andExpect(jsonPath("$[*].id", containsInAnyOrder(1, 2)));
+
+    verify(chargingSpotService, times(1)).getAvailableBikes(1L);
+}
+
+
+
+@Test
+void whenGetAvailableBikesForInvalidId_thenReturnNotFound() throws Exception {
+    when(chargingSpotRepository.existsById(99L)).thenReturn(false);
+
+    mockMvc.perform(get("/api/stations/99/available")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+
+    verify(chargingSpotService, never()).getAvailableBikes(anyLong());
+}
+
 
     @Test
     void whenDeleteExistingStation_thenReturnOk() throws Exception {
