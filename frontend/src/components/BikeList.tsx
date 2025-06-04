@@ -9,7 +9,7 @@ import { LandMark, getLandmarksByCity } from "../api/landmark-crud";
 import { BikeRentingDTO, createBikeRenting } from "../api/bikeRenting-crud";
 import { Bike } from "../api/bike-crud";
 
-function BikeList() {
+function BikeList({duration}: { duration: number | null }) {
   const [stations, setStations] = useState<Station[]>([]);
   const [availableBikesMap, setAvailableBikesMap] = useState<
     Record<number, number>
@@ -111,6 +111,10 @@ function BikeList() {
       // Replace with actual user from your auth context
       const currentUser = { id: 1, username: "andredora" };
 
+      const endTime = duration
+        ? new Date(Date.now() + duration * 60 * 1000).toISOString()
+        : null; // If duration is null, endTime will be indefinite
+
       const rentingData: BikeRentingDTO = {
         bike: selectedBike,
         user: currentUser,
@@ -119,7 +123,7 @@ function BikeList() {
         culturalLandmarks:
           selectedLandmarks.length > 0 ? selectedLandmarks : null,
         time: new Date().toISOString(),
-        endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours later
+        endTime: endTime, 
       };
 
       await createBikeRenting(rentingData);
