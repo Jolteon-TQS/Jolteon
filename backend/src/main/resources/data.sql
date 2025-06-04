@@ -24,7 +24,8 @@ INSERT INTO cultural_landmark (name, description, latitude, longitude, city) VAL
 ('Costa Nova', 'Famous for its colorful striped houses and beautiful beach.', 40.6200, -8.7667, 'Aveiro'),
 ('Ria de Aveiro', 'A picturesque lagoon with canals and traditional boats.', 40.6400, -8.6500, 'Aveiro'),
 ('Museu de Aveiro', 'A museum showcasing the history and culture of Aveiro.', 40.6400, -8.6500, 'Aveiro'),
-('Igreja de São Domingos', 'A historic church known for its stunning architecture.', 40.6400, -8.6500, 'Aveiro');
+('Igreja de São Domingos', 'A historic church known for its stunning architecture.', 40.6400, -8.6500, 'Aveiro'),
+('Rachelz House', 'Big very rich house with cute cat very cutie patotie', 10.6400, -80.3500, 'New York');
 
 -- INSERT INTO bike_renting (
 --   bike_id, user_id, start_spot_id, time
