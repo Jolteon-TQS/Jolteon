@@ -44,7 +44,7 @@ const RouteMap = () => {
     });
 
     return () => map.remove();
-  }, []);
+  }, [apikey]);
 
   return <div ref={mapContainer} style={{ height: "400px" }} />;
 };

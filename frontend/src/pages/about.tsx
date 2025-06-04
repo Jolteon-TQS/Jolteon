@@ -24,7 +24,7 @@ function About() {
           {/* Text */}
           <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-yellow-500">
-              Your bikes. Our routes.
+              Our bikes. your routes.
             </h1>
             <p className="text-lg md:text-xl mb-6 text-gray-700">
               Jolteon is a simple, smart electric bike rental platform that
@@ -75,11 +75,11 @@ function About() {
             Overview
           </h2>
           <p className="text-lg text-gray-700">
-            Jolteon makes urban exploration easy. Rent electric bikes from hubs
-            across the city, plan your trip to a specific destination, and
-            discover cultural points of interest along the way—like local
-            landmarks or museums. Designed for tourists and casual city riders,
-            Jolteon skips the clutter and gets you moving.
+            Jolteon makes urban exploration easy. Rent electric bikes from
+            solar-powered stations across the city, plan your trip to a specific
+            destination, and discover cultural points of interest along the
+            way—like local landmarks or museums. Designed for tourists and
+            casual city riders, Jolteon skips the clutter and gets you moving.
           </p>
         </div>
       </motion.section>
@@ -105,26 +105,30 @@ function About() {
               {
                 title: "Point-to-point electric bike rentals",
                 description:
-                  "Start and end your trip at designated hubs across the city.",
+                  "Start and end your trip at designated stations across the city.",
                 image: rental,
+                buttonText: "Find a station",
               },
               {
                 title: "Route planning",
                 description:
                   "Pick a start and destination—Jolteon maps your journey.",
                 image: route,
+                buttonText: "Coming soon",
               },
               {
                 title: "Optional cultural stops",
                 description:
                   "Discover museums, landmarks, and hidden gems along your route.",
                 image: landmark,
+                buttonText: "Explore landmarks",
               },
               {
                 title: "Real-time events and notifications",
                 description:
-                  "Get alerts for bike availability, battery status, and more.",
+                  "Get alerts for bike availability, and new landmarks or events.",
                 image: charge,
+                buttonText: "Coming soon",
               },
             ].map((feature, index) => (
               <motion.div
@@ -152,9 +156,21 @@ function About() {
                     </h2>
                     <p className="text-gray-800">{feature.description}</p>
                     <div className="card-actions justify-end">
-                      <button className="btn btn-outline btn-primary">
-                        Explore
-                      </button>
+                      {feature.buttonText === "Coming soon" ? (
+                        <button
+                          className="btn btn-outline btn-primary"
+                          disabled
+                        >
+                          {feature.buttonText}
+                        </button>
+                      ) : (
+                        <a
+                          href="/bikes"
+                          className="btn btn-outline btn-primary"
+                        >
+                          {feature.buttonText}
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

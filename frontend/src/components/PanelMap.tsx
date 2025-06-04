@@ -82,7 +82,7 @@ const PanelMap = ({ markers }: Props) => {
     };
   }, [markers, apikey]);
 
-  return <div ref={mapContainer} style={{ height: "500px", width: "100%" }} />;
+  return <div ref={mapContainer} style={{ height: "605px", width: "100%" }} />;
 };
 
 export default PanelMap;

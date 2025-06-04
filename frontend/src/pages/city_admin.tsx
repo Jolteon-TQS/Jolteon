@@ -163,7 +163,7 @@ function LandmarkPanel() {
       </div>
 
       {/* Right: Map */}
-      <div className="w-full lg:w-1/2">
+      <div className="w-full lg:w-1/2 z-10">
         <LandmarkMap landmarks={landmarks} onDeleteLandmark={deleteLandmark} />
       </div>
 
