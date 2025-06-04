@@ -81,6 +81,7 @@ function Panel() {
         longitude: parseFloat(newBike.longitude),
         chargingSpotId: parseInt(newBike.chargingSpotId),
         autonomy: parseInt(newBike.autonomy),
+        isAvailable: true,
       };
       const createdBike = await createBike(bikeToCreate);
       console.log("Created Bike:", createdBike);
@@ -101,7 +102,6 @@ function Panel() {
   };
 
   const addStation = async () => {
-    // Validate all required fields are filled
     if (
       !newStation.city ||
       !newStation.latitude ||
@@ -126,11 +126,11 @@ function Panel() {
 
     try {
       const stationToCreate = {
-        city: newStation.city.trim(), // Trim whitespace
+        city: newStation.city.trim(),
         latitude,
         longitude,
         capacity,
-        bikes: [], // Initialize with an empty array
+        bikes: [],
       };
 
       console.log("Creating station with data:", stationToCreate); // Debug log

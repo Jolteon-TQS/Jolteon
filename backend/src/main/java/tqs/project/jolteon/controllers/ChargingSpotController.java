@@ -16,6 +16,8 @@ import tqs.project.jolteon.entities.ChargingSpot;
 import tqs.project.jolteon.repositories.ChargingSpotRepository;
 import tqs.project.jolteon.services.ChargingSpotService;
 import java.util.List;
+import java.util.Set;
+import tqs.project.jolteon.entities.Bike;
 
 
 @RestController
@@ -50,6 +52,15 @@ public class ChargingSpotController {
         }
         ChargingSpot spot = chargingSpotService.getChargingSpotById(id);
         return ResponseEntity.ok(spot);
+    }
+
+    @GetMapping("/{id}/available")
+    public ResponseEntity<Set<Bike>> getAvailableBikes(@PathVariable Long id) {
+        if (!chargingSpotRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        Set<Bike> availableBikes = chargingSpotService.getAvailableBikes(id);
+        return ResponseEntity.ok(availableBikes);
     }
 
     @PostMapping

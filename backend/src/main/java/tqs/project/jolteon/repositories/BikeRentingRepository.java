@@ -7,11 +7,18 @@ import java.util.Set;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface BikeRentingRepository extends JpaRepository<BikeRenting, Long> {
     Set<BikeRenting> findByUserId(Long userId);
 
-    @Query("SELECT br FROM BikeRenting br WHERE br.user.id = :userId AND br.endTime IS NULL AND br.endSpot IS NULL")
+    @Query("SELECT br FROM BikeRenting br WHERE br.user.id = :userId AND br.endSpot IS NULL")
     Optional<BikeRenting> findActiveRentingByUserId(@Param("userId") Long userId);
+
+    List<BikeRenting> findAllByEndTimeBeforeAndEndSpotIsNullAndBike_IsAvailableFalse(LocalDateTime time);
+
+
+
 }

@@ -7,6 +7,7 @@ export interface Bike {
   longitude: number;
   chargingSpotId: number;
   autonomy: number;
+  isAvailable: boolean;
 }
 
 const base_api_url = import.meta.env.VITE_API_URL;
