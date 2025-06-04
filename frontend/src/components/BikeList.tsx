@@ -24,7 +24,9 @@ function BikeList({ duration }: { duration: number | null }) {
   const [showModal, setShowModal] = useState(false);
   const [showRouteOptions, setShowRouteOptions] = useState(false);
   const [landmarks, setLandmarks] = useState<CulturalLandmark[]>([]);
-  const [selectedLandmarks, setSelectedLandmarks] = useState<CulturalLandmark[]>([]);
+  const [selectedLandmarks, setSelectedLandmarks] = useState<
+    CulturalLandmark[]
+  >([]);
   const [isLoadingLandmarks, setIsLoadingLandmarks] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const itemsPerPage = 5;
