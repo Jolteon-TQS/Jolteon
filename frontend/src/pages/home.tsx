@@ -41,10 +41,10 @@ function Home() {
   }
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6 p-6 bg-blue-50 mt-5 mockup-window border-base-300">
+    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-blue-50 window border-base-300 mt-40 shadow-sm">
       {/* Left: Info Panel */}
       <div className="flex-1 mt-5">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6">Active Bike</h1>
+        <h1 className="text-3xl font-bold text-blue-800 mb-6 ml-2">Active Bike</h1>
         <div className="bg-white shadow-md rounded-xl p-6">
           <div className="flex flex-col md:flex-row gap-8 items-center">
             {/* Left: Info */}
@@ -79,7 +79,7 @@ function Home() {
       </div>
 
       {/* Right: Map */}
-      <div className="w-full lg:w-1/2">
+      <div className="w-full lg:w-1/2 z-9">
         <BikeMap latitude={bike.latitude} longitude={bike.longitude} />
       </div>
     </main>

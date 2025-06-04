@@ -258,7 +258,7 @@ function Panel() {
   }
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6 p-6 bg-orange-100 mt-5 mockup-window border-base-300">
+    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-100 mt-40 window border-base-300 shadow-sm">
       {/* Left Side - Forms and Controls */}
       <div className="flex-1 space-y-6 mt-5">
         <h1 className="text-3xl font-bold text-orange-700">Control Panel</h1>
@@ -436,7 +436,7 @@ function Panel() {
       </div>
 
       {/* Right Side - Map */}
-      <div className="w-full lg:w-1/2">
+      <div className="w-full lg:w-1/2 z-9">
         <PanelMap
           markers={[
             ...bikes
