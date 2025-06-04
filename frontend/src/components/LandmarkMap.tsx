@@ -83,7 +83,6 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
       marker.addTo(map);
       markerRefs.current.push(marker);
     });
-
   }, [landmarks, apikey]);
 
   return <div ref={mapContainer} style={{ height: "500px", width: "100%" }} />;
