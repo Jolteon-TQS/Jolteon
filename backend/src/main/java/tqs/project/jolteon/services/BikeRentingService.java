@@ -117,16 +117,21 @@ public class BikeRentingService {
     }
 
 
-    @Transactional
-    public BikeRenting endBikeRenting(Long id, LocalDateTime endTime, Long endSpotId) {
-        BikeRenting renting = bikeRentingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
-        ChargingSpot endSpot = chargingSpotService.getChargingSpotById(endSpotId);
-        renting.setEndTime(endTime);
-        renting.setEndSpot(endSpot);
-        renting.getBike().setIsAvailable(true);
-        renting.getBike().setChargingSpot(endSpot);
-        return bikeRentingRepository.save(renting);
-    }
+@Transactional
+public BikeRenting endBikeRenting(Long id, Long endSpotId) {
+    BikeRenting renting = bikeRentingRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
+
+    ChargingSpot endSpot = chargingSpotService.getChargingSpotById(endSpotId);
+
+    LocalDateTime endTime = renting.getEndTime();
+    renting.setEndTime(endTime != null ? endTime : LocalDateTime.now());
+    renting.setEndSpot(endSpot);
+    renting.getBike().setIsAvailable(true);
+    renting.getBike().setChargingSpot(endSpot);
+
+    return bikeRentingRepository.save(renting);
+}
+
 
 }

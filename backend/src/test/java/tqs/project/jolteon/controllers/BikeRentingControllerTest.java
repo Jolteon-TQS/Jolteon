@@ -164,7 +164,6 @@ class BikeRentingControllerTest {
 
                 Mockito.when(bikeRentingService.endBikeRenting(
                                 Mockito.eq(1L),
-                                Mockito.any(LocalDateTime.class),
                                 Mockito.eq(2L)))
                                 .thenReturn(renting);
 
