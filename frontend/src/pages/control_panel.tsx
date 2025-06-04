@@ -126,11 +126,11 @@ function Panel() {
 
     try {
       const stationToCreate = {
-        city: newStation.city.trim(), // Trim whitespace
+        city: newStation.city.trim(),
         latitude,
         longitude,
         capacity,
-        bikes: [], // Initialize with an empty array
+        bikes: [], 
       };
 
       console.log("Creating station with data:", stationToCreate); // Debug log

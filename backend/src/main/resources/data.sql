@@ -26,8 +26,8 @@ INSERT INTO cultural_landmark (name, description, latitude, longitude, city) VAL
 ('Museu de Aveiro', 'A museum showcasing the history and culture of Aveiro.', 40.6400, -8.6500, 'Aveiro'),
 ('Igreja de São Domingos', 'A historic church known for its stunning architecture.', 40.6400, -8.6500, 'Aveiro');
 
-INSERT INTO bike_renting (
-  bike_id, user_id, start_spot_id, time
-) VALUES (
-  1, 1, 1, NOW()
-);
+-- INSERT INTO bike_renting (
+--   bike_id, user_id, start_spot_id, time
+-- ) VALUES (
+--   1, 1, 1, NOW()
+-- );

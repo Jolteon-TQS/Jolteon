@@ -65,4 +65,23 @@ public class ChargingSpotService {
         return chargingSpotRepository.findByCity(city);
     }
 
+    public ChargingSpot findNearestOrRandom(String city) {
+        // first we try to find one of the same city, 
+        List<ChargingSpot> spots = chargingSpotRepository.findByCity(city);
+        if (!spots.isEmpty()) {
+            // if there are multiple, we can return a random one
+            int randomIndex = (int) (Math.random() * spots.size());
+            return spots.get(randomIndex);
+        } else {
+            // if there are no spots in the city, we can return a random one from all available
+            List<ChargingSpot> allSpots = chargingSpotRepository.findAll();
+            if (!allSpots.isEmpty()) {
+                int randomIndex = (int) (Math.random() * allSpots.size());
+                return allSpots.get(randomIndex);
+            } else {
+                throw new RuntimeException("No charging spots available");
+            }
+        }
+    }
+
 }
