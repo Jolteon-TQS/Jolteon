@@ -27,11 +27,7 @@ function Navbar() {
               Rent Bike
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/routes" className={navLinkClass}>
-              Routes
-            </NavLink>
-          </li>
+          {/* <li><NavLink to="/routes" className={navLinkClass}>Routes</NavLink></li> */}
           <li>
             <NavLink to="/operator" className={navLinkClass}>
               Control Panel
@@ -58,15 +54,13 @@ function Navbar() {
             <span className="text-primary font-bold">120.52€</span>
           </div>
 
-          {/* Notification Bell */}
+          {/* Notification Bell - Removed the outer button */}
           <div className="indicator">
-            <button className="btn btn-ghost btn-circle">
-              <NotificationBell />
-            </button>
+            <NotificationBell />
           </div>
 
           {/* User Avatar */}
-          <div className="navbar-end dropdown dropdown-end">
+          <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
               role="button"
