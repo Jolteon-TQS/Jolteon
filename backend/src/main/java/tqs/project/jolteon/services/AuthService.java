@@ -114,7 +114,7 @@ public class AuthService {
     }
 
 
-    private static final String SECRET_KEY = "batatafrita12cavalo34onthefloor5x5256x636";
+    private static final String SECRET_KEY = "Xx_-batatafrita12cavalo31C0H8M0amoT.Q.S.-_xX";
 
     public String generateAuthToken(NormalUser user) {
         SecretKey secretKey = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8),
