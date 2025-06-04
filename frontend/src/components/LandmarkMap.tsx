@@ -1,117 +1,91 @@
 import { useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
-
-interface Landmark {
-  id: number;
-  name: string;
-  city: string;
-  description: string;
-  lat: number;
-  lng: number;
-  image: string;
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { CulturalLandmark } from "../api/landmark-crud";
+interface Props {
+  landmarks: CulturalLandmark[];
+  onDeleteLandmark?: (id: number) => void;
 }
 
-interface Props {
-  landmarks: Landmark[];
-  onDeleteLandmark?: (id: number) => void;
+declare global {
+  interface Window {
+    deleteLandmark: (id: number) => void;
+  }
 }
 
 const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const markerRefs = useRef<L.Marker[]>([]);
   const apikey = import.meta.env.VITE_API_KEY;
 
-  // Convert landmarks to GeoJSON
-  const getLandmarkGeoJSON = (): GeoJSON.FeatureCollection => ({
-    type: "FeatureCollection",
-    features: landmarks.map((lm) => ({
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [lm.lng, lm.lat],
-      },
-      properties: {
-        id: lm.id,
-        name: lm.name,
-        city: lm.city,
-        description: lm.description,
-        image: lm.image,
-      },
-    })),
-  });
-
   useEffect(() => {
-    const map = new maplibregl.Map({
-      container: mapContainer.current!,
-      style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
-      center: [-8.653, 40.641],
-      zoom: 14,
-    });
+    if (!mapContainer.current) return;
+
+    const map = L.map(mapContainer.current).setView(
+      landmarks.length > 0
+        ? [landmarks[0].latitude, landmarks[0].longitude]
+        : [40.641, -8.653],
+      14,
+    );
+
+    L.tileLayer(
+      `https://maps.geoapify.com/v1/tile/klokantech-basic/{z}/{x}/{y}.png?apiKey=${apikey}`,
+      {
+        attribution:
+          'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a>',
+      },
+    ).addTo(map);
 
     mapRef.current = map;
 
-    map.on("load", () => {
-      map.addSource("landmarks", {
-        type: "geojson",
-        data: getLandmarkGeoJSON(),
-      });
+    window.deleteLandmark = (id: number) => {
+      if (onDeleteLandmark) onDeleteLandmark(id);
+    };
 
-      map.addLayer({
-        id: "landmarks-layer",
-        type: "circle",
-        source: "landmarks",
-        paint: {
-          "circle-radius": 8,
-          "circle-color": "#10B981", // green
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 2,
-        },
-      });
-
-      // Add popup on click
-      map.on("click", "landmarks-layer", (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-
-        const props = feature.properties!;
-        const coordinates = (feature.geometry as any).coordinates.slice();
-
-        const html = `
-          <strong>${props.name}</strong><br/>
-          <em>${props.city}</em><br/>
-          ${props.description}<br/>
-          ${props.image ? `<img src="${props.image}" alt="${props.name}" style="max-width: 100px;" />` : ""}
-          <br/><button onclick="window.deleteLandmark(${props.id})" style="color:red;">Delete</button>
-        `;
-
-        new maplibregl.Popup().setLngLat(coordinates).setHTML(html).addTo(map);
-      });
-
-      // Change cursor on hover
-      map.on("mouseenter", "landmarks-layer", () => {
-        map.getCanvas().style.cursor = "pointer";
-      });
-      map.on("mouseleave", "landmarks-layer", () => {
-        map.getCanvas().style.cursor = "";
-      });
-
-      (window as any).deleteLandmark = (id: number) => {
-        if (onDeleteLandmark) onDeleteLandmark(id);
-      };
-    });
-
-    return () => map.remove();
-  }, []);
+    return () => {
+      map.remove();
+    };
+  }, [apikey, landmarks, onDeleteLandmark]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded() || !map.getSource("landmarks")) return;
+    if (!map) return;
 
-    const source = map.getSource("landmarks") as maplibregl.GeoJSONSource;
-    source.setData(getLandmarkGeoJSON());
-  }, [landmarks]);
+    // Remove old markers
+    markerRefs.current.forEach((marker) => map.removeLayer(marker));
+    markerRefs.current = [];
 
-  return <div ref={mapContainer} style={{ height: "500px" }} />;
+    // Add new markers
+    landmarks.forEach((lm) => {
+      const color = "4bd176";
+      const iconName = "landmark";
+      const icon = L.icon({
+        iconUrl: `https://api.geoapify.com/v1/icon?size=medium&type=awesome&color=%23${color}&icon=${iconName}&apiKey=${apikey}`,
+        iconSize: [30, 40],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30],
+      });
+
+      const marker = L.marker([lm.latitude, lm.longitude], { icon });
+
+      const popupHtml = `
+        <div style="text-align:center;">
+          <strong>${lm.name}</strong><br/>
+          <em>${lm.city}</em><br/>
+          ${lm.description}<br/>
+          ${lm.imageUrl ? `<img src="${lm.imageUrl}" alt="${lm.name}" style="max-width: 100px; margin-top: 5px;" />` : ""}
+          <br/><button onclick="window.deleteLandmark(${lm.id})" style="color:red; margin-top:5px;">Delete</button>
+        </div>
+      `;
+
+      marker.bindPopup(popupHtml);
+      marker.addTo(map);
+      markerRefs.current.push(marker);
+    });
+  }, [landmarks, apikey]);
+
+  return <div ref={mapContainer} style={{ height: "500px", width: "100%" }} />;
 };
 
 export default PanelMap;

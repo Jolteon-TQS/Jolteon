@@ -14,7 +14,7 @@ const Map = ({ latitude, longitude }: Props) => {
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainer.current!,
-      style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
+      style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
       center: [longitude, latitude],
       zoom: 16,
     });
@@ -77,7 +77,7 @@ const Map = ({ latitude, longitude }: Props) => {
     });
 
     return () => map.remove();
-  }, [latitude, longitude]);
+  }, [latitude, longitude, apikey]);
 
   return <div ref={mapContainer} style={{ height: "500px" }} />;
 };

@@ -1,13 +1,14 @@
 import { NavLink } from "react-router-dom";
-import NotificationBell from "./ShowNotification";
+import NotificationBell from "./ShowNotifications";
 import jolteon from "../assets/jolteon.png";
+import Clock from "./Clock";
 
 function Navbar() {
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `btn btn-ghost ${isActive ? "text-primary font-bold" : ""}`;
 
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-200 shadow-sm z-10 fixed top-0 left-0 right-0">
       <div className="navbar-start">
         <img src={jolteon} className="h-8 w-8 ml-5" />
         <NavLink to="/" className="btn btn-ghost text-xl">
@@ -27,11 +28,7 @@ function Navbar() {
               Rent Bike
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/routes" className={navLinkClass}>
-              Routes
-            </NavLink>
-          </li>
+          {/* <li><NavLink to="/routes" className={navLinkClass}>Routes</NavLink></li> */}
           <li>
             <NavLink to="/operator" className={navLinkClass}>
               Control Panel
@@ -52,20 +49,16 @@ function Navbar() {
 
       <div className="navbar-end">
         <div className="flex items-center gap-4 pr-4">
-          {/* Balance Display */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-base-200 text-sm">
-            <span className="font-semibold">Balance:</span>
-            <span className="text-primary font-bold">120.52€</span>
+          <div className="hidden sm:flex items-center text-sm font-semibold text-base-content">
+            <Clock />
           </div>
 
-          {/* Notification Bell */}
           <div className="indicator">
             <button className="btn btn-ghost btn-circle">
               <NotificationBell />
             </button>
           </div>
 
-          {/* User Avatar */}
           <div className="navbar-end dropdown dropdown-end">
             <div
               tabIndex={0}

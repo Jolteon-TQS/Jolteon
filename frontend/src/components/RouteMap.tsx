@@ -10,7 +10,7 @@ const RouteMap = () => {
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainer.current!,
-      style: `https://maps.geoapify.com/v1/styles/osm-liberty/style.json?apiKey=${apikey}`,
+      style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
       center: [-8.6455, 40.6405],
       zoom: 13,
     });
@@ -44,7 +44,7 @@ const RouteMap = () => {
     });
 
     return () => map.remove();
-  }, []);
+  }, [apikey]);
 
   return <div ref={mapContainer} style={{ height: "400px" }} />;
 };

@@ -51,7 +51,6 @@ public class OperatorService {
         return bikeService.getBikesByCity(operator.getCity());
     }
 
-    //acho q estes n sao necessarios, depois tiram-se
     public List<ChargingSpot> getAllChargingSpots() {
         return chargingSpotService.getAllChargingSpots();
     }

@@ -9,19 +9,13 @@ import Login from "./pages/login.tsx";
 import ChosenRoute from "./pages/route.tsx";
 import Operator from "./pages/control_panel.tsx";
 import CityAdmin from "./pages/city_admin.tsx";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 function App() {
-  function notify(): void {
-    toast("Battery low! Please charge your bike.");
-  }
   return (
     <>
       <Navbar />
-      <button className="btn btn-primary mt-10 ml-10" onClick={notify}>
-        Show Notification
-      </button>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} />
