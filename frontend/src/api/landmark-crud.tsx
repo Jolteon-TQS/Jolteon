@@ -60,3 +60,17 @@ export const updateCulturalLandmark = async (
 export const deleteCulturalLandmark = async (id: number): Promise<void> => {
   await axios.delete(`${API_BASE}/${id}`);
 };
+
+export const getLandmarksByCity = async (
+  city: string,
+): Promise<CulturalLandmark[]> => {
+  try {
+    const response = await axios.get<CulturalLandmark[]>(`${API_BASE}/search`, {
+      params: { city },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error searching cultural landmarks:", error);
+    throw error;
+  }
+};
