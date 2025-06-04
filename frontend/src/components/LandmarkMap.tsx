@@ -1,19 +1,9 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-interface Landmark {
-  id: number;
-  name: string;
-  city: string;
-  description: string;
-  lat: number;
-  lng: number;
-  image: string;
-}
-
+import { CulturalLandmark } from "../api/landmark-crud";
 interface Props {
-  landmarks: Landmark[];
+  landmarks: CulturalLandmark[];
   onDeleteLandmark?: (id: number) => void;
 }
 
@@ -34,7 +24,7 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
 
     const map = L.map(mapContainer.current).setView(
       landmarks.length > 0
-        ? [landmarks[0].lat, landmarks[0].lng]
+        ? [landmarks[0].latitude, landmarks[0].longitude]
         : [40.641, -8.653],
       14,
     );
@@ -68,8 +58,8 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
 
     // Add new markers
     landmarks.forEach((lm) => {
-      const color = "4bd176"; 
-      const iconName = "landmark"; 
+      const color = "4bd176";
+      const iconName = "landmark";
       const icon = L.icon({
         iconUrl: `https://api.geoapify.com/v1/icon?size=medium&type=awesome&color=%23${color}&icon=${iconName}&apiKey=${apikey}`,
         iconSize: [30, 40],
@@ -77,14 +67,14 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
         popupAnchor: [0, -30],
       });
 
-      const marker = L.marker([lm.lat, lm.lng], { icon });
+      const marker = L.marker([lm.latitude, lm.longitude], { icon });
 
       const popupHtml = `
         <div style="text-align:center;">
           <strong>${lm.name}</strong><br/>
           <em>${lm.city}</em><br/>
           ${lm.description}<br/>
-          ${lm.image ? `<img src="${lm.image}" alt="${lm.name}" style="max-width: 100px; margin-top: 5px;" />` : ""}
+          ${lm.imageUrl ? `<img src="${lm.imageUrl}" alt="${lm.name}" style="max-width: 100px; margin-top: 5px;" />` : ""}
           <br/><button onclick="window.deleteLandmark(${lm.id})" style="color:red; margin-top:5px;">Delete</button>
         </div>
       `;
