@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,11 @@ public class CulturalLandmarkController {
         this.culturalLandmarkService = culturalLandmarkService;
     }
 
-    @PostMapping 
-    public ResponseEntity<CulturalLandmarkDTO> addCulturalLandmark(@RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
-        CulturalLandmark saved = culturalLandmarkService.addCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
+    @PostMapping
+    public ResponseEntity<CulturalLandmarkDTO> addCulturalLandmark(
+            @RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
+        CulturalLandmark saved = culturalLandmarkService
+                .addCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
         return ResponseEntity.ok(CulturalLandmarkMapper.toDTO(saved));
     }
 
@@ -56,11 +59,23 @@ public class CulturalLandmarkController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CulturalLandmarkDTO> updateCulturalLandmark(@PathVariable Long id, @RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
-        CulturalLandmark updated = culturalLandmarkService.updateCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
+    public ResponseEntity<CulturalLandmarkDTO> updateCulturalLandmark(@PathVariable Long id,
+            @RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
+        CulturalLandmark updated = culturalLandmarkService
+                .updateCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
         if (updated == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(CulturalLandmarkMapper.toDTO(updated));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CulturalLandmarkDTO>> getCulturalLandmarksByCity(@RequestParam String city) {
+        List<CulturalLandmarkDTO> dtos = culturalLandmarkService.getCulturalLandmarksByCity(city)
+                .stream()
+                .map(CulturalLandmarkMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
 }

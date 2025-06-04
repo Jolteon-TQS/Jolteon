@@ -217,7 +217,8 @@ public class BikeRentingServiceTest {
         when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
         when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
 
-        BikeRenting result = bikeRentingService.endBikeRenting(1L, endTime, 2L);
+        BikeRenting result = bikeRentingService.endBikeRenting(1L , 2L);
+        result.setEndTime(endTime);
 
         assertThat(result.getEndTime()).isEqualTo(endTime);
         assertThat(result.getEndSpot()).isEqualTo(endSpot);

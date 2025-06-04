@@ -111,4 +111,20 @@ class CulturalLandmarkControllerTest {
                 .content(objectMapper.writeValueAsString(landmarkDTO)))
                 .andExpect(status().isNotFound());
     }
+
+
+    @Test
+    void testGetCulturalLandmarksByCity() throws Exception {
+        when(culturalLandmarkService.getCulturalLandmarksByCity("Aveiro")).thenReturn(List.of(landmark));
+        mockMvc.perform(get("/api/cultural-landmarks/search")
+                .param("city", "Aveiro"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].name").value("Museu de Aveiro"))
+                .andExpect(jsonPath("$[0].city").value("Aveiro"));
+
+        verify(culturalLandmarkService, times(1)).getCulturalLandmarksByCity("Aveiro");
+
+    }
+
 }
