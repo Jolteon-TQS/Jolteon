@@ -107,6 +107,23 @@ public class BikeRentingServiceTest {
     }
 
     @Test
+    public void testCreateBikeRenting_UserHasActiveRenting() {
+        // Simulate existing active renting for the user
+        when(bikeRentingRepository.findActiveRentingByUserId(1L))
+                .thenReturn(Optional.of(new BikeRenting()));
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> 
+            bikeRentingService.createBikeRenting(1L, 1L, 1L, 2L, Set.of(1L), time, endTime)
+        );
+
+        assertEquals("User already has an active bike renting", e.getMessage());
+
+        verify(bikeService, never()).getBikeById(any());
+        verify(bikeRentingRepository, never()).save(any());
+    }
+
+
+    @Test
     public void testGetById() {
         BikeRenting renting = new BikeRenting();
         renting.setId(5L);
