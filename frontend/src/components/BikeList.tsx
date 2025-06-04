@@ -5,7 +5,7 @@ import {
   getAllStations,
   getAvailableBikesAtStation,
 } from "../api/station-crud";
-import { LandMark, getLandmarksByCity } from "../api/landmark-crud";
+import { CulturalLandmark, getLandmarksByCity } from "../api/landmark-crud";
 import { BikeRentingDTO, createBikeRenting } from "../api/bikeRenting-crud";
 import { Bike } from "../api/bike-crud";
 
@@ -23,8 +23,10 @@ function BikeList({ duration }: { duration: number | null }) {
   const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showRouteOptions, setShowRouteOptions] = useState(false);
-  const [landmarks, setLandmarks] = useState<LandMark[]>([]);
-  const [selectedLandmarks, setSelectedLandmarks] = useState<LandMark[]>([]);
+  const [landmarks, setLandmarks] = useState<CulturalLandmark[]>([]);
+  const [selectedLandmarks, setSelectedLandmarks] = useState<
+    CulturalLandmark[]
+  >([]);
   const [isLoadingLandmarks, setIsLoadingLandmarks] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const itemsPerPage = 5;
@@ -92,7 +94,7 @@ function BikeList({ duration }: { duration: number | null }) {
     }
   };
 
-  const toggleLandmarkSelection = (landmark: LandMark) => {
+  const toggleLandmarkSelection = (landmark: CulturalLandmark) => {
     setSelectedLandmarks((prev) => {
       const isSelected = prev.some((l) => l.id === landmark.id);
       if (isSelected) {

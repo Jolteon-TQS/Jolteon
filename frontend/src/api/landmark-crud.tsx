@@ -1,43 +1,76 @@
 import axios from "axios";
 
-export interface LandMark {
+export interface CulturalLandmark {
   id?: number;
   name: string;
-  city: string;
   description: string;
-  imageUrl: string;
+  city: string;
   latitude: number;
   longitude: number;
+  imageUrl?: string;
 }
 
 const base_api_url = import.meta.env.VITE_API_URL;
-const API_BASE = `${base_api_url}/bikes`;
+const API_BASE = `${base_api_url}/cultural-landmarks`;
 
-export const getAllLandmarks = async (): Promise<LandMark[]> => {
-  const response = await axios.get<LandMark[]>(`${API_BASE}/landmarks`);
+// get
+// delete /id
+//post
+// {
+//     "name": "string",
+//     "city": "string",
+//     "description": "string",
+//     "imageUrl": "string",
+//     "latitude": 0,
+//     "longitude": 0
+//   }
+
+export const getAllCulturalLandmarks = async (): Promise<
+  CulturalLandmark[]
+> => {
+  const response = await axios.get<CulturalLandmark[]>(API_BASE);
   return response.data;
 };
 
-export const getLandmarksByCity = async (city: string): Promise<LandMark[]> => {
-  // const response = await axios.get<LandMark[]>(`${API_BASE}/landmarks/search`, {
-  //     params: { city },
-  // });
+export const getCulturalLandmarkById = async (
+  id: number,
+): Promise<CulturalLandmark> => {
+  const response = await axios.get<CulturalLandmark>(`${API_BASE}/${id}`);
+  return response.data;
+};
 
-  console.log(city);
+export const createCulturalLandmark = async (
+  landmark: CulturalLandmark,
+): Promise<CulturalLandmark> => {
+  const response = await axios.post<CulturalLandmark>(API_BASE, landmark);
+  return response.data;
+};
 
-  // return response.data;
+export const updateCulturalLandmark = async (
+  id: number,
+  updatedCulturalLandmark: CulturalLandmark,
+): Promise<CulturalLandmark> => {
+  const response = await axios.put<CulturalLandmark>(
+    `${API_BASE}/${id}`,
+    updatedCulturalLandmark,
+  );
+  return response.data;
+};
 
-  // Make sample data
+export const deleteCulturalLandmark = async (id: number): Promise<void> => {
+  await axios.delete(`${API_BASE}/${id}`);
+};
 
-  return [
-    {
-      id: 1,
-      name: "Eiffel Tower",
-      city: "Paris",
-      description: "An iconic symbol of Paris.",
-      imageUrl: "https://example.com/eiffel-tower.jpg",
-      latitude: 48.8584,
-      longitude: 2.2945,
-    },
-  ];
+export const getLandmarksByCity = async (
+  city: string,
+): Promise<CulturalLandmark[]> => {
+  try {
+    const response = await axios.get<CulturalLandmark[]>(`${API_BASE}/search`, {
+      params: { city },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error searching cultural landmarks:", error);
+    throw error;
+  }
 };

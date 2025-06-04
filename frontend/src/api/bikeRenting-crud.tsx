@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LandMark } from "./landmark-crud";
+import { CulturalLandmark } from "./landmark-crud";
 import { Station } from "./station-crud";
 import { Bike } from "./bike-crud";
 
@@ -13,7 +13,7 @@ export interface BikeRentingDTO {
   user: User;
   startSpot: Station | null;
   endSpot: Station | null;
-  culturalLandmarks: LandMark[] | null;
+  culturalLandmarks: CulturalLandmark[] | null;
   time: string; // ISO format date string
   endTime: string | null; // ISO format date string
 }

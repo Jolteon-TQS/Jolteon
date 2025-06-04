@@ -39,27 +39,6 @@ public class CityAdminController {
     }
 
 
-    @PostMapping("/cultural-landmarks")      
-    public ResponseEntity<CulturalLandmarkDTO> addCulturalLandmark(@RequestBody CulturalLandmarkDTO culturalLandmarkDTO) {
-        CulturalLandmark saved = culturalLandmarkService.addCulturalLandmark(CulturalLandmarkMapper.toEntity(culturalLandmarkDTO));
-        return ResponseEntity.ok(CulturalLandmarkMapper.toDTO(saved));
-    }
-
-    @DeleteMapping("/cultural-landmarks/{id}")
-    public ResponseEntity<Void> deleteCulturalLandmark(@PathVariable Long id) {
-        culturalLandmarkService.deleteCulturalLandmark(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/cultural-landmarks")
-    public ResponseEntity<List<CulturalLandmarkDTO>> getAllCulturalLandmarks() {
-        List<CulturalLandmarkDTO> dtos = culturalLandmarkService.getAllCulturalLandmarks()
-                .stream()
-                .map(CulturalLandmarkMapper::toDTO)
-                .toList();
-        return ResponseEntity.ok(dtos);
-    }
-
     @GetMapping("/{id}/cultural-landmarks")
     public ResponseEntity<List<CulturalLandmarkDTO>> getCulturalLandmarkByCityAdminId(@PathVariable Long id) {
         CityAdmin cityAdmin = cityAdminService.getCityAdminById(id);
