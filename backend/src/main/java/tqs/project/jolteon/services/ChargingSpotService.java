@@ -3,7 +3,12 @@ package tqs.project.jolteon.services;
 import tqs.project.jolteon.entities.ChargingSpot;
 import tqs.project.jolteon.repositories.ChargingSpotRepository;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
+import tqs.project.jolteon.entities.Bike;
 
 
 @Service
@@ -18,6 +23,18 @@ public class ChargingSpotService {
     public ChargingSpot addChargingSpot(ChargingSpot chargingSpot) {
         return chargingSpotRepository.save(chargingSpot);
     }
+
+
+    public Set<Bike> getAvailableBikes(Long id) {
+        return chargingSpotRepository.findById(id)
+                .map(ChargingSpot::getBikes)
+                .map(bikes -> bikes.stream()
+                        .filter(bike -> Boolean.TRUE.equals(bike.getIsAvailable()))
+                        .collect(Collectors.toSet()))
+                .orElseThrow(() -> new RuntimeException("Charging spot not found with id " + id));
+    }
+
+
 
     public <Optional> ChargingSpot getChargingSpotById(Long id) {
         return chargingSpotRepository.findById(id)
