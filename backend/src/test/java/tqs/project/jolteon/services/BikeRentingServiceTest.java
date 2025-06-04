@@ -17,11 +17,16 @@ import static org.mockito.Mockito.*;
 
 public class BikeRentingServiceTest {
 
-    @Mock private BikeRentingRepository bikeRentingRepository;
-    @Mock private BikeService bikeService;
-    @Mock private ChargingSpotService chargingSpotService;
-    @Mock private NormalUserService userService;
-    @Mock private CulturalLandmarkService culturalLandmarkService;
+    @Mock
+    private BikeRentingRepository bikeRentingRepository;
+    @Mock
+    private BikeService bikeService;
+    @Mock
+    private ChargingSpotService chargingSpotService;
+    @Mock
+    private NormalUserService userService;
+    @Mock
+    private CulturalLandmarkService culturalLandmarkService;
 
     @InjectMocks
     private BikeRentingService bikeRentingService;
@@ -59,10 +64,11 @@ public class BikeRentingServiceTest {
         endTime = LocalDateTime.now();
     }
 
-
     @Test
     public void testCreateBikeRenting_Success() {
         bike.setIsAvailable(true);
+        bike.setChargingSpot(startSpot);
+
         when(bikeService.getBikeById(1L)).thenReturn(Optional.of(bike));
         when(userService.getNormalUserById(1L)).thenReturn(user);
         when(chargingSpotService.getChargingSpotById(1L)).thenReturn(startSpot);
@@ -71,8 +77,7 @@ public class BikeRentingServiceTest {
         when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
 
         BikeRenting result = bikeRentingService.createBikeRenting(
-                1L, 1L, 1L, 2L, Set.of(1L), time, endTime
-        );
+                1L, 1L, 1L, 2L, Set.of(1L), time, endTime);
 
         assertThat(result.getBike()).isEqualTo(bike);
         assertThat(result.getUser()).isEqualTo(user);
@@ -81,6 +86,9 @@ public class BikeRentingServiceTest {
         assertThat(result.getCulturalLandmarks()).contains(landmark);
         assertThat(result.getTime()).isEqualTo(time);
         assertThat(result.getEndTime()).isEqualTo(endTime);
+
+        assertThat(bike.getIsAvailable()).isFalse();
+        assertThat(bike.getChargingSpot()).isNull();
     }
 
     @Test
@@ -91,14 +99,12 @@ public class BikeRentingServiceTest {
         when(chargingSpotService.getChargingSpotById(1L)).thenReturn(startSpot);
         when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
         when(culturalLandmarkService.getCulturalLandmarksByIds(Set.of(1L))).thenReturn(landmarks);
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                bikeRentingService.createBikeRenting(1L, 1L, 1L, 2L, Set.of(1L), time, endTime)
-        );
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> bikeRentingService.createBikeRenting(1L, 1L, 1L, 2L, Set.of(1L), time, endTime));
         assertEquals("Bike is not available for renting", e.getMessage());
 
         verify(bikeRentingRepository, never()).save(any(BikeRenting.class));
     }
-
 
     @Test
     public void testGetById() {
@@ -177,25 +183,10 @@ public class BikeRentingServiceTest {
     @Test
     public void testCreateBikeRenting_BikeNotFound() {
         when(bikeService.getBikeById(99L)).thenReturn(Optional.empty());
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                bikeRentingService.createBikeRenting(99L, 1L, 1L, 2L, Set.of(1L), time, endTime)
-        );
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> bikeRentingService.createBikeRenting(99L, 1L, 1L, 2L, Set.of(1L), time, endTime));
         assertEquals("Bike not found", e.getMessage());
     }
-
-    // @Transactional
-    // public BikeRenting endBikeRenting(Long id, LocalDateTime endTime, Long endSpotId) {
-    //     BikeRenting renting = bikeRentingRepository.findById(id)
-    //             .orElseThrow(() -> new IllegalArgumentException("Bike renting not found"));
-    //     ChargingSpot endSpot = chargingSpotService.getChargingSpotById(endSpotId);
-    //     renting.setEndTime(endTime);
-    //     renting.setEndSpot(endSpot);
-    //     renting.getBike().setIsAvailable(true);
-    //     renting.getBike().setChargingSpot(endSpot);
-    //     return bikeRentingRepository.save(renting);
-    // }
-
-
 
     @Test
     public void testEndBikeRenting_Success() {
@@ -215,8 +206,5 @@ public class BikeRentingServiceTest {
         assertThat(result.getEndSpot()).isEqualTo(endSpot);
         assertThat(result.getBike().getIsAvailable()).isTrue();
     }
-
-
-
 
 }
