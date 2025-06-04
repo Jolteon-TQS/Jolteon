@@ -97,7 +97,7 @@ const StationsMap = () => {
     });
 
     return () => map.remove();
-  }, []);
+  }, [apikey]);
 
   return <div ref={mapContainer} style={{ height: "500px" }} />;
 };

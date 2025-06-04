@@ -362,9 +362,7 @@ function Panel() {
 
         {/* Add New Station Form */}
         <div className="space-y-2">
-          <h2 className="font-semibold text-lg">
-            Add Charging Station
-          </h2>
+          <h2 className="font-semibold text-lg">Add Charging Station</h2>
           {error && <div className="text-error text-sm">{error}</div>}
           <div className="flex flex-col sm:flex-row gap-2">
             <input

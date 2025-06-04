@@ -75,11 +75,11 @@ function About() {
             Overview
           </h2>
           <p className="text-lg text-gray-700">
-            Jolteon makes urban exploration easy. Rent electric bikes from solar-powered stations
-            across the city, plan your trip to a specific destination, and
-            discover cultural points of interest along the way—like local
-            landmarks or museums. Designed for tourists and casual city riders,
-            Jolteon skips the clutter and gets you moving.
+            Jolteon makes urban exploration easy. Rent electric bikes from
+            solar-powered stations across the city, plan your trip to a specific
+            destination, and discover cultural points of interest along the
+            way—like local landmarks or museums. Designed for tourists and
+            casual city riders, Jolteon skips the clutter and gets you moving.
           </p>
         </div>
       </motion.section>
@@ -157,11 +157,17 @@ function About() {
                     <p className="text-gray-800">{feature.description}</p>
                     <div className="card-actions justify-end">
                       {feature.buttonText === "Coming soon" ? (
-                        <button className="btn btn-outline btn-primary" disabled>
+                        <button
+                          className="btn btn-outline btn-primary"
+                          disabled
+                        >
                           {feature.buttonText}
                         </button>
                       ) : (
-                        <a href="/bikes" className="btn btn-outline btn-primary">
+                        <a
+                          href="/bikes"
+                          className="btn btn-outline btn-primary"
+                        >
                           {feature.buttonText}
                         </a>
                       )}
@@ -170,7 +176,7 @@ function About() {
                 </div>
               </motion.div>
             ))}
-        </div>
+          </div>
         </div>
       </motion.section>
     </main>

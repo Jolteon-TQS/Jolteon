@@ -44,7 +44,9 @@ function Home() {
     <main className="flex flex-col lg:flex-row gap-6 p-10 bg-blue-50 window border-base-300 mt-40 shadow-sm">
       {/* Left: Info Panel */}
       <div className="flex-1 mt-5">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6 ml-2">Active Bike</h1>
+        <h1 className="text-3xl font-bold text-blue-800 mb-6 ml-2">
+          Active Bike
+        </h1>
         <div className="bg-white shadow-md rounded-xl p-6">
           <div className="flex flex-col md:flex-row gap-8 items-center">
             {/* Left: Info */}

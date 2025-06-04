@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
 
-export function notify(message: String): void {
+export function notify(message: string): void {
   toast(message);
 }

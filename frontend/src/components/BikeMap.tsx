@@ -77,7 +77,7 @@ const Map = ({ latitude, longitude }: Props) => {
     });
 
     return () => map.remove();
-  }, [latitude, longitude]);
+  }, [latitude, longitude, apikey]);
 
   return <div ref={mapContainer} style={{ height: "500px" }} />;
 };
