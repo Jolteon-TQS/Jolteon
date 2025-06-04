@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import NotificationBell from "./ShowNotification";
+import NotificationBell from "./ShowNotifications";
 import jolteon from "../assets/jolteon.png";
+import Clock from "./Clock";
 
 function Navbar() {
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -48,19 +49,17 @@ function Navbar() {
 
       <div className="navbar-end">
         <div className="flex items-center gap-4 pr-4">
-          {/* Balance Display */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-base-200 text-sm">
-            <span className="font-semibold">Balance:</span>
-            <span className="text-primary font-bold">120.52€</span>
+          <div className="hidden sm:flex items-center text-sm font-semibold text-base-content">
+            <Clock />
           </div>
 
-          {/* Notification Bell - Removed the outer button */}
           <div className="indicator">
-            <NotificationBell />
+            <button className="btn btn-ghost btn-circle">
+              <NotificationBell />
+            </button>
           </div>
 
-          {/* User Avatar */}
-          <div className="dropdown dropdown-end">
+          <div className="navbar-end dropdown dropdown-end">
             <div
               tabIndex={0}
               role="button"

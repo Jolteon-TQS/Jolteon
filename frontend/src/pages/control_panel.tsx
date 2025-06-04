@@ -14,6 +14,7 @@ import {
   updateStation,
   Station,
 } from "../api/station-crud";
+import { notify } from "../components/Notify";
 
 function Panel() {
   const [bikes, setBikes] = useState<Bike[]>([]);
@@ -91,6 +92,8 @@ function Panel() {
         chargingSpotId: "",
         autonomy: "",
       });
+      setError(null); // Clear any previous errors
+      notify("Bike created successfully!");
     } catch (err) {
       setError("Failed to create bike.");
       console.error(err);
@@ -142,6 +145,7 @@ function Panel() {
       setStations([...stations, createdStation]);
       setNewStation({ city: "", latitude: "", longitude: "", capacity: "" });
       setError(null); // Clear any previous errors
+      notify("Station created successfully!");
 
       // Reset modal state if stations modal is open
       if (showModal === "stations") {
@@ -171,6 +175,7 @@ function Panel() {
       if (showModal === "bikes") {
         const updatedBike = await updateBike(editingId, editingItem as Bike);
         setBikes(bikes.map((b) => (b.id === editingId ? updatedBike : b)));
+        notify("Bike updated successfully!");
       } else {
         const updatedStation = await updateStation(
           editingId,
@@ -179,6 +184,7 @@ function Panel() {
         setStations(
           stations.map((s) => (s.id === editingId ? updatedStation : s)),
         );
+        notify("Station updated successfully!");
       }
       setEditingId(null);
       setEditingItem(null);
@@ -192,6 +198,7 @@ function Panel() {
     try {
       await deleteBike(id);
       setBikes(bikes.filter((b) => b.id !== id));
+      notify("Bike deleted successfully!");
     } catch (err) {
       setError("Failed to delete bike.");
       console.error(err);
@@ -202,6 +209,7 @@ function Panel() {
     try {
       await deleteStation(id);
       setStations(stations.filter((s) => s.id !== id));
+      notify("Station deleted successfully!");
     } catch (err) {
       setError("Failed to delete station.");
       console.error(err);
@@ -355,7 +363,7 @@ function Panel() {
         {/* Add New Station Form */}
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">
-            Add Charging Station ({stations.length})
+            Add Charging Station
           </h2>
           {error && <div className="text-error text-sm">{error}</div>}
           <div className="flex flex-col sm:flex-row gap-2">
@@ -422,8 +430,7 @@ function Panel() {
             onClick={() => openModal("stations")}
             className="btn btn-primary w-full"
           >
-            {/* View/Manage Stations */}
-            NÃO MEXER
+            View/Manage Stations
           </button>
         </div>
       </div>
