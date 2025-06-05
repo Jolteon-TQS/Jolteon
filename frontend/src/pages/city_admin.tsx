@@ -285,7 +285,9 @@ function LandmarkPanel() {
           landmarks={landmarks}
           stations={stations.map((station) => ({
             ...station,
-            bikes: Array.isArray(station.bikes) ? station.bikes.length : station.bikes,
+            bikes: Array.isArray(station.bikes)
+              ? station.bikes.length
+              : station.bikes,
           }))}
           onStationSelect={() => {}}
           initialCenter={[-8.653, 40.641]}

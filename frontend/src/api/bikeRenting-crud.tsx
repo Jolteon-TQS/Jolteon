@@ -43,7 +43,8 @@ export const getBikeRentingById = async (
       typeof error === "object" &&
       error !== null &&
       "response" in error &&
-      typeof (error as { response?: { status?: number } }).response === "object" &&
+      typeof (error as { response?: { status?: number } }).response ===
+        "object" &&
       (error as { response?: { status?: number } }).response !== null &&
       (error as { response?: { status?: number } }).response?.status === 404
     ) {
