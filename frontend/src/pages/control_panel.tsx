@@ -261,7 +261,7 @@ function Panel() {
   }
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-100 mt-40 window border-base-300 shadow-sm">
+    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-100 mt-18 window border-base-300 shadow-sm min-h-screen">
       {/* Left Side - Forms and Controls */}
       <div className="flex-1 space-y-6 mt-5">
         <h1 className="text-3xl font-bold text-orange-700">Control Panel</h1>
@@ -433,32 +433,34 @@ function Panel() {
 
       {/* Right Side - Map */}
       <div className="w-full lg:w-1/2 z-9">
-        <PanelMap
-          markers={[
-            ...bikes
-              .filter((bike) => typeof bike.id === "number")
-              .filter((bike) => !selectedCity || bike.city === selectedCity)
-              .map((bike) => ({
-                id: bike.id as number,
-                type: "bike" as const,
-                latitude: bike.latitude,
-                longitude: bike.longitude,
-                label: `<b>Bike ${bike.id}</b></br>${bike.city}</br>`,
-              })),
-            ...stations
-              .filter((station) => typeof station.id === "number")
-              .filter(
-                (station) => !selectedCity || station.city === selectedCity,
-              )
-              .map((station) => ({
-                id: station.id as number,
-                type: "station" as const,
-                latitude: station.latitude,
-                longitude: station.longitude,
-                label: `<b>Station ${station.id}</b></br>${station.city}</br>(${station.bikes.length}/${station.capacity} bikes)`,
-              })),
-          ]}
-        />
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <PanelMap
+            markers={[
+              ...bikes
+                .filter((bike) => typeof bike.id === "number")
+                .filter((bike) => !selectedCity || bike.city === selectedCity)
+                .map((bike) => ({
+                  id: bike.id as number,
+                  type: "bike" as const,
+                  latitude: bike.latitude,
+                  longitude: bike.longitude,
+                  label: `Bike ${bike.id} - ${bike.city}`,
+                })),
+              ...stations
+                .filter((station) => typeof station.id === "number")
+                .filter(
+                  (station) => !selectedCity || station.city === selectedCity,
+                )
+                .map((station) => ({
+                  id: station.id as number,
+                  type: "station" as const,
+                  latitude: station.latitude,
+                  longitude: station.longitude,
+                  label: `${station.city} Station: ${station.bikes.length}/${station.capacity} bikes`,
+                })),
+            ]}
+          />
+        </div>
       </div>
 
       {/* Management Modal */}
