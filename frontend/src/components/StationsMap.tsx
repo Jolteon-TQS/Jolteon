@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { createReview, Review } from "../api/review-crud";
 
 interface Station {
   id: number;
@@ -11,14 +12,18 @@ interface Station {
   bikes?: number;
 }
 
+interface Landmark {
+  id?: number;
+  name: string;
+  city: string;
+  latitude: number;
+  longitude: number;
+  imageUrl?: string;
+  averageRating?: number;
+}
+
 interface StationsMapProps {
-  landmarks: {
-    name: string;
-    city: string;
-    latitude: number;
-    longitude: number;
-    imageUrl?: string;
-  }[];
+  landmarks: Landmark[];
   stations: Station[];
   onStationSelect: (stationId: number) => void;
   initialCenter: [number, number];
@@ -29,18 +34,30 @@ const StationsMap = ({
   landmarks = [],
   stations = [],
   onStationSelect,
-  initialCenter = [-8.653, 40.641], // Default to Aveiro
+  initialCenter = [-8.653, 40.641],
   initialZoom = 14,
 }: StationsMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [selectedStation, setSelectedStation] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [landmarkToReview, setLandmarkToReview] = useState<number | null>(null);
   const apikey = import.meta.env.VITE_API_KEY;
+
+  useEffect(() => {
+    (
+      window as typeof window & {
+        openReviewModal: (landmarkId: number) => void;
+      }
+    ).openReviewModal = (landmarkId: number) => {
+      setLandmarkToReview(landmarkId);
+      setShowModal(true);
+    };
+  }, []);
 
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // Initialize map
     const map = new maplibregl.Map({
       container: mapContainer.current,
       style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
@@ -49,19 +66,14 @@ const StationsMap = ({
       attributionControl: false,
     });
 
-    // Add controls
     map.addControl(new maplibregl.NavigationControl(), "top-right");
     map.addControl(
-      new maplibregl.ScaleControl({
-        maxWidth: 100,
-        unit: "metric",
-      }),
+      new maplibregl.ScaleControl({ maxWidth: 100, unit: "metric" }),
     );
 
     mapRef.current = map;
 
     map.on("load", () => {
-      // Prepare GeoJSON data sources
       const landmarksData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
         type: "FeatureCollection",
         features: landmarks.map((landmark) => ({
@@ -71,8 +83,14 @@ const StationsMap = ({
             coordinates: [landmark.longitude, landmark.latitude],
           },
           properties: {
+            id: landmark.id,
             title: landmark.name,
-            description: landmark.city,
+            description:
+              landmark.city +
+              "<br>" +
+              (landmark.averageRating !== undefined
+                ? landmark.averageRating.toFixed(1) + " ⭐"
+                : "Sem avaliações"),
             type: "landmark",
             imageUrl: landmark.imageUrl,
           },
@@ -98,18 +116,9 @@ const StationsMap = ({
         })),
       };
 
-      // Add sources
-      map.addSource("landmarks", {
-        type: "geojson",
-        data: landmarksData,
-      });
+      map.addSource("landmarks", { type: "geojson", data: landmarksData });
+      map.addSource("stations", { type: "geojson", data: stationsData });
 
-      map.addSource("stations", {
-        type: "geojson",
-        data: stationsData,
-      });
-
-      // Add layers
       map.addLayer({
         id: "landmarks-layer",
         type: "circle",
@@ -131,15 +140,14 @@ const StationsMap = ({
           "circle-color": [
             "case",
             ["==", ["get", "id"], selectedStation ?? -1],
-            "#EC4899", // Selected station color
-            "#F97316", // Default station color
+            "#EC4899",
+            "#F97316",
           ],
           "circle-stroke-color": "#ffffff",
           "circle-stroke-width": 2,
         },
       });
 
-      // Add labels
       map.addLayer({
         id: "landmark-labels",
         type: "symbol",
@@ -172,7 +180,6 @@ const StationsMap = ({
         },
       });
 
-      // Click handler for points
       const handlePointClick = (e: maplibregl.MapLayerMouseEvent) => {
         const coordinates = (
           e.features?.[0]?.geometry as GeoJSON.Point
@@ -192,23 +199,36 @@ const StationsMap = ({
           popupContent += `<br><img src="${properties.imageUrl}" alt="${properties.title}" style="max-width: 200px; margin-top: 8px;">`;
         }
 
+        if (properties.type === "landmark") {
+          popupContent += `<br><button onclick="window.openReviewModal(${properties.id})"  style="
+    margin-top: 12px;
+    padding: 8px 16px;
+    background-color: #10B981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;"
+  onmouseover="this.style.backgroundColor='#059669'"
+  onmouseout="this.style.backgroundColor='#10B981'">Rate</button>`;
+        }
+
         new maplibregl.Popup()
           .setLngLat(coordinates as [number, number])
           .setHTML(popupContent)
           .addTo(map);
 
-        // Handle station selection
         if (properties.type === "station" && properties.id && onStationSelect) {
           setSelectedStation(properties.id);
           onStationSelect(properties.id);
         }
       };
 
-      // Add click handlers
       map.on("click", "landmarks-layer", handlePointClick);
       map.on("click", "stations-layer", handlePointClick);
 
-      // Cursor changes
       map.on("mouseenter", ["landmarks-layer", "stations-layer"], () => {
         map.getCanvas().style.cursor = "pointer";
       });
@@ -233,17 +253,147 @@ const StationsMap = ({
     onStationSelect,
   ]);
 
+  const landmarkName =
+    landmarks.find((l) => l.id === landmarkToReview)?.name ?? "Local";
+
   return (
-    <div
-      ref={mapContainer}
-      style={{
-        height: "500px",
-        width: "100%",
-        borderRadius: "8px",
-        boxShadow:
-          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-      }}
-    />
+    <>
+      <div
+        ref={mapContainer}
+        style={{
+          height: "500px",
+          width: "100%",
+          borderRadius: "8px",
+          boxShadow:
+            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        }}
+      />
+      {showModal && landmarkToReview !== null && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              padding: "24px",
+              borderRadius: "12px",
+              width: "100%",
+              maxWidth: "400px",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+            }}
+          >
+            <h2
+              style={{
+                marginBottom: "16px",
+                fontSize: "1.25rem",
+                fontWeight: "bold",
+              }}
+            >
+              Rating {landmarkName}
+            </h2>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget as HTMLFormElement;
+                const stars = parseInt(form.stars.value);
+                const description = form.description.value;
+
+                const review: Review = {
+                  stars,
+                  description,
+                  user: 1,
+                  culturalLandmark: landmarkToReview!,
+                };
+
+                await createReview(review);
+                setShowModal(false);
+                setLandmarkToReview(null);
+              }}
+            >
+              <div style={{ marginBottom: "12px" }}>
+                <label style={{ display: "block", fontWeight: "500" }}>
+                  Stars:
+                  <input
+                    name="stars"
+                    type="number"
+                    min={1}
+                    max={5}
+                    required
+                    style={{
+                      marginTop: "4px",
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                    }}
+                  />
+                </label>
+              </div>
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontWeight: "500" }}>
+                  Comment:
+                  <textarea
+                    name="description"
+                    required
+                    rows={4}
+                    style={{
+                      marginTop: "4px",
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                    }}
+                  />
+                </label>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  style={{
+                    padding: "8px 12px",
+                    backgroundColor: "#e5e7eb",
+                    borderRadius: "6px",
+                    border: "none",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: "8px 12px",
+                    backgroundColor: "#10B981",
+                    color: "white",
+                    borderRadius: "6px",
+                    border: "none",
+                  }}
+                >
+                  Send
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

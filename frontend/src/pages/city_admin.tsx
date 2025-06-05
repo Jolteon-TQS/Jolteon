@@ -19,6 +19,7 @@ function LandmarkPanel() {
     latitude: "",
     longitude: "",
     imageUrl: "",
+    averageRating: "",
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingItem, setEditingItem] =
@@ -47,6 +48,7 @@ function LandmarkPanel() {
           latitude: lm.latitude,
           longitude: lm.longitude,
           imageUrl: lm.imageUrl || "",
+          averageRating: lm.averageRating || 0,
         }));
 
         setLandmarks(convertedLandmarks);
@@ -97,6 +99,7 @@ function LandmarkPanel() {
           latitude: created.latitude,
           longitude: created.longitude,
           imageUrl: created.imageUrl,
+          averageRating: created.averageRating || 0,
         },
       ]);
 
@@ -107,6 +110,7 @@ function LandmarkPanel() {
         latitude: "",
         longitude: "",
         imageUrl: "",
+        averageRating: "",
       });
     } catch (error) {
       console.error("Failed to add landmark", error);
