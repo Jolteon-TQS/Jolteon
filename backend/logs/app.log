@@ -1,0 +1,138 @@
+2025-06-04T22:43:04.147Z  INFO 81 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : Starting jolteonApplication using Java 21.0.7 with PID 81 (/target/classes started by root in /)
+2025-06-04T22:43:04.148Z  INFO 81 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-06-04T22:43:04.175Z  INFO 81 --- [jolteon] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-04T22:43:04.176Z  INFO 81 --- [jolteon] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-04T22:43:04.810Z  INFO 81 --- [jolteon] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04T22:43:04.855Z  INFO 81 --- [jolteon] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 10 JPA repository interfaces.
+2025-06-04T22:43:05.352Z  INFO 81 --- [jolteon] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-06-04T22:43:05.362Z  INFO 81 --- [jolteon] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-06-04T22:43:05.362Z  INFO 81 --- [jolteon] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-06-04T22:43:05.389Z  INFO 81 --- [jolteon] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-06-04T22:43:05.389Z  INFO 81 --- [jolteon] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1213 ms
+2025-06-04T22:43:05.616Z  INFO 81 --- [jolteon] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04T22:43:05.649Z  INFO 81 --- [jolteon] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-06-04T22:43:05.669Z  INFO 81 --- [jolteon] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-06-04T22:43:05.837Z  INFO 81 --- [jolteon] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04T22:43:05.855Z  INFO 81 --- [jolteon] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-06-04T22:43:05.956Z  INFO 81 --- [jolteon] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5e9b47a4
+2025-06-04T22:43:05.957Z  INFO 81 --- [jolteon] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-06-04T22:43:05.976Z  WARN 81 --- [jolteon] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-04T22:43:05.987Z  INFO 81 --- [jolteon] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04T22:43:06.636Z  INFO 81 --- [jolteon] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04T22:43:06.703Z  WARN 81 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:43:06.703Z  WARN 81 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk86ndhpy8lqcg62imhna9r822m" of relation "bike_alert" does not exist, skipping
+2025-06-04T22:43:06.706Z  WARN 81 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:43:06.706Z  WARN 81 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk4qy8oy3o065vggcl9bkcvarvd" of relation "charging_spot_bikes" does not exist, skipping
+2025-06-04T22:43:06.708Z  WARN 81 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:43:06.708Z  WARN 81 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk82f82n8cevx429ylcu80rej2r" of relation "route" does not exist, skipping
+2025-06-04T22:43:06.729Z  INFO 81 --- [jolteon] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04T22:43:06.911Z  INFO 81 --- [jolteon] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-04T22:43:08.009Z  WARN 81 --- [jolteon] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04T22:43:08.058Z  INFO 81 --- [jolteon] [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-06-04T22:43:09.027Z  INFO 81 --- [jolteon] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-06-04T22:43:09.034Z  INFO 81 --- [jolteon] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoints beneath base path '/actuator'
+2025-06-04T22:43:09.090Z  INFO 81 --- [jolteon] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-06-04T22:43:09.100Z  INFO 81 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : Started jolteonApplication in 5.243 seconds (process running for 5.506)
+2025-06-04T22:43:09.145Z  INFO 81 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : 🚀 Jolteon application started successfully!
+2025-06-04T22:43:14.136Z  INFO 81 --- [jolteon] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-04T22:43:14.136Z  INFO 81 --- [jolteon] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-06-04T22:43:14.137Z  INFO 81 --- [jolteon] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-06-04T22:46:37.294Z  INFO 79 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : Starting jolteonApplication using Java 21.0.7 with PID 79 (/target/classes started by root in /)
+2025-06-04T22:46:37.295Z  INFO 79 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-06-04T22:46:37.322Z  INFO 79 --- [jolteon] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-04T22:46:37.323Z  INFO 79 --- [jolteon] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-04T22:46:37.908Z  INFO 79 --- [jolteon] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04T22:46:37.950Z  INFO 79 --- [jolteon] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 10 JPA repository interfaces.
+2025-06-04T22:46:38.432Z  INFO 79 --- [jolteon] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-06-04T22:46:38.441Z  INFO 79 --- [jolteon] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-06-04T22:46:38.442Z  INFO 79 --- [jolteon] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-06-04T22:46:38.467Z  INFO 79 --- [jolteon] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-06-04T22:46:38.467Z  INFO 79 --- [jolteon] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1144 ms
+2025-06-04T22:46:38.681Z  INFO 79 --- [jolteon] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04T22:46:38.711Z  INFO 79 --- [jolteon] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-06-04T22:46:38.734Z  INFO 79 --- [jolteon] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-06-04T22:46:38.902Z  INFO 79 --- [jolteon] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04T22:46:38.920Z  INFO 79 --- [jolteon] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-06-04T22:46:39.019Z  INFO 79 --- [jolteon] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@b1d34bb
+2025-06-04T22:46:39.021Z  INFO 79 --- [jolteon] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-06-04T22:46:39.040Z  WARN 79 --- [jolteon] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-04T22:46:39.052Z  INFO 79 --- [jolteon] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04T22:46:39.690Z  INFO 79 --- [jolteon] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04T22:46:39.755Z  WARN 79 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:46:39.756Z  WARN 79 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk86ndhpy8lqcg62imhna9r822m" of relation "bike_alert" does not exist, skipping
+2025-06-04T22:46:39.758Z  WARN 79 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:46:39.758Z  WARN 79 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk4qy8oy3o065vggcl9bkcvarvd" of relation "charging_spot_bikes" does not exist, skipping
+2025-06-04T22:46:39.761Z  WARN 79 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:46:39.761Z  WARN 79 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk82f82n8cevx429ylcu80rej2r" of relation "route" does not exist, skipping
+2025-06-04T22:46:39.781Z  INFO 79 --- [jolteon] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04T22:46:39.953Z  INFO 79 --- [jolteon] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-04T22:46:41.055Z  WARN 79 --- [jolteon] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04T22:46:41.106Z  INFO 79 --- [jolteon] [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-06-04T22:46:41.983Z  INFO 79 --- [jolteon] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-06-04T22:46:41.990Z  INFO 79 --- [jolteon] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoints beneath base path '/actuator'
+2025-06-04T22:46:42.044Z  INFO 79 --- [jolteon] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-06-04T22:46:42.053Z  INFO 79 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : Started jolteonApplication in 5.036 seconds (process running for 5.289)
+2025-06-04T22:46:42.098Z  INFO 79 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : 🚀 Jolteon application started successfully!
+2025-06-04T22:46:52.268Z  INFO 79 --- [jolteon] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-04T22:46:52.268Z  INFO 79 --- [jolteon] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-06-04T22:46:52.270Z  INFO 79 --- [jolteon] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-06-04T22:50:33.862Z  INFO 76 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : Starting jolteonApplication using Java 21.0.7 with PID 76 (/target/classes started by root in /)
+2025-06-04T22:50:33.863Z  INFO 76 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-06-04T22:50:33.891Z  INFO 76 --- [jolteon] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-04T22:50:33.892Z  INFO 76 --- [jolteon] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-04T22:50:34.473Z  INFO 76 --- [jolteon] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04T22:50:34.516Z  INFO 76 --- [jolteon] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 10 JPA repository interfaces.
+2025-06-04T22:50:34.988Z  INFO 76 --- [jolteon] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-06-04T22:50:34.997Z  INFO 76 --- [jolteon] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-06-04T22:50:34.997Z  INFO 76 --- [jolteon] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-06-04T22:50:35.021Z  INFO 76 --- [jolteon] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-06-04T22:50:35.021Z  INFO 76 --- [jolteon] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1129 ms
+2025-06-04T22:50:35.222Z  INFO 76 --- [jolteon] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04T22:50:35.251Z  INFO 76 --- [jolteon] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-06-04T22:50:35.270Z  INFO 76 --- [jolteon] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-06-04T22:50:35.430Z  INFO 76 --- [jolteon] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04T22:50:35.448Z  INFO 76 --- [jolteon] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-06-04T22:50:35.544Z  INFO 76 --- [jolteon] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7d8ca836
+2025-06-04T22:50:35.545Z  INFO 76 --- [jolteon] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-06-04T22:50:35.563Z  WARN 76 --- [jolteon] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-04T22:50:35.575Z  INFO 76 --- [jolteon] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04T22:50:36.194Z  INFO 76 --- [jolteon] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04T22:50:36.257Z  WARN 76 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:50:36.257Z  WARN 76 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk86ndhpy8lqcg62imhna9r822m" of relation "bike_alert" does not exist, skipping
+2025-06-04T22:50:36.260Z  WARN 76 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:50:36.260Z  WARN 76 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk4qy8oy3o065vggcl9bkcvarvd" of relation "charging_spot_bikes" does not exist, skipping
+2025-06-04T22:50:36.262Z  WARN 76 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2025-06-04T22:50:36.262Z  WARN 76 --- [jolteon] [restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint "uk82f82n8cevx429ylcu80rej2r" of relation "route" does not exist, skipping
+2025-06-04T22:50:36.282Z  INFO 76 --- [jolteon] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04T22:50:36.456Z  INFO 76 --- [jolteon] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-04T22:50:37.539Z  WARN 76 --- [jolteon] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04T22:50:37.589Z  INFO 76 --- [jolteon] [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-06-04T22:50:38.403Z  INFO 76 --- [jolteon] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-06-04T22:50:38.410Z  INFO 76 --- [jolteon] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoints beneath base path '/actuator'
+2025-06-04T22:50:38.463Z  INFO 76 --- [jolteon] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-06-04T22:50:38.472Z  INFO 76 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : Started jolteonApplication in 4.888 seconds (process running for 5.144)
+2025-06-04T22:50:38.516Z  INFO 76 --- [jolteon] [restartedMain] tqs.project.jolteon.jolteonApplication   : 🚀 Jolteon application started successfully!
+2025-06-04T22:50:39.478Z  INFO 76 --- [jolteon] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-04T22:50:39.478Z  INFO 76 --- [jolteon] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-06-04T22:50:39.479Z  INFO 76 --- [jolteon] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
