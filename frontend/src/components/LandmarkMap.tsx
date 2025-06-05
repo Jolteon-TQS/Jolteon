@@ -39,9 +39,9 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
 
     mapRef.current = map;
 
-    window.deleteLandmark = (id: number) => {
-      if (onDeleteLandmark) onDeleteLandmark(id);
-    };
+    // window.deleteLandmark = (id: number) => {
+    //   if (onDeleteLandmark) onDeleteLandmark(id);
+    // };
 
     return () => {
       map.remove();
@@ -75,7 +75,6 @@ const PanelMap = ({ landmarks, onDeleteLandmark }: Props) => {
           <em>${lm.city}</em><br/>
           ${lm.description}<br/>
           ${lm.imageUrl ? `<img src="${lm.imageUrl}" alt="${lm.name}" style="max-width: 100px; margin-top: 5px;" />` : ""}
-          <br/><button onclick="window.deleteLandmark(${lm.id})" style="color:red; margin-top:5px;">Delete</button>
         </div>
       `;
 

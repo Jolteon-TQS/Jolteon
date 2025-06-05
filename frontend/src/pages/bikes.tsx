@@ -3,7 +3,7 @@ import BikeList from "../components/BikeList";
 import Map from "../components/StationsMap";
 
 function Bikes() {
-  const [duration, setDuration] = useState<number | null>(null); // null means indefinite
+  const [duration, setDuration] = useState<number | null>(null);
 
   const handleDurationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -11,7 +11,7 @@ function Bikes() {
   };
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-50 mt-5 window border-base-300 mt-40">
+<main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-50 mt-5 window border-base-300 mt-18 min-h-screen">
       {/* Left Side */}
       <div className="flex-1 space-y-4 mt-5">
         <h1 className="text-3xl font-bold text-primary">Rent a Bike</h1>
@@ -43,7 +43,7 @@ function Bikes() {
       </div>
 
       {/* Right Side: Map */}
-      <div className="w-full lg:w-1/2">
+      <div className="w-full lg:w-1/2 bg-white rounded-2xl shadow-xl overflow-hidden h-full mt-20">
         <Map />
       </div>
     </main>

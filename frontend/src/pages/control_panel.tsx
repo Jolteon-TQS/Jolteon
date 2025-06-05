@@ -258,7 +258,7 @@ function Panel() {
   }
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-100 mt-40 window border-base-300 shadow-sm">
+    <main className="flex flex-col lg:flex-row gap-6 p-10 bg-orange-100 mt-18 window border-base-300 shadow-sm min-h-screen">
       {/* Left Side - Forms and Controls */}
       <div className="flex-1 space-y-6 mt-5">
         <h1 className="text-3xl font-bold text-orange-700">Control Panel</h1>
@@ -435,6 +435,7 @@ function Panel() {
 
       {/* Right Side - Map */}
       <div className="w-full lg:w-1/2 z-9">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         <PanelMap
           markers={[
             ...bikes
@@ -461,6 +462,7 @@ function Panel() {
               })),
           ]}
         />
+        </div>
       </div>
 
       {/* Management Modal */}
