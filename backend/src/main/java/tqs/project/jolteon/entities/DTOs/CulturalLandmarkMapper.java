@@ -15,6 +15,15 @@ public class CulturalLandmarkMapper {
         //             .map(ReviewMapper::toDTO)
         //             .collect(Collectors.toSet());
         // }
+        Double averageRating;
+        if (culturalLandmark.getReviews() == null || culturalLandmark.getReviews().isEmpty()){
+            averageRating = 0.0;
+        } else {
+            averageRating = culturalLandmark.getReviews().stream()
+                    .mapToDouble(Review::getStars)
+                    .average()
+                    .orElse(0.0);
+        }
         return new CulturalLandmarkDTO(
                 culturalLandmark.getId(),
                 culturalLandmark.getName(),
@@ -22,8 +31,8 @@ public class CulturalLandmarkMapper {
                 culturalLandmark.getDescription(),
                 culturalLandmark.getImageUrl(),
                 culturalLandmark.getLatitude(),
-                culturalLandmark.getLongitude()
-                // reviews
+                culturalLandmark.getLongitude(),
+                averageRating
                 );
 
     }

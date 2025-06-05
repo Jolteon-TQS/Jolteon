@@ -17,4 +17,5 @@ public class CulturalLandmarkDTO {
     private Double latitude;
     private Double longitude;
     //private Set<ReviewDTO> reviews; 
+    private Double averageRating;
 }

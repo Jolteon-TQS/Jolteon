@@ -8,6 +8,7 @@ export interface CulturalLandmark {
   latitude: number;
   longitude: number;
   imageUrl?: string;
+  averageRating?: number;
 }
 
 const base_api_url = import.meta.env.VITE_API_URL;

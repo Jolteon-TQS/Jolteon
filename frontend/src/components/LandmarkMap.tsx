@@ -18,6 +18,7 @@ interface StationsMapProps {
     latitude: number;
     longitude: number;
     imageUrl?: string;
+    averageRating?: number;
   }[];
   stations: Station[];
   onStationSelect: (stationId: number) => void;
@@ -72,7 +73,12 @@ const LandmarkMap = ({
           },
           properties: {
             title: landmark.name,
-            description: landmark.city,
+            description:
+              landmark.city +
+              "<br>" +
+              (landmark.averageRating !== undefined
+                ? landmark.averageRating.toFixed(1) + " ⭐"
+                : "Sem avaliações"),
             type: "landmark",
             imageUrl: landmark.imageUrl,
           },
