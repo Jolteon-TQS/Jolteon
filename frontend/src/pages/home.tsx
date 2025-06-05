@@ -109,10 +109,12 @@ function Home() {
 
   const { bike, user, culturalLandmarks, startSpot, endSpot, time, endTime } =
     bikeRenting;
-  const remainingTime = endTime
-    ? 0
-    : bike.autonomy -
-      Math.floor((Date.now() - new Date(time).getTime()) / (1000 * 60));
+
+  const endTimeUTC = endTime ? new Date(endTime + "Z") : null; // force UTC parsing
+
+  const remainingTime = endTimeUTC
+    ? Math.max(0, Math.floor((endTimeUTC.getTime() - Date.now()) / (1000 * 60)))
+    : 0; // fallback to 0 if no endTime
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-8">
@@ -251,64 +253,62 @@ function Home() {
                   </div>
                 )}
 
-                {!endTime && (
-                  <>
-                    <div className="mt-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Select End Station
-                      </label>
-                      <select
-                        value={selectedEndSpot || ""}
-                        onChange={(e) =>
-                          setSelectedEndSpot(Number(e.target.value))
-                        }
-                        className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option value="">Select a station</option>
-                        {stations.map((station) => (
-                          <option key={station.id} value={station.id}>
-                            {station.city}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="mt-4 flex justify-end">
-                      <button
-                        onClick={handleEndTrip}
-                        disabled={endingTrip || !selectedEndSpot}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                      >
-                        {endingTrip ? (
-                          <span className="flex items-center">
-                            <svg
-                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Ending Trip...
-                          </span>
-                        ) : (
-                          "End Trip"
-                        )}
-                      </button>
-                    </div>
-                  </>
-                )}
+                <>
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Select End Station
+                    </label>
+                    <select
+                      value={selectedEndSpot || ""}
+                      onChange={(e) =>
+                        setSelectedEndSpot(Number(e.target.value))
+                      }
+                      className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Select a station</option>
+                      {stations.map((station) => (
+                        <option key={station.id} value={station.id}>
+                          {station.city}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={handleEndTrip}
+                      disabled={endingTrip || !selectedEndSpot}
+                      className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                    >
+                      {endingTrip ? (
+                        <span className="flex items-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Ending Trip...
+                        </span>
+                      ) : (
+                        "End Trip"
+                      )}
+                    </button>
+                  </div>
+                </>
               </div>
             </div>
           </div>

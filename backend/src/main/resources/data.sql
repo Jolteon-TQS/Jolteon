@@ -21,14 +21,17 @@ INSERT INTO city_admin (username, email, city) VALUES
 ('marianavivagua', 'mariana@be.pt', 'Aveiro');
 
 INSERT INTO cultural_landmark (name, description, latitude, longitude, city) VALUES
-('Costa Nova', 'Famous for its colorful striped houses and beautiful beach.', 40.6200, -8.7667, 'Aveiro'),
-('Ria de Aveiro', 'A picturesque lagoon with canals and traditional boats.', 40.6400, -8.6500, 'Aveiro'),
-('Museu de Aveiro', 'A museum showcasing the history and culture of Aveiro.', 40.6400, -8.6500, 'Aveiro'),
+('Costa Nova', 'Famous for its colorful striped houses and beautiful beach.', 40.6178, -8.7525, 'Aveiro'),
+('Ria de Aveiro', 'A picturesque lagoon with canals and traditional boats.', 40.6412, -8.6528, 'Aveiro'),
+('Museu de Aveiro', 'A museum showcasing the history and culture of Aveiro.', 40.6210, -8.6500, 'Aveiro'),
 ('Igreja de São Domingos', 'A historic church known for its stunning architecture.', 40.6400, -8.6500, 'Aveiro'),
 ('Rachelz House', 'Big very rich house with cute cat very cutie patotie', 10.6400, -80.3500, 'New York');
 
--- INSERT INTO bike_renting (
---   bike_id, user_id, start_spot_id, time
--- ) VALUES (
---   1, 1, 1, NOW()
--- );
+
+INSERT INTO review (user_id, cultural_landmark_id, stars, description) VALUES
+(1, 1, 5, 'Amazing place! The colorful houses are stunning.'),
+(1, 2, 4, 'Beautiful lagoon with a lot of history.'),
+(2, 1, 3, 'Nice place, but a bit crowded.'),
+(2, 3, 5, 'Loved the museum! Very informative.'),
+(1, 4, 4, 'The church is breathtaking. A must-visit in Aveiro.'),
+(2, 5, 5, 'Rachelz House is a hidden gem! The cat is adorable.');
