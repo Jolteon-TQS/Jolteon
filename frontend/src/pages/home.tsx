@@ -107,12 +107,14 @@ function Home() {
     );
   }
 
-  const { bike, user, culturalLandmarks, startSpot, endSpot, time, endTime } =
-    bikeRenting;
-  const remainingTime = endTime
-    ? 0
-    : bike.autonomy -
-      Math.floor((Date.now() - new Date(time).getTime()) / (1000 * 60));
+const { bike, user, culturalLandmarks, startSpot, endSpot, time, endTime } = bikeRenting;
+
+
+const endTimeUTC = endTime ? new Date(endTime + "Z") : null; // force UTC parsing
+
+const remainingTime = endTimeUTC
+  ? Math.max(0, Math.floor((endTimeUTC.getTime() - Date.now()) / (1000 * 60)))
+  : 0; // fallback to 0 if no endTime
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-8">
@@ -251,7 +253,6 @@ function Home() {
                   </div>
                 )}
 
-                {!endTime && (
                   <>
                     <div className="mt-6">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -308,7 +309,6 @@ function Home() {
                       </button>
                     </div>
                   </>
-                )}
               </div>
             </div>
           </div>
