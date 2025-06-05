@@ -7,9 +7,11 @@ import {
   updateCulturalLandmark,
   CulturalLandmark,
 } from "../api/landmark-crud";
+import { getAllStations, Station } from "../api/station-crud";
 
 function LandmarkPanel() {
   const [landmarks, setLandmarks] = useState<CulturalLandmark[]>([]);
+  const [stations, setStations] = useState<Station[]>([]);
   const [newLandmark, setNewLandmark] = useState({
     name: "",
     city: "",
@@ -19,9 +21,10 @@ function LandmarkPanel() {
     imageUrl: "",
   });
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingItem, setEditingItem] = useState<Partial<CulturalLandmark> | null>(null);
+  const [editingItem, setEditingItem] =
+    useState<Partial<CulturalLandmark> | null>(null);
   const [showModal, setShowModal] = useState(false);
-  
+
   // Search and pagination state
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,10 +32,14 @@ function LandmarkPanel() {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchLandmarks = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllCulturalLandmarks();
-        const converted = data.map((lm) => ({
+        const [landmarksData, stationsData] = await Promise.all([
+          getAllCulturalLandmarks(),
+          getAllStations(),
+        ]);
+
+        const convertedLandmarks = landmarksData.map((lm) => ({
           id: lm.id,
           name: lm.name,
           city: lm.city,
@@ -41,27 +48,30 @@ function LandmarkPanel() {
           longitude: lm.longitude,
           imageUrl: lm.imageUrl || "",
         }));
-        setLandmarks(converted);
+
+        setLandmarks(convertedLandmarks);
+        setStations(stationsData);
       } catch (error) {
-        console.error("Failed to load landmarks", error);
+        console.error("Failed to load data", error);
       }
     };
 
-    fetchLandmarks();
+    fetchData();
   }, []);
 
   // Filter landmarks based on search term
-  const filteredItems = landmarks.filter((landmark) =>
-    landmark.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    landmark.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    landmark.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredItems = landmarks.filter(
+    (landmark) =>
+      landmark.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      landmark.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      landmark.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const currentItems = filteredItems.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const addLandmark = async () => {
@@ -151,8 +161,8 @@ function LandmarkPanel() {
                 latitude: updatedLandmark.latitude,
                 longitude: updatedLandmark.longitude,
               }
-            : lm
-        )
+            : lm,
+        ),
       );
 
       setEditingId(null);
@@ -177,7 +187,9 @@ function LandmarkPanel() {
             onChange={(e) => setSelectedCity(e.target.value || null)}
           >
             <option value="">All Cities</option>
-            {Array.from(new Set(landmarks.map((landmark) => landmark.city))).map((city) => (
+            {Array.from(
+              new Set(landmarks.map((landmark) => landmark.city)),
+            ).map((city) => (
               <option key={city} value={city}>
                 {city}
               </option>
@@ -269,7 +281,16 @@ function LandmarkPanel() {
 
       {/* Right: Map */}
       <div className="w-full lg:w-1/2 z-10 bg-white rounded-2xl shadow-xl overflow-hidden h-full">
-        <LandmarkMap landmarks={landmarks} onDeleteLandmark={deleteLandmark} />
+        <LandmarkMap
+          landmarks={landmarks}
+          stations={stations.map((station) => ({
+            ...station,
+            bikes: Array.isArray(station.bikes) ? station.bikes.length : station.bikes,
+          }))}
+          onStationSelect={() => {}}
+          initialCenter={[-8.653, 40.641]}
+          initialZoom={10}
+        />
       </div>
 
       {/* Modal */}
@@ -364,7 +385,9 @@ function LandmarkPanel() {
                                 <input
                                   type="number"
                                   className="input input-bordered input-sm w-20"
-                                  value={editingItem?.latitude?.toString() || ""}
+                                  value={
+                                    editingItem?.latitude?.toString() || ""
+                                  }
                                   onChange={(e) =>
                                     setEditingItem({
                                       ...editingItem,
@@ -376,11 +399,14 @@ function LandmarkPanel() {
                                 <input
                                   type="number"
                                   className="input input-bordered input-sm w-20"
-                                  value={editingItem?.longitude?.toString() || ""}
+                                  value={
+                                    editingItem?.longitude?.toString() || ""
+                                  }
                                   onChange={(e) =>
                                     setEditingItem({
                                       ...editingItem,
-                                      longitude: parseFloat(e.target.value) || 0,
+                                      longitude:
+                                        parseFloat(e.target.value) || 0,
                                     })
                                   }
                                   step="0.000001"
@@ -405,11 +431,16 @@ function LandmarkPanel() {
                           <>
                             <td>{item.name}</td>
                             <td>{item.city}</td>
-                            <td className="truncate max-w-xs">{item.description}</td>
-                            <td>
-                              {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}
+                            <td className="truncate max-w-xs">
+                              {item.description}
                             </td>
-                            <td className="truncate max-w-xs">{item.imageUrl}</td>
+                            <td>
+                              {item.latitude.toFixed(4)},{" "}
+                              {item.longitude.toFixed(4)}
+                            </td>
+                            <td className="truncate max-w-xs">
+                              {item.imageUrl}
+                            </td>
                           </>
                         )}
 

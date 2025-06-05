@@ -436,32 +436,32 @@ function Panel() {
       {/* Right Side - Map */}
       <div className="w-full lg:w-1/2 z-9">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <PanelMap
-          markers={[
-            ...bikes
-              .filter((bike) => typeof bike.id === "number")
-              .filter((bike) => !selectedCity || bike.city === selectedCity)
-              .map((bike) => ({
-                id: bike.id as number,
-                type: "bike" as const,
-                latitude: bike.latitude,
-                longitude: bike.longitude,
-                label: `<b>Bike ${bike.id}</b></br>${bike.city}</br>`,
-              })),
-            ...stations
-              .filter((station) => typeof station.id === "number")
-              .filter(
-                (station) => !selectedCity || station.city === selectedCity,
-              )
-              .map((station) => ({
-                id: station.id as number,
-                type: "station" as const,
-                latitude: station.latitude,
-                longitude: station.longitude,
-                label: `<b>Station ${station.id}</b></br>${station.city}</br>(${station.bikes.length}/${station.capacity} bikes)`,
-              })),
-          ]}
-        />
+          <PanelMap
+            markers={[
+              ...bikes
+                .filter((bike) => typeof bike.id === "number")
+                .filter((bike) => !selectedCity || bike.city === selectedCity)
+                .map((bike) => ({
+                  id: bike.id as number,
+                  type: "bike" as const,
+                  latitude: bike.latitude,
+                  longitude: bike.longitude,
+                  label: `Bike ${bike.id} - ${bike.city}`,
+                })),
+              ...stations
+                .filter((station) => typeof station.id === "number")
+                .filter(
+                  (station) => !selectedCity || station.city === selectedCity,
+                )
+                .map((station) => ({
+                  id: station.id as number,
+                  type: "station" as const,
+                  latitude: station.latitude,
+                  longitude: station.longitude,
+                  label: `${station.city} Station: ${station.bikes.length}/${station.capacity} bikes`,
+                })),
+            ]}
+          />
         </div>
       </div>
 

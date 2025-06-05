@@ -34,23 +34,31 @@ export const getBikeRentingById = async (
   id: number,
 ): Promise<BikeRentingDTO | null> => {
   try {
-    const response = await axios.get<BikeRentingDTO>(`${API_BASE}/active/${id}`);
+    const response = await axios.get<BikeRentingDTO>(
+      `${API_BASE}/active/${id}`,
+    );
     return response.data;
-  } catch (error: any) {
-    if (error.response && error.response.status === 404) {
+  } catch (error: unknown) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      typeof (error as { response?: { status?: number } }).response === "object" &&
+      (error as { response?: { status?: number } }).response !== null &&
+      (error as { response?: { status?: number } }).response?.status === 404
+    ) {
       return null; // No active rental
     }
     throw error; // Re-throw other errors
   }
 };
 
-
 export const endBikeRenting = async (
   id: number,
-  endSpotId: number
+  endSpotId: number,
 ): Promise<BikeRentingDTO> => {
   const response = await axios.put<BikeRentingDTO>(
-    `${API_BASE}/${id}/end?endSpotId=${endSpotId}`
+    `${API_BASE}/${id}/end?endSpotId=${endSpotId}`,
   );
   return response.data;
 };

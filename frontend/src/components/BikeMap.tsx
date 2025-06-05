@@ -29,14 +29,14 @@ interface Props {
   onStationSelect?: (stationId: number) => void;
 }
 
-const Map = ({ 
-  latitude, 
-  longitude, 
-  landmarks = [], 
-  startSpot, 
-  endSpot, 
+const Map = ({
+  latitude,
+  longitude,
+  landmarks = [],
+  startSpot,
+  endSpot,
   stations = [],
-  onStationSelect 
+  onStationSelect,
 }: Props) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -51,17 +51,19 @@ const Map = ({
       style: `https://maps.geoapify.com/v1/styles/klokantech-basic/style.json?apiKey=${apikey}`,
       center: [longitude, latitude],
       zoom: 16,
-      attributionControl: false
+      attributionControl: false,
     });
 
     // Add zoom and rotation controls to the map.
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
-    
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
+
     // Add scale control
-    map.addControl(new maplibregl.ScaleControl({
-      maxWidth: 100,
-      unit: 'metric'
-    }));
+    map.addControl(
+      new maplibregl.ScaleControl({
+        maxWidth: 100,
+        unit: "metric",
+      }),
+    );
 
     mapRef.current = map;
 
@@ -87,7 +89,7 @@ const Map = ({
       // Add landmarks if provided
       const landmarksData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
         type: "FeatureCollection",
-        features: landmarks.map(landmark => ({
+        features: landmarks.map((landmark) => ({
           type: "Feature",
           geometry: {
             type: "Point",
@@ -97,53 +99,57 @@ const Map = ({
             title: landmark.name,
             description: landmark.city,
             type: "landmark",
-            imageUrl: landmark.imageUrl
+            imageUrl: landmark.imageUrl,
           },
         })),
       };
 
       // Add start spot if provided
-      const startSpotData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-        type: "FeatureCollection",
-        features: startSpot ? [
-          {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [startSpot.longitude, startSpot.latitude],
-            },
-            properties: {
-              title: "Start Location",
-              description: startSpot.city,
-              type: "start",
-            },
-          }
-        ] : [],
-      };
+      // const startSpotData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      //   type: "FeatureCollection",
+      //   features: startSpot
+      //     ? [
+      //         {
+      //           type: "Feature",
+      //           geometry: {
+      //             type: "Point",
+      //             coordinates: [startSpot.longitude, startSpot.latitude],
+      //           },
+      //           properties: {
+      //             title: "Start Location",
+      //             description: startSpot.city,
+      //             type: "start",
+      //           },
+      //         },
+      //       ]
+      //     : [],
+      // };
 
       // Add end spot if provided
-      const endSpotData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-        type: "FeatureCollection",
-        features: endSpot ? [
-          {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [endSpot.longitude, endSpot.latitude],
-            },
-            properties: {
-              title: "End Location",
-              description: endSpot.city,
-              type: "end",
-            },
-          }
-        ] : [],
-      };
+      // const endSpotData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      //   type: "FeatureCollection",
+      //   features: endSpot
+      //     ? [
+      //         {
+      //           type: "Feature",
+      //           geometry: {
+      //             type: "Point",
+      //             coordinates: [endSpot.longitude, endSpot.latitude],
+      //           },
+      //           properties: {
+      //             title: "End Location",
+      //             description: endSpot.city,
+      //             type: "end",
+      //           },
+      //         },
+      //       ]
+      //     : [],
+      // };
 
       // Add stations data
       const stationsData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
         type: "FeatureCollection",
-        features: stations.map(station => ({
+        features: stations.map((station) => ({
           type: "Feature",
           geometry: {
             type: "Point",
@@ -154,7 +160,7 @@ const Map = ({
             description: station.city,
             capacity: station.capacity,
             type: "station",
-            id: station.id
+            id: station.id,
           },
         })),
       };
@@ -170,15 +176,10 @@ const Map = ({
         data: landmarksData,
       });
 
-      map.addSource("start-spot", {
-        type: "geojson",
-        data: startSpotData,
-      });
-
-      map.addSource("end-spot", {
-        type: "geojson",
-        data: endSpotData,
-      });
+      // map.addSource("end-spot", {
+      //   type: "geojson",
+      //   data: endSpotData,
+      // });
 
       map.addSource("stations", {
         type: "geojson",
@@ -240,7 +241,7 @@ const Map = ({
         source: "stations",
         paint: {
           "circle-radius": 7,
-          "circle-color": "#8B5CF6",
+          "circle-color": "#F97316",
           "circle-stroke-color": "#ffffff",
           "circle-stroke-width": 2,
         },
@@ -289,7 +290,7 @@ const Map = ({
           "text-offset": [0, 1.5],
         },
         paint: {
-          "text-color": "#5B21B6",
+          "text-color": "#F97316",
           "text-halo-color": "#ffffff",
           "text-halo-width": 1,
         },
@@ -297,9 +298,11 @@ const Map = ({
 
       // Click handler for all point types
       const handlePointClick = (e: maplibregl.MapLayerMouseEvent) => {
-        const coordinates = (e.features?.[0]?.geometry as GeoJSON.Point)?.coordinates.slice();
+        const coordinates = (
+          e.features?.[0]?.geometry as GeoJSON.Point
+        )?.coordinates.slice();
         const properties = e.features?.[0]?.properties;
-        
+
         if (!coordinates || !properties) return;
 
         let popupContent = `<strong>${properties.title}</strong>`;
@@ -338,13 +341,19 @@ const Map = ({
           "case",
           ["==", ["get", "id"], selectedStation],
           "#EC4899", // Highlight color for selected station
-          "#8B5CF6"  // Default color for other stations
+          "#8B5CF6", // Default color for other stations
         ]);
       }
 
       // Cursor changes
-      const layers = ["bike-layer", "landmarks-layer", "start-spot-layer", "end-spot-layer", "stations-layer"];
-      layers.forEach(layer => {
+      const layers = [
+        "bike-layer",
+        "landmarks-layer",
+        "start-spot-layer",
+        "end-spot-layer",
+        "stations-layer",
+      ];
+      layers.forEach((layer) => {
         map.on("mouseenter", layer, () => {
           map.getCanvas().style.cursor = "pointer";
         });
@@ -360,17 +369,28 @@ const Map = ({
         mapRef.current = null;
       }
     };
-  }, [latitude, longitude, landmarks, startSpot, endSpot, stations, selectedStation, apikey, onStationSelect]);
+  }, [
+    latitude,
+    longitude,
+    landmarks,
+    startSpot,
+    endSpot,
+    stations,
+    selectedStation,
+    apikey,
+    onStationSelect,
+  ]);
 
   return (
-    <div 
-      ref={mapContainer} 
-      style={{ 
-        height: "560px", 
+    <div
+      ref={mapContainer}
+      style={{
+        height: "100%",
         width: "100%",
         borderRadius: "12px",
-        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-      }} 
+        boxShadow:
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      }}
     />
   );
 };

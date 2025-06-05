@@ -15,26 +15,25 @@ function Home() {
   const [error, setError] = useState<string | null>(null);
   const [endingTrip, setEndingTrip] = useState(false);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const [rentingData, stationsData] = await Promise.all([
-        getBikeRentingById(1), // this is the user id
-        getAllStations(),
-      ]);
-      setBikeRenting(rentingData); // might be null now
-      setStations(stationsData);
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
-      setError("Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [rentingData, stationsData] = await Promise.all([
+          getBikeRentingById(1), // this is the user id
+          getAllStations(),
+        ]);
+        setBikeRenting(rentingData); // might be null now
+        setStations(stationsData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   const handleEndTrip = async () => {
     if (!bikeRenting || !selectedEndSpot) {
@@ -44,7 +43,10 @@ useEffect(() => {
 
     setEndingTrip(true);
     try {
-      const updatedRental = await endBikeRenting(bikeRenting.id!, selectedEndSpot!);
+      const updatedRental = await endBikeRenting(
+        bikeRenting.id!,
+        selectedEndSpot!,
+      );
       setBikeRenting(updatedRental);
       notify("Trip ended successfully!");
     } catch (error) {
@@ -86,7 +88,9 @@ useEffect(() => {
     return (
       <div className="flex items-center justify-center h-screen bg-blue-50">
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">No Active Rental</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            No Active Rental
+          </h2>
           <p className="text-gray-600 mb-6">
             You don't have any active bike rentals at the moment.
           </p>
@@ -103,10 +107,12 @@ useEffect(() => {
     );
   }
 
-  const { bike, user, culturalLandmarks, startSpot, endSpot, time, endTime } = bikeRenting;
+  const { bike, user, culturalLandmarks, startSpot, endSpot, time, endTime } =
+    bikeRenting;
   const remainingTime = endTime
     ? 0
-    : bike.autonomy - Math.floor((Date.now() - new Date(time).getTime()) / (1000 * 60));
+    : bike.autonomy -
+      Math.floor((Date.now() - new Date(time).getTime()) / (1000 * 60));
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-8">
@@ -121,9 +127,14 @@ useEffect(() => {
                     <h1 className="text-3xl font-bold text-blue-900 mb-1">
                       Bike Rental Details
                     </h1>
-                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${endTime ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                      {endTime ? 'Completed' : 'Active'}
+                    <div
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        endTime
+                          ? "bg-green-100 text-green-800"
+                          : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
+                      {endTime ? "Completed" : "Active"}
                     </div>
                   </div>
                   <div className="flex-shrink-0">
@@ -134,18 +145,31 @@ useEffect(() => {
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Rider</h3>
-                      <p className="mt-1 text-lg font-medium text-gray-900">{user.username}</p>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Rider
+                      </h3>
+                      <p className="mt-1 text-lg font-medium text-gray-900">
+                        {user.username}
+                      </p>
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Rental time</h3>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Rental time
+                      </h3>
                       <div className="mt-1">
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
                           <div
-                            className={`h-2.5 rounded-full ${remainingTime > 30 ? 'bg-green-500' : remainingTime > 10 ? 'bg-yellow-500' : 'bg-red-500'
-                              }`}
-                            style={{ width: `${Math.min(100, (remainingTime / bike.autonomy) * 100)}%` }}
+                            className={`h-2.5 rounded-full ${
+                              remainingTime > 30
+                                ? "bg-green-500"
+                                : remainingTime > 10
+                                  ? "bg-yellow-500"
+                                  : "bg-red-500"
+                            }`}
+                            style={{
+                              width: `${Math.min(100, (remainingTime / bike.autonomy) * 100)}%`,
+                            }}
                           ></div>
                         </div>
                         <p className="mt-1 text-sm text-gray-600">
@@ -155,8 +179,12 @@ useEffect(() => {
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Current Location</h3>
-                      <p className="mt-1 text-lg font-medium text-gray-900">{bike.city}</p>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Current Location
+                      </h3>
+                      <p className="mt-1 text-lg font-medium text-gray-900">
+                        {bike.city}
+                      </p>
                       <p className="text-sm text-gray-600">
                         {bike.latitude.toFixed(4)}, {bike.longitude.toFixed(4)}
                       </p>
@@ -165,26 +193,32 @@ useEffect(() => {
 
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Start Time</h3>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Start Time
+                      </h3>
                       <p className="mt-1 text-lg font-medium text-gray-900">
                         {new Date(time).toLocaleString()}
                       </p>
                       {startSpot && (
                         <p className="text-sm text-gray-600 mt-1">
-                          {startSpot.city} ({startSpot.latitude.toFixed(4)}, {startSpot.longitude.toFixed(4)})
+                          {startSpot.city} ({startSpot.latitude.toFixed(4)},{" "}
+                          {startSpot.longitude.toFixed(4)})
                         </p>
                       )}
                     </div>
 
                     {endTime && (
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">End Time</h3>
+                        <h3 className="text-sm font-medium text-gray-500">
+                          End Time
+                        </h3>
                         <p className="mt-1 text-lg font-medium text-gray-900">
                           {new Date(endTime).toLocaleString()}
                         </p>
                         {endSpot && (
                           <p className="text-sm text-gray-600 mt-1">
-                            {endSpot.city} ({endSpot.latitude.toFixed(4)}, {endSpot.longitude.toFixed(4)})
+                            {endSpot.city} ({endSpot.latitude.toFixed(4)},{" "}
+                            {endSpot.longitude.toFixed(4)})
                           </p>
                         )}
                       </div>
@@ -194,14 +228,23 @@ useEffect(() => {
 
                 {(culturalLandmarks ?? []).length > 0 && (
                   <div className="mt-8">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Landmarks to Visit</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Landmarks to Visit
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {culturalLandmarks
-                        ?.filter(landmark => typeof landmark.id === "number")
-                        .map(landmark => (
-                          <div key={landmark.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <h4 className="font-medium text-gray-900">{landmark.name}</h4>
-                            <p className="text-sm text-gray-600">{landmark.city}</p>
+                        ?.filter((landmark) => typeof landmark.id === "number")
+                        .map((landmark) => (
+                          <div
+                            key={landmark.id}
+                            className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                          >
+                            <h4 className="font-medium text-gray-900">
+                              {landmark.name}
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              {landmark.city}
+                            </p>
                           </div>
                         ))}
                     </div>
@@ -216,7 +259,9 @@ useEffect(() => {
                       </label>
                       <select
                         value={selectedEndSpot || ""}
-                        onChange={(e) => setSelectedEndSpot(Number(e.target.value))}
+                        onChange={(e) =>
+                          setSelectedEndSpot(Number(e.target.value))
+                        }
                         className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="">Select a station</option>
@@ -235,9 +280,25 @@ useEffect(() => {
                       >
                         {endingTrip ? (
                           <span className="flex items-center">
-                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <svg
+                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
                             </svg>
                             Ending Trip...
                           </span>
@@ -258,14 +319,12 @@ useEffect(() => {
               <BikeMap
                 latitude={bike.latitude}
                 longitude={bike.longitude}
-                landmarks={
-                  culturalLandmarks
-                    ?.filter(landmark => typeof landmark.id === "number")
-                    .map(landmark => ({
-                      ...landmark,
-                      id: landmark.id as number,
-                    }))
-                }
+                landmarks={culturalLandmarks
+                  ?.filter((landmark) => typeof landmark.id === "number")
+                  .map((landmark) => ({
+                    ...landmark,
+                    id: landmark.id as number,
+                  }))}
                 startSpot={startSpot ?? undefined}
                 endSpot={endSpot}
                 stations={stations}
