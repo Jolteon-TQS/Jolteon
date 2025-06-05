@@ -65,11 +65,18 @@ function Panel() {
   }, []);
 
   const addBike = async () => {
-    if (!newBike.stationId || !newBike.latitude || !newBike.longitude || !newBike.autonomy)
+    if (
+      !newBike.stationId ||
+      !newBike.latitude ||
+      !newBike.longitude ||
+      !newBike.autonomy
+    )
       return;
-    
+
     try {
-      const selectedStation = stations.find(s => s.id === parseInt(newBike.stationId));
+      const selectedStation = stations.find(
+        (s) => s.id === parseInt(newBike.stationId),
+      );
       if (!selectedStation) {
         setError("Selected station not found");
         return;
@@ -83,7 +90,7 @@ function Panel() {
         autonomy: parseInt(newBike.autonomy),
         isAvailable: true,
       };
-      
+
       const createdBike = await createBike(bikeToCreate);
       setBikes([...bikes, createdBike]);
       setNewBike({
@@ -116,7 +123,9 @@ function Panel() {
     const capacity = parseInt(newStation.capacity);
 
     if (isNaN(latitude) || isNaN(longitude) || isNaN(capacity)) {
-      setError("Please enter valid numbers for latitude, longitude and capacity");
+      setError(
+        "Please enter valid numbers for latitude, longitude and capacity",
+      );
       return;
     }
 
@@ -161,8 +170,10 @@ function Panel() {
     try {
       if (showModal === "bikes") {
         // For bike editing, if station is changed, update city as well
-        if ('chargingSpotId' in editingItem && editingItem.chargingSpotId) {
-          const selectedStation = stations.find(s => s.id === editingItem.chargingSpotId);
+        if ("chargingSpotId" in editingItem && editingItem.chargingSpotId) {
+          const selectedStation = stations.find(
+            (s) => s.id === editingItem.chargingSpotId,
+          );
           if (selectedStation) {
             editingItem.city = selectedStation.city;
           }
@@ -281,7 +292,9 @@ function Panel() {
             <select
               className="select select-bordered flex-1"
               value={newBike.stationId}
-              onChange={(e) => setNewBike({ ...newBike, stationId: e.target.value })}
+              onChange={(e) =>
+                setNewBike({ ...newBike, stationId: e.target.value })
+              }
             >
               <option value="">Select a Station</option>
               {stations.map((station) => (
@@ -513,11 +526,16 @@ function Panel() {
                               <td>
                                 <select
                                   className="select select-bordered select-sm"
-                                  value={(editingItem as Bike)?.chargingSpotId?.toString() || ""}
+                                  value={
+                                    (
+                                      editingItem as Bike
+                                    )?.chargingSpotId?.toString() || ""
+                                  }
                                   onChange={(e) =>
                                     setEditingItem({
                                       ...editingItem,
-                                      chargingSpotId: parseInt(e.target.value) || 0,
+                                      chargingSpotId:
+                                        parseInt(e.target.value) || 0,
                                     })
                                   }
                                 >
