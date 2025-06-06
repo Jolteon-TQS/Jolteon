@@ -43,6 +43,9 @@ services:
     image: grafana/grafana
     ports:
       - ${GRAFANA_PORTS}
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
     volumes:
       - grafana-storage:/var/lib/grafana
     depends_on:
