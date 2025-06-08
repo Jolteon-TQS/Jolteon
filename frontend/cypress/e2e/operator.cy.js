@@ -57,55 +57,55 @@ describe("Test Operation functions", () => {
       });
   });
 
-  // it("add-bike-with-empty-fields", function () {
-  //   cy.visit("localhost:5173/operator");
+  it("add-bike-with-empty-fields", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a bike with some empty fields
-  //   cy.get(".select").select("2");
-  //   cy.get('[placeholder="Latitude"]').clear();
-  //   cy.get('[placeholder="Longitude"]').clear();
-  //   cy.get(":nth-child(3) > .input").clear();
+    // Attempt to add a bike with some empty fields
+    cy.get(".select").select("2");
+    cy.get('[placeholder="Latitude"]').clear();
+    cy.get('[placeholder="Longitude"]').clear();
+    cy.get(":nth-child(3) > .input").clear();
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
-  // });
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
+  });
 
-  // it("add-bike-with-invalid-latitude", function () {
-  //   cy.visit("localhost:5173/operator");
+  it("add-bike-with-invalid-latitude", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a bike with an invalid latitude
-  //   cy.get(".select").select("2");
-  //   cy.get('[placeholder="Latitude"]').clear().type("invalid_latitude");
-  //   cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
-  //   cy.get(":nth-child(3) > .input").clear().type("60");
+    // Attempt to add a bike with an invalid latitude
+    cy.get(".select").select("2");
+    cy.get('[placeholder="Latitude"]').clear().type("invalid_latitude");
+    cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
+    cy.get(":nth-child(3) > .input").clear().type("60");
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
-  // });
-  // it("add-bike-with-invalid-longitude", function () {
-  //   cy.visit("localhost:5173/operator");
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
+  });
+  it("add-bike-with-invalid-longitude", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a bike with an invalid longitude
-  //   cy.get(".select").select("2");
-  //   cy.get('[placeholder="Latitude"]').clear().type("34.052235");
-  //   cy.get('[placeholder="Longitude"]').clear().type("invalid_longitude");
-  //   cy.get(":nth-child(3) > .input").clear().type("60");
+    // Attempt to add a bike with an invalid longitude
+    cy.get(".select").select("2");
+    cy.get('[placeholder="Latitude"]').clear().type("34.052235");
+    cy.get('[placeholder="Longitude"]').clear().type("invalid_longitude");
+    cy.get(":nth-child(3) > .input").clear().type("60");
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
-  // });
-  // it("add-bike-with-invalid-battery", function () {
-  //   cy.visit("localhost:5173/operator");
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
+  });
+  it("add-bike-with-invalid-battery", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a bike with an invalid battery percentage
-  //   cy.get(".select").select("2");
-  //   cy.get('[placeholder="Latitude"]').clear().type("34.052235");
-  //   cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
-  //   cy.get(":nth-child(3) > .input").clear().type("invalid_battery");
+    // Attempt to add a bike with an invalid battery percentage
+    cy.get(".select").select("2");
+    cy.get('[placeholder="Latitude"]').clear().type("34.052235");
+    cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
+    cy.get(":nth-child(3) > .input").clear().type("invalid_battery");
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
-  // });
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
+  });
 
   /* ==== Test Created with Cypress Studio ==== */
   it("add-station-successful", function () {
@@ -160,57 +160,57 @@ describe("Test Operation functions", () => {
     });
   });
 
-  // it("add-station-with-empty-fields", function () {
-  //   cy.visit("localhost:5173/operator");
+  it("add-station-with-empty-fields", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a station with some empty fields
-  //   cy.get('[placeholder="City *"]').clear();
-  //   cy.get('[placeholder="Latitude *"]').clear();
-  //   cy.get('[placeholder="Longitude *"]').clear();
-  //   cy.get('[placeholder="Capacity *"]').clear();
+    // Attempt to add a station with some empty fields
+    cy.get('[placeholder="City *"]').clear();
+    cy.get('[placeholder="Latitude *"]').clear();
+    cy.get('[placeholder="Longitude *"]').clear();
+    cy.get('[placeholder="Capacity *"]').clear();
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
-  // });
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
+  });
 
-  // it("add-station-with-invalid-latitude", function () {
-  //   cy.visit("localhost:5173/operator");
+  it("add-station-with-invalid-latitude", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a station with an invalid latitude
-  //   cy.get('[placeholder="City *"]').clear().type("Guarda");
-  //   cy.get('[placeholder="Latitude *"]').clear().type("invalid_latitude");
-  //   cy.get('[placeholder="Longitude *"]').clear().type("-7.26792");
-  //   cy.get('[placeholder="Capacity *"]').clear().type("2");
+    // Attempt to add a station with an invalid latitude
+    cy.get('[placeholder="City *"]').clear().type("Guarda");
+    cy.get('[placeholder="Latitude *"]').clear().type("invalid_latitude");
+    cy.get('[placeholder="Longitude *"]').clear().type("-7.26792");
+    cy.get('[placeholder="Capacity *"]').clear().type("2");
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
-  // });
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
+  });
 
-  // it("add-station-with-invalid-longitude", function () {
-  //   cy.visit("localhost:5173/operator");
+  it("add-station-with-invalid-longitude", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a station with an invalid longitude
-  //   cy.get('[placeholder="City *"]').clear().type("Guarda");
-  //   cy.get('[placeholder="Latitude *"]').clear().type("40.5371");
-  //   cy.get('[placeholder="Longitude *"]').clear().type("invalid_longitude");
-  //   cy.get('[placeholder="Capacity *"]').clear("2");
+    // Attempt to add a station with an invalid longitude
+    cy.get('[placeholder="City *"]').clear().type("Guarda");
+    cy.get('[placeholder="Latitude *"]').clear().type("40.5371");
+    cy.get('[placeholder="Longitude *"]').clear().type("invalid_longitude");
+    cy.get('[placeholder="Capacity *"]').clear("2");
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
-  // });
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
+  });
 
-  // it("add-station-with-invalid-capacity", function () {
-  //   cy.visit("localhost:5173/operator");
+  it("add-station-with-invalid-capacity", function () {
+    cy.visit("localhost:5173/operator");
 
-  //   // Attempt to add a station with an invalid capacity
-  //   cy.get('[placeholder="City *"]').clear("Guarda");
-  //   cy.get('[placeholder="Latitude *"]').clear("40.5371");
-  //   cy.get('[placeholder="Longitude *"]').clear("-7.26792");
-  //   cy.get('[placeholder="Capacity *"]').clear("invalid_capacity");
+    // Attempt to add a station with an invalid capacity
+    cy.get('[placeholder="City *"]').clear("Guarda");
+    cy.get('[placeholder="Latitude *"]').clear("40.5371");
+    cy.get('[placeholder="Longitude *"]').clear("-7.26792");
+    cy.get('[placeholder="Capacity *"]').clear("invalid_capacity");
 
-  //   // Check that button is disabled
-  //   cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
-  // });
+    // Check that button is disabled
+    cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
+  });
 
   /* ==== Test Created with Cypress Studio ==== */
   it("edit-station-successful", function () {
