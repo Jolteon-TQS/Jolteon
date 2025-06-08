@@ -1,4 +1,4 @@
-describe("template spec", () => {
+describe("Test Operation functions", () => {
   it("passes", () => {
     cy.visit("https://example.cypress.io");
   });
