@@ -1,12 +1,8 @@
 describe("Test Operation functions", () => {
-  it("passes", () => {
-    cy.visit("https://example.cypress.io");
-  });
-
   it("add-bike-successful", function () {
     cy.visit("localhost:5173/bikes");
 
-    // wait for 2.5 seconds to ensure the page is fully loaded
+    // wait for 1.0 seconds to ensure the page is fully loaded
     cy.wait(1000);
     // Find the element for Los Angeles and grab the number of bikes available
     cy.contains("li.list-row", "Los Angeles") // find the <li> with "Los Angeles"
@@ -24,12 +20,9 @@ describe("Test Operation functions", () => {
     // Add a new bike
     cy.visit("localhost:5173/operator");
     cy.get(".select").select("2");
-    cy.get('[placeholder="Latitude"]').clear("34.052235");
-    cy.get('[placeholder="Latitude"]').type("34.052235");
-    cy.get('[placeholder="Longitude"]').clear("-118.243683");
-    cy.get('[placeholder="Longitude"]').type("-118.243683");
-    cy.get(":nth-child(3) > .input").clear("6");
-    cy.get(":nth-child(3) > .input").type("60");
+    cy.get('[placeholder="Latitude"]').clear().type("34.052235");
+    cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
+    cy.get(":nth-child(3) > .input").clear().type("60");
     cy.get(".space-y-6 > :nth-child(3) > .btn").click();
 
     // Check number of bikes in Los Angeles after adding a new bike
@@ -68,10 +61,9 @@ describe("Test Operation functions", () => {
 
     // Attempt to add a bike with an invalid latitude
     cy.get(".select").select("2");
-    cy.get('[placeholder="Latitude"]').clear("invalid_latitude");
-    cy.get('[placeholder="Longitude"]').clear("-118.243683");
-    cy.get(":nth-child(3) > .input").clear("6");
-    cy.get(":nth-child(3) > .input").type("60");
+    cy.get('[placeholder="Latitude"]').clear().type("invalid_latitude");
+    cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
+    cy.get(":nth-child(3) > .input").clear().type("60");
 
     // Check that button is disabled
     cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
@@ -81,10 +73,9 @@ describe("Test Operation functions", () => {
 
     // Attempt to add a bike with an invalid longitude
     cy.get(".select").select("2");
-    cy.get('[placeholder="Latitude"]').clear("34.052235");
-    cy.get('[placeholder="Longitude"]').clear("invalid_longitude");
-    cy.get(":nth-child(3) > .input").clear("6");
-    cy.get(":nth-child(3) > .input").type("60");
+    cy.get('[placeholder="Latitude"]').clear().type("34.052235");
+    cy.get('[placeholder="Longitude"]').clear().type("invalid_longitude");
+    cy.get(":nth-child(3) > .input").clear().type("60");
 
     // Check that button is disabled
     cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
@@ -94,9 +85,9 @@ describe("Test Operation functions", () => {
 
     // Attempt to add a bike with an invalid battery percentage
     cy.get(".select").select("2");
-    cy.get('[placeholder="Latitude"]').clear("34.052235");
-    cy.get('[placeholder="Longitude"]').clear("-118.243683");
-    cy.get(":nth-child(3) > .input").clear("invalid_battery");
+    cy.get('[placeholder="Latitude"]').clear().type("34.052235");
+    cy.get('[placeholder="Longitude"]').clear().type("-118.243683");
+    cy.get(":nth-child(3) > .input").clear().type("invalid_battery");
 
     // Check that button is disabled
     cy.get(".space-y-6 > :nth-child(3) > .btn").should("be.disabled");
@@ -110,14 +101,10 @@ describe("Test Operation functions", () => {
     const capacity = 2;
 
     cy.visit("localhost:5173/operator");
-    cy.get('[placeholder="City *"]').clear("A");
-    cy.get('[placeholder="City *"]').type("Aveiro");
-    cy.get('[placeholder="Latitude *"]').clear(lat.toString());
-    cy.get('[placeholder="Latitude *"]').type(lat.toString());
-    cy.get('[placeholder="Longitude *"]').clear(long.toString());
-    cy.get('[placeholder="Longitude *"]').type(long.toString());
-    cy.get('[placeholder="Capacity *"]').clear(capacity.toString());
-    cy.get('[placeholder="Capacity *"]').type(capacity.toString());
+    cy.get('[placeholder="City *"]').clear().type("Aveiro");
+    cy.get('[placeholder="Latitude *"]').clear().type(lat.toString());
+    cy.get('[placeholder="Longitude *"]').clear().type(long.toString());
+    cy.get('[placeholder="Capacity *"]').clear().type(capacity.toString());
     cy.get(".space-y-6 > :nth-child(5) > .btn").click();
     cy.get(":nth-child(6) > .btn").click();
     cy.get("tbody > :nth-child(6)").click();
@@ -176,10 +163,10 @@ describe("Test Operation functions", () => {
     cy.visit("localhost:5173/operator");
 
     // Attempt to add a station with an invalid latitude
-    cy.get('[placeholder="City *"]').clear("Aveiro");
-    cy.get('[placeholder="Latitude *"]').clear("invalid_latitude");
-    cy.get('[placeholder="Longitude *"]').clear("-8.65362");
-    cy.get('[placeholder="Capacity *"]').clear("2");
+    cy.get('[placeholder="City *"]').clear().type("Aveiro");
+    cy.get('[placeholder="Latitude *"]').clear().type("invalid_latitude");
+    cy.get('[placeholder="Longitude *"]').clear().type("-8.65362");
+    cy.get('[placeholder="Capacity *"]').clear().type("2");
 
     // Check that button is disabled
     cy.get(".space-y-6 > :nth-child(5) > .btn").should("be.disabled");
@@ -189,9 +176,9 @@ describe("Test Operation functions", () => {
     cy.visit("localhost:5173/operator");
 
     // Attempt to add a station with an invalid longitude
-    cy.get('[placeholder="City *"]').clear("Aveiro");
-    cy.get('[placeholder="Latitude *"]').clear("40.6412");
-    cy.get('[placeholder="Longitude *"]').clear("invalid_longitude");
+    cy.get('[placeholder="City *"]').clear().type("Aveiro");
+    cy.get('[placeholder="Latitude *"]').clear().type("40.6412");
+    cy.get('[placeholder="Longitude *"]').clear().type("invalid_longitude");
     cy.get('[placeholder="Capacity *"]').clear("2");
 
     // Check that button is disabled
@@ -222,11 +209,10 @@ describe("Test Operation functions", () => {
     cy.visit("localhost:5173/operator");
     cy.get(":nth-child(6) > .btn").click();
     cy.get(":nth-child(6) > .flex > .btn-info").click();
-    cy.get(":nth-child(6) > :nth-child(3) > .input").type(capacity.toString());
-    cy.get(":nth-child(6) > :nth-child(2) > .input").click();
-    cy.get(":nth-child(6) > :nth-child(2) > .input").type(city);
-    cy.get('[value="40.6412"]').type(lat.toString());
-    cy.get('[value="-8.65362"]').type(long.toString());
+    cy.get(":nth-child(6) > :nth-child(3) > .input").clear().type(capacity.toString());
+    cy.get(":nth-child(6) > :nth-child(2) > .input").clear().type(city);
+    cy.get('[value="40.6412"]').clear().type(lat.toString());
+    cy.get('[value="-8.65362"]').clear().type(long.toString());
     cy.get(".btn-success").click();
     /* ==== End Cypress Studio ==== */
 

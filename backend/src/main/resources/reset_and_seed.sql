@@ -8,7 +8,6 @@ TRUNCATE
     charging_spot
 RESTART IDENTITY CASCADE;
 
--- 2. Insert seed data into charging_spot
 INSERT INTO charging_spot (city, latitude, longitude, capacity) VALUES
   ('New York', 40.7128, -74.0060, 10),
   ('Los Angeles', 34.0522, -118.2437, 8),
@@ -17,7 +16,6 @@ INSERT INTO charging_spot (city, latitude, longitude, capacity) VALUES
   ('Tokyo', 35.6895, 139.6917, 15),
   ('Aveiro', 40.6400, -8.6500, 60);
 
--- 3. Insert seed data into bike
 INSERT INTO bike (autonomy, is_available, latitude, longitude, city, charging_spot_id) VALUES
   (120, true, 40.7128, -74.0060, 'New York', 1),
   (80, true, 34.0522, -118.2437, 'Los Angeles', 2),
@@ -25,7 +23,6 @@ INSERT INTO bike (autonomy, is_available, latitude, longitude, city, charging_sp
   (50, true, 48.8566, 2.3522, 'Paris', 5),
   (110, true, 35.6895, 139.6917, 'Tokyo', 4),
 
-  -- Aveiro station bikes
   (100, true, 40.6400, -8.6500, 'Aveiro', 6),
   (90, true, 40.6400, -8.6500, 'Aveiro', 6),
   (110, true, 40.6400, -8.6500, 'Aveiro', 6),
@@ -75,9 +72,21 @@ INSERT INTO bike (autonomy, is_available, latitude, longitude, city, charging_sp
   (80, true, 40.6400, -8.6500, 'Aveiro', 6),
   (90, true, 40.6400, -8.6500, 'Aveiro', 6),
   (100, true, 40.6400, -8.6500, 'Aveiro', 6),
-  (110, true, 40.6400, -8.6500, 'Aveiro', 6);
+  (110, true, 40.6400, -8.6500, 'Aveiro', 6),
 
--- 4. Insert seed data into normal_user
+  -- more bikes
+  (110, true, 40.7128, -74.0060, 'New York', 1),
+  (60, true, 40.7128, -74.0060, 'New York', 1),
+  (90, true, 34.0522, -118.2437, 'Los Angeles', 2),
+  (150, true, 51.5074, -0.1278, 'London', 3),
+  (90, true, 51.5074, -0.1278, 'London', 3),
+  (110, true, 51.5074, -0.1278, 'London', 3),
+  (100, true, 48.8566, 2.3522, 'Paris', 5),
+  (70, true, 48.8566, 2.3522, 'Paris', 5),
+  (120, true, 48.8566, 2.3522, 'Paris', 5),
+  (130, true, 48.8566, 2.3522, 'Paris', 5),
+  (80, true, 48.8566, 2.3522, 'Paris', 5);
+
 INSERT INTO normal_user (username, email, balance) VALUES
   ('andredora', 'andre@dora.com', 1000),
   ('pedrosalgado', 'pedro@sal.com', 50),
@@ -90,12 +99,10 @@ INSERT INTO normal_user (username, email, balance) VALUES
   ('raquelvinagre', 'raquel@vinagre.com', 100),
   ('diogufernandes', 'diogu@fernandes.com', 1200);
 
--- 5. Insert seed data into city_admin
 INSERT INTO city_admin (username, email, city) VALUES
   ('antonio', 'antonio@ua.pt', 'Aveiro'),
   ('marianavivagua', 'mariana@be.pt', 'Aveiro');
 
--- 6. Insert seed data into cultural_landmark
 INSERT INTO cultural_landmark (name, description, latitude, longitude, city) VALUES
   ('Costa Nova', 'Famous for its colorful striped houses and beautiful beach.', 40.6178, -8.7525, 'Aveiro'),
   ('Ria de Aveiro', 'A picturesque lagoon with canals and traditional boats.', 40.6412, -8.6528, 'Aveiro'),
@@ -103,7 +110,6 @@ INSERT INTO cultural_landmark (name, description, latitude, longitude, city) VAL
   ('Igreja de São Domingos', 'A historic church known for its stunning architecture.', 40.6400, -8.6500, 'Aveiro'),
   ('Rachelz House', 'Big very rich house with cute cat very cutie patotie', 10.6400, -80.3500, 'New York');
 
--- 7. Insert seed data into review
 INSERT INTO review (user_id, cultural_landmark_id, stars, description) VALUES
   (1, 1, 5, 'Amazing place! The colorful houses are stunning.'),
   (1, 2, 4, 'Beautiful lagoon with a lot of history.'),

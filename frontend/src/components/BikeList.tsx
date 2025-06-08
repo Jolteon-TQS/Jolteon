@@ -203,12 +203,15 @@ function BikeList({ duration }: { duration: number | null }) {
         </li>
 
         {currentStations.length > 0 ? (
-          currentStations.map((station) => {
+          currentStations.map((station, index) => {
             const availableCount = availableBikesMap[station.id] ?? 0;
             return (
               <li
                 key={station.id}
                 className="list-row flex items-center gap-4 p-4 border-t border-base-200"
+                data-cy={`station-row-${index}`}
+                data-city={station.city}
+                data-available-bikes={availableCount}
               >
                 <div>
                   <img
