@@ -26,8 +26,8 @@
     <tag/>
     <url/>
   </scm>
-  <properties>
 
+  <properties>
     <sonar.exclusions>**/*Mapper.java</sonar.exclusions>
     <sonar.exclusions>**/*Scheduler.java</sonar.exclusions>
     <sonar.organization>jolteon-tqs</sonar.organization>
@@ -42,36 +42,38 @@
     <cucumber.version>7.22.0</cucumber.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
   </properties>
-  <dependencies>
 
+  <dependencies>
     <dependency>
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
-<dependency>
-  <groupId>app.getxray</groupId>
-<artifactId>xray-junit-extensions</artifactId>
-<version>0.10.0</version>
-<scope>test</scope>
-</dependency>
     <dependency>
-       <groupId>com.h2database</groupId>
-       <artifactId>h2</artifactId>
-       <version>2.3.232</version>
-       <scope>test</scope>
+      <groupId>app.getxray</groupId>
+      <artifactId>xray-junit-extensions</artifactId>
+      <version>0.10.0</version>
+      <scope>test</scope>
     </dependency>
 
-<dependency>
-  <groupId>org.springdoc</groupId>
-  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-  <version>2.0.4</version>
-</dependency>
-<dependency>
-    <groupId>org.postgresql</groupId>
-    <artifactId>postgresql</artifactId>
-    <version>42.7.5</version>
-</dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.3.232</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.5</version>
+    </dependency>
 
     <dependency>
       <groupId>io.cucumber</groupId>
@@ -79,6 +81,7 @@
       <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-junit-platform-engine</artifactId>
@@ -185,39 +188,47 @@
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-testcontainers</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>2.0.4</version>
     </dependency>
+    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
