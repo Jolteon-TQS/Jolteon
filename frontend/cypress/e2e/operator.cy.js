@@ -209,7 +209,9 @@ describe("Test Operation functions", () => {
     cy.visit("localhost:5173/operator");
     cy.get(":nth-child(6) > .btn").click();
     cy.get(":nth-child(6) > .flex > .btn-info").click();
-    cy.get(":nth-child(6) > :nth-child(3) > .input").clear().type(capacity.toString());
+    cy.get(":nth-child(6) > :nth-child(3) > .input")
+      .clear()
+      .type(capacity.toString());
     cy.get(":nth-child(6) > :nth-child(2) > .input").clear().type(city);
     cy.get('[value="40.6412"]').clear().type(lat.toString());
     cy.get('[value="-8.65362"]').clear().type(long.toString());

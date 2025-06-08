@@ -1,9 +1,9 @@
-describe('example to-do app', () => {
+describe("test rent bike logic", () => {
   beforeEach(() => {
     // Reset the database before each test
-    cy.request('POST', 'http://localhost:8080/api/reset/db')
-    cy.visit('http://localhost:5173/bikes')
-  })
+    cy.request("POST", "http://localhost:8080/api/reset/db");
+    cy.visit("http://localhost:5173/bikes");
+  });
 
   it("shows all stations in the correct order", () => {
     const stations = [
@@ -19,5 +19,5 @@ describe('example to-do app', () => {
         .should("have.attr", "data-city", city)
         .and("have.attr", "data-available-bikes", bikes.toString());
     });
-  })
-})
+  });
+});
