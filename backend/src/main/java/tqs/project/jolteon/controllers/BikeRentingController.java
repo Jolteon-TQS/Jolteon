@@ -40,23 +40,29 @@ public class BikeRentingController {
     }
 
     @PostMapping
-    public ResponseEntity<BikeRentingDTO> createRenting(@RequestBody BikeRentingDTO bikeRentingDTO) {
-        Long bikeId = bikeRentingDTO.getBike().getId();
-        Long userId = bikeRentingDTO.getUser().getId();
-        Long startSpotId = bikeRentingDTO.getStartSpot() != null ? bikeRentingDTO.getStartSpot().getId() : null;
-        Long endSpotId = bikeRentingDTO.getEndSpot() != null ? bikeRentingDTO.getEndSpot().getId() : null;
-        Set<Long> landmarkIds = bikeRentingDTO.getCulturalLandmarks() != null
-                ? bikeRentingDTO.getCulturalLandmarks().stream()
-                        .map(landmark -> landmark.getId())
-                        .collect(Collectors.toSet())
-                : null;
-        LocalDateTime time = bikeRentingDTO.getTime();
-        LocalDateTime endTime = bikeRentingDTO.getEndTime();
-        BikeRenting bikeRenting = bikeRentingService.createBikeRenting(
-                bikeId, userId, startSpotId, endSpotId, landmarkIds, time, endTime);
+    public ResponseEntity<?> createRenting(@RequestBody BikeRentingDTO bikeRentingDTO) {
+        try {
+            Long bikeId = bikeRentingDTO.getBike().getId();
+            Long userId = bikeRentingDTO.getUser().getId();
+            Long startSpotId = bikeRentingDTO.getStartSpot() != null ? bikeRentingDTO.getStartSpot().getId() : null;
+            Long endSpotId = bikeRentingDTO.getEndSpot() != null ? bikeRentingDTO.getEndSpot().getId() : null;
+            Set<Long> landmarkIds = bikeRentingDTO.getCulturalLandmarks() != null
+                    ? bikeRentingDTO.getCulturalLandmarks().stream()
+                            .map(landmark -> landmark.getId())
+                            .collect(Collectors.toSet())
+                    : null;
+            LocalDateTime time = bikeRentingDTO.getTime();
+            LocalDateTime endTime = bikeRentingDTO.getEndTime();
 
-        BikeRentingDTO createdDto = BikeRentingMapper.toDTO(bikeRenting);
-        return ResponseEntity.ok(createdDto);
+            BikeRenting bikeRenting = bikeRentingService.createBikeRenting(
+                    bikeId, userId, startSpotId, endSpotId, landmarkIds, time, endTime);
+
+            BikeRentingDTO createdDto = BikeRentingMapper.toDTO(bikeRenting);
+            return ResponseEntity.ok(createdDto);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("{rentingId}/end")
