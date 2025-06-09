@@ -155,16 +155,10 @@ function BikeList({ duration }: { duration: number | null }) {
             ? error.response.data
             : "Could not create rental.";
 
-        toast.error(
-          <div data-cy="error-toast">
-            {errorMessage}
-          </div>
-        );
+        toast.error(<div data-cy="error-toast">{errorMessage}</div>);
       } else {
         toast.error(
-          <div data-cy="error-toast">
-            {"An unexpected error occurred."}
-          </div>
+          <div data-cy="error-toast">{"An unexpected error occurred."}</div>,
         );
       }
     } finally {

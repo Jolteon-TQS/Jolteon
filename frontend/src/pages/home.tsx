@@ -55,7 +55,7 @@ function Home() {
       toast.error(
         <div data-cy="error-toast">
           {"End station capacity at max, select another one."}
-        </div>
+        </div>,
       );
     } finally {
       setEndingTrip(false);
@@ -179,7 +179,10 @@ function Home() {
                             }}
                           ></div>
                         </div>
-                        <p className="mt-1 text-sm text-gray-600" data-cy="remaining-time">
+                        <p
+                          className="mt-1 text-sm text-gray-600"
+                          data-cy="remaining-time"
+                        >
                           {Math.max(0, remainingTime)} minutes remaining
                         </p>
                       </div>

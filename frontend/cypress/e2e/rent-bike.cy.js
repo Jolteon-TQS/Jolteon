@@ -19,16 +19,14 @@ describe("test rent bike logic", () => {
       .should("be.visible")
       .select(stationName);
 
-    cy.get('[data-cy="end-trip-button"]')
-      .should("be.visible")
-      .click();
+    cy.get('[data-cy="end-trip-button"]').should("be.visible").click();
   }
 
   function expectAvailableBikes(index, expected) {
     cy.get(`[data-cy="station-row-${index}"]`).should(
       "have.attr",
       "data-available-bikes",
-      expected.toString()
+      expected.toString(),
     );
   }
 
@@ -72,8 +70,10 @@ describe("test rent bike logic", () => {
 
     rentBikeFromStation(1); // Attempt second rent
 
-    cy.get("[data-cy=error-toast]")
-      .should("contain", "User already has an active bike renting");
+    cy.get("[data-cy=error-toast]").should(
+      "contain",
+      "User already has an active bike renting",
+    );
   });
 
   // it("allows defining a rental duration", () => {
@@ -127,7 +127,6 @@ describe("test rent bike logic", () => {
   // });
 
   it("should not allow viewing trip details without and active rental", () => {
-
     cy.visit("http://localhost:5173");
 
     cy.get('[data-cy="no-active-rental"]')
@@ -141,16 +140,14 @@ describe("test rent bike logic", () => {
     cy.visit("http://localhost:5173");
 
     // Attempt to end the trip at Paris, which has max capacity (6 bikes)
-    cy.get('[data-cy="end-spot-select"]')
-      .should("be.visible")
-      .select("Paris");
+    cy.get('[data-cy="end-spot-select"]').should("be.visible").select("Paris");
 
-    cy.get('[data-cy="end-trip-button"]')
-      .should("be.visible")
-      .click();
+    cy.get('[data-cy="end-trip-button"]').should("be.visible").click();
 
-    cy.get("[data-cy=error-toast]")
-      .should("contain", "End station capacity at max, select another one.");
+    cy.get("[data-cy=error-toast]").should(
+      "contain",
+      "End station capacity at max, select another one.",
+    );
   });
 
   it("should not allow ending a trip without selecting first an end station", () => {
