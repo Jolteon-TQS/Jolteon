@@ -154,11 +154,10 @@ class BikeRentingControllerTest {
         }
 
         @Test
-        void createRenting_returnsBadRequest_whenInvalidId() throws Exception {
-
-                String invalidInputJson = """
+        void createRenting_returnsBadRequest_whenServiceThrowsIllegalArgumentException() throws Exception {
+                String inputJson = """
                                 {
-                                  "bike": { "id": invalid-id },
+                                  "bike": { "id": 99 },
                                   "user": { "id": 1 },
                                   "culturalLandmarks": [ { "id": 1 } ],
                                   "startSpot": { "id": 1 },
@@ -166,41 +165,22 @@ class BikeRentingControllerTest {
                                 }
                                 """;
 
-                BikeRenting createdEntity = new BikeRenting();
-                createdEntity.setId(42L);
-                createdEntity.setTime(LocalDateTime.parse("2025-06-03T19:37:48.326"));
-
-                Bike bike = new Bike();
-                bike.setId(1L);
-                createdEntity.setBike(bike);
-
-                NormalUser user = new NormalUser();
-                user.setId(1L);
-                createdEntity.setUser(user);
-
-                CulturalLandmark landmark = new CulturalLandmark();
-                landmark.setId(1L);
-                createdEntity.setCulturalLandmarks(Set.of(landmark));
-
-                // Set startSpot
-                ChargingSpot startSpot = new ChargingSpot();
-                startSpot.setId(1L);
-                createdEntity.setStartSpot(startSpot);
-
                 Mockito.when(bikeRentingService.createBikeRenting(
-                                Mockito.eq(1L),
+                                Mockito.eq(99L),
                                 Mockito.eq(1L),
                                 Mockito.eq(1L),
                                 Mockito.isNull(),
                                 Mockito.eq(Set.of(1L)),
                                 Mockito.any(LocalDateTime.class),
-                                Mockito.isNull())).thenReturn(createdEntity);
+                                Mockito.isNull())).thenThrow(new IllegalArgumentException("Bike not found"));
+
                 mockMvc.perform(
                                 org.springframework.test.web.servlet.request.MockMvcRequestBuilders
                                                 .post("/api/rentings")
                                                 .contentType(MediaType.APPLICATION_JSON)
-                                                .content(invalidInputJson))
-                                .andExpect(status().isBadRequest());
+                                                .content(inputJson))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(content().string("Bike not found")); // Optional: match message
         }
 
         @Test
