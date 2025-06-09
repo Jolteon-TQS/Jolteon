@@ -1,11 +1,7 @@
 package tqs.project.jolteon.entities.DTOs;
 
-import java.util.stream.Collectors;
-
 import tqs.project.jolteon.entities.CulturalLandmark;
 import tqs.project.jolteon.entities.Review;
-
-import java.util.Set;
 
 public class CulturalLandmarkMapper {
     public static CulturalLandmarkDTO toDTO(CulturalLandmark culturalLandmark) {

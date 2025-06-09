@@ -154,14 +154,14 @@ class BikeRentingControllerTest {
         }
 
         @Test
-        void createRenting_returnsBadRequest_whenInvalidInput() throws Exception {
+        void createRenting_returnsBadRequest_whenInvalidId() throws Exception {
                 String invalidInputJson = """
                                 {
-                                  "bike": { "id": 1 },
+                                  "bike": { "id": invalid-id },
                                   "user": { "id": 1 },
                                   "culturalLandmarks": [ { "id": 1 } ],
                                   "startSpot": { "id": 1 },
-                                  "time": "invalid-date"
+                                  "time": "2025-06-03T19:37:48.326Z"
                                 }
                                 """;
 
