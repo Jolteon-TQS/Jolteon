@@ -226,4 +226,24 @@ public class BikeRentingServiceTest {
         assertThat(result.getBike().getIsAvailable()).isTrue();
     }
 
+    @Test
+    public void testEndBikeRenting_AtStationWithCapacityAtFull() {
+        BikeRenting renting = new BikeRenting();
+        renting.setId(1L);
+        renting.setBike(bike);
+        renting.setEndTime(null);
+        renting.setEndSpot(null);
+
+        when(bikeRentingRepository.findById(1L)).thenReturn(Optional.of(renting));
+        when(chargingSpotService.getChargingSpotById(2L)).thenReturn(endSpot);
+        when(bikeRentingRepository.save(any(BikeRenting.class))).thenAnswer(i -> i.getArgument(0));
+
+        endSpot.setCapacity(0); // Simulate full charging spot
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> 
+            bikeRentingService.endBikeRenting(1L, 2L)
+        );
+        assertEquals("Charging spot is full", e.getMessage());
+    }
+
 }
