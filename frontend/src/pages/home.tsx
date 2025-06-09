@@ -202,7 +202,10 @@ function Home() {
                         {new Date(time).toLocaleString()}
                       </p>
                       {startSpot && (
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p
+                          className="text-sm text-gray-600 mt-1"
+                          data-cy="start-spot"
+                        >
                           {startSpot.city} ({startSpot.latitude.toFixed(4)},{" "}
                           {startSpot.longitude.toFixed(4)})
                         </p>
@@ -218,7 +221,10 @@ function Home() {
                           {new Date(endTime).toLocaleString()}
                         </p>
                         {endSpot && (
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p
+                            className="text-sm text-gray-600 mt-1"
+                            data-cy="end-spot"
+                          >
                             {endSpot.city} ({endSpot.latitude.toFixed(4)},{" "}
                             {endSpot.longitude.toFixed(4)})
                           </p>
@@ -264,6 +270,7 @@ function Home() {
                         setSelectedEndSpot(Number(e.target.value))
                       }
                       className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      data-cy="end-spot-select"
                     >
                       <option value="">Select a station</option>
                       {stations.map((station) => (
@@ -278,6 +285,7 @@ function Home() {
                       onClick={handleEndTrip}
                       disabled={endingTrip || !selectedEndSpot}
                       className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                      data-cy="end-trip-button"
                     >
                       {endingTrip ? (
                         <span className="flex items-center">

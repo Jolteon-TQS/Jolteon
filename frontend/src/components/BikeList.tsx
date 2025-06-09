@@ -230,6 +230,7 @@ function BikeList({ duration }: { duration: number | null }) {
                   className="btn btn-primary"
                   disabled={availableCount === 0}
                   onClick={() => handleRentClick(station)}
+                  data-cy={`rent-button-${index}`}
                 >
                   Rent Here
                 </button>
@@ -379,6 +380,7 @@ function BikeList({ duration }: { duration: number | null }) {
                 className="btn btn-primary"
                 onClick={handleConfirmRental}
                 disabled={isSubmitting || !selectedBike}
+                data-cy="confirm-rent-button"
               >
                 {isSubmitting ? (
                   <span className="loading loading-spinner"></span>
