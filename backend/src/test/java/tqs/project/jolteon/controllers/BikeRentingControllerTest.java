@@ -154,6 +154,26 @@ class BikeRentingControllerTest {
         }
 
         @Test
+        void createRenting_returnsBadRequest_whenInvalidInput() throws Exception {
+                String invalidInputJson = """
+                                {
+                                  "bike": { "id": 1 },
+                                  "user": { "id": 1 },
+                                  "culturalLandmarks": [ { "id": 1 } ],
+                                  "startSpot": { "id": 1 },
+                                  "time": "invalid-date"
+                                }
+                                """;
+
+                mockMvc.perform(
+                                org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                                .post("/api/rentings")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content(invalidInputJson))
+                                .andExpect(status().isBadRequest());
+        }
+
+        @Test
         void endRenting_updatesAndReturnsBikeRentingDTO() throws Exception {
                 BikeRenting renting = createBikeRentingEntity(1L);
                 renting.setEndTime(LocalDateTime.of(2023, 1, 1, 12, 0));

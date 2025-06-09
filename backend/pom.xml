@@ -28,10 +28,12 @@
   </scm>
 
   <properties>
-    <sonar.exclusions>**/*Mapper.java</sonar.exclusions>
-    <sonar.exclusions>**/*Scheduler.java</sonar.exclusions>
-    <sonar.exclusions>**/DatabaseResetService.java</sonar.exclusions>
-    <sonar.exclusions>**/ResetController.java</sonar.exclusions>
+    <sonar.exclusions>
+      **/*Mapper.java,
+      **/*Scheduler.java,
+      **/DatabaseResetService.java,
+      **/ResetController.java
+    </sonar.exclusions>
     <sonar.organization>jolteon-tqs</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>21</java.version>
