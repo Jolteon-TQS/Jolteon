@@ -8,7 +8,7 @@ describe("Test Operation functions", () => {
     // Intercept the API calls to avoid bugs with the map loading
     cy.intercept("GET", "https://maps.geoapify.com/**", {
       statusCode: 200,
-      body: {}, // empty mock object; adjust as needed
+      body: {},
     }).as("geoapify");
   });
 

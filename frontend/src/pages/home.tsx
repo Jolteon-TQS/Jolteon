@@ -6,6 +6,7 @@ import { getAllStations } from "../api/station-crud";
 import { BikeRentingDTO } from "../api/bikeRenting-crud";
 import { Station } from "../api/station-crud";
 import { notify } from "../components/Notify";
+import { toast } from "react-toastify";
 
 function Home() {
   const [bikeRenting, setBikeRenting] = useState<BikeRentingDTO | null>(null);
@@ -51,7 +52,11 @@ function Home() {
       notify("Trip ended successfully!");
     } catch (error) {
       console.error("Failed to end trip:", error);
-      notify("Failed to end trip");
+      toast.error(
+        <div data-cy="error-toast">
+          {"End station capacity at max, select another one."}
+        </div>
+      );
     } finally {
       setEndingTrip(false);
     }
@@ -91,7 +96,7 @@ function Home() {
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             No Active Rental
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6" data-cy="no-active-rental">
             You don't have any active bike rentals at the moment.
           </p>
           <button
@@ -174,7 +179,7 @@ function Home() {
                             }}
                           ></div>
                         </div>
-                        <p className="mt-1 text-sm text-gray-600">
+                        <p className="mt-1 text-sm text-gray-600" data-cy="remaining-time">
                           {Math.max(0, remainingTime)} minutes remaining
                         </p>
                       </div>

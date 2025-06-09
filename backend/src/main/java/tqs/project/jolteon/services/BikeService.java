@@ -59,5 +59,9 @@ public class BikeService {
     public List<Bike> getBikesByCity(String city) {
         return bikeRepository.findByCity(city);
     }
+
+    public List<Bike> getBikesByChargingPointId(Long chargingPointId) {
+        return bikeRepository.findByChargingSpotId(chargingPointId);
+    }
 }
 

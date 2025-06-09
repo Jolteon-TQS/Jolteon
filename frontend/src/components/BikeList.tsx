@@ -146,11 +146,8 @@ function BikeList({ duration }: { duration: number | null }) {
         ...prev,
         [selectedStation.id]: updatedBikes.length,
       }));
-      // } catch (error) {
-      //   console.error("Failed to create rental:", error);
     } catch (error: any) {
       console.error("Failed to create rental:", error);
-      // toast.error("Failed to create rental. Please try again.");
 
       if (error?.response?.status === 400) {
         const errorMessage =
@@ -158,9 +155,17 @@ function BikeList({ duration }: { duration: number | null }) {
             ? error.response.data
             : "Could not create rental.";
 
-        toast.error(errorMessage); // 👈 This shows the backend error message
+        toast.error(
+          <div data-cy="error-toast">
+            {errorMessage}
+          </div>
+        );
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(
+          <div data-cy="error-toast">
+            {"An unexpected error occurred."}
+          </div>
+        );
       }
     } finally {
       setIsSubmitting(false);

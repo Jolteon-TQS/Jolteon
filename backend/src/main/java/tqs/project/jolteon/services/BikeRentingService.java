@@ -124,6 +124,13 @@ public BikeRenting endBikeRenting(Long id, Long endSpotId) {
 
     ChargingSpot endSpot = chargingSpotService.getChargingSpotById(endSpotId);
 
+    // Get number of bikes in the end spot
+    List<Bike> bikesInEndSpot = bikeService.getBikesByChargingPointId(endSpotId);
+
+    if (bikesInEndSpot.size() >= endSpot.getCapacity()) {
+        throw new IllegalArgumentException("Charging spot is full");
+    }
+
     LocalDateTime endTime = renting.getEndTime();
     renting.setEndTime(endTime != null ? endTime : LocalDateTime.now());
     renting.setEndSpot(endSpot);

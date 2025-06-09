@@ -71,11 +71,11 @@ INSERT INTO bike (autonomy, is_available, latitude, longitude, city, charging_sp
   (150, true, 51.5074, -0.1278, 'London', 3),
   (90, true, 51.5074, -0.1278, 'London', 3),
   (110, true, 51.5074, -0.1278, 'London', 3),
-  (100, true, 48.8566, 2.3522, 'Paris', 5),
-  (70, true, 48.8566, 2.3522, 'Paris', 5),
-  (120, true, 48.8566, 2.3522, 'Paris', 5),
-  (130, true, 48.8566, 2.3522, 'Paris', 5),
-  (80, true, 48.8566, 2.3522, 'Paris', 5);
+  (100, true, 48.8566, 2.3522, 'Paris', 4),
+  (70, true, 48.8566, 2.3522, 'Paris', 4),
+  (120, true, 48.8566, 2.3522, 'Paris', 4),
+  (130, true, 48.8566, 2.3522, 'Paris', 4),
+  (80, true, 48.8566, 2.3522, 'Paris', 4);
 
 INSERT INTO normal_user (username, email, balance) VALUES
 ('andredora', 'andre@dora.com', 1000),
