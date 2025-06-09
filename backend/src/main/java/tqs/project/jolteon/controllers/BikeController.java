@@ -8,10 +8,8 @@ import tqs.project.jolteon.entities.ChargingSpot;
 import tqs.project.jolteon.entities.DTOs.BikeMapper;
 import tqs.project.jolteon.services.BikeService;
 import tqs.project.jolteon.services.ChargingSpotService;
-import tqs.project.jolteon.repositories.ChargingSpotRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/bikes")

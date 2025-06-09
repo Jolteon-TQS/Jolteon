@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import tqs.project.jolteon.entities.NormalUser;
 import java.util.Set;
 import java.time.LocalDateTime;
 

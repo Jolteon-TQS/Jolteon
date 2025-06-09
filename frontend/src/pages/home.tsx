@@ -6,6 +6,7 @@ import { getAllStations } from "../api/station-crud";
 import { BikeRentingDTO } from "../api/bikeRenting-crud";
 import { Station } from "../api/station-crud";
 import { notify } from "../components/Notify";
+import { toast } from "react-toastify";
 
 function Home() {
   const [bikeRenting, setBikeRenting] = useState<BikeRentingDTO | null>(null);
@@ -51,7 +52,11 @@ function Home() {
       notify("Trip ended successfully!");
     } catch (error) {
       console.error("Failed to end trip:", error);
-      notify("Failed to end trip");
+      toast.error(
+        <div data-cy="error-toast">
+          {"End station capacity at max, select another one."}
+        </div>,
+      );
     } finally {
       setEndingTrip(false);
     }
@@ -91,7 +96,7 @@ function Home() {
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             No Active Rental
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6" data-cy="no-active-rental">
             You don't have any active bike rentals at the moment.
           </p>
           <button
@@ -174,7 +179,10 @@ function Home() {
                             }}
                           ></div>
                         </div>
-                        <p className="mt-1 text-sm text-gray-600">
+                        <p
+                          className="mt-1 text-sm text-gray-600"
+                          data-cy="remaining-time"
+                        >
                           {Math.max(0, remainingTime)} minutes remaining
                         </p>
                       </div>
@@ -202,7 +210,10 @@ function Home() {
                         {new Date(time).toLocaleString()}
                       </p>
                       {startSpot && (
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p
+                          className="text-sm text-gray-600 mt-1"
+                          data-cy="start-spot"
+                        >
                           {startSpot.city} ({startSpot.latitude.toFixed(4)},{" "}
                           {startSpot.longitude.toFixed(4)})
                         </p>
@@ -218,7 +229,10 @@ function Home() {
                           {new Date(endTime).toLocaleString()}
                         </p>
                         {endSpot && (
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p
+                            className="text-sm text-gray-600 mt-1"
+                            data-cy="end-spot"
+                          >
                             {endSpot.city} ({endSpot.latitude.toFixed(4)},{" "}
                             {endSpot.longitude.toFixed(4)})
                           </p>
@@ -264,6 +278,7 @@ function Home() {
                         setSelectedEndSpot(Number(e.target.value))
                       }
                       className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      data-cy="end-spot-select"
                     >
                       <option value="">Select a station</option>
                       {stations.map((station) => (
@@ -278,6 +293,7 @@ function Home() {
                       onClick={handleEndTrip}
                       disabled={endingTrip || !selectedEndSpot}
                       className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                      data-cy="end-trip-button"
                     >
                       {endingTrip ? (
                         <span className="flex items-center">

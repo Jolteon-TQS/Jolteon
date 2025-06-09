@@ -24,4 +24,8 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
 
 
     List<Bike> findByCity(String city);
+
+    // Custom query to find bikes by charging spot ID
+    @Query("SELECT b FROM Bike b WHERE b.chargingSpot.id = :chargingSpotId")
+    List<Bike> findByChargingSpotId(@Param("chargingSpotId") Long chargingSpotId);
 }

@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import tqs.project.jolteon.entities.CityAdmin;
-import tqs.project.jolteon.entities.CulturalLandmark;
 import tqs.project.jolteon.services.CityAdminService;
 import tqs.project.jolteon.services.CulturalLandmarkService;
 

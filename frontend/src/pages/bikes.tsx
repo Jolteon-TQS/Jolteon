@@ -90,6 +90,7 @@ function Bikes() {
             className="select select-primary w-full max-w-xs"
             value={duration === null ? "indefinite" : duration}
             onChange={handleDurationChange}
+            data-cy="duration-select"
           >
             <option value="30">30 minutes</option>
             <option value="60">1 hour</option>
