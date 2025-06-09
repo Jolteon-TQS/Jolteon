@@ -1,5 +1,4 @@
 describe("Test Operation functions", () => {
-
   before(() => {
     // Reset the database before each test
     cy.request("POST", "http://localhost:8080/api/reset/db");
@@ -7,7 +6,7 @@ describe("Test Operation functions", () => {
 
   beforeEach(() => {
     // Intercept the API calls to avoid bugs with the map loading
-     cy.intercept("GET", "https://maps.geoapify.com/**", {
+    cy.intercept("GET", "https://maps.geoapify.com/**", {
       statusCode: 200,
       body: {}, // empty mock object; adjust as needed
     }).as("geoapify");
@@ -247,7 +246,7 @@ describe("Test Operation functions", () => {
               .invoke("text")
               .then((capacityText) => {
                 const capacityResult = parseInt(capacityText.trim(), 10);
-                expect(capacityResult).to.equal(capacity*10);
+                expect(capacityResult).to.equal(capacity * 10);
 
                 // Location is in the 4th <td> (index 3), format: "50.0000, 10.0000"
                 cy.wrap($row)
@@ -260,8 +259,8 @@ describe("Test Operation functions", () => {
                       .map((s) => s.trim());
                     const latResult = parseFloat(latStr);
                     const longResult = parseFloat(longStr);
-                    expect(latResult).to.be.closeTo(lat*10, 0.0001);
-                    expect(longResult).to.be.closeTo(long*10, 0.0001);
+                    expect(latResult).to.be.closeTo(lat * 10, 0.0001);
+                    expect(longResult).to.be.closeTo(long * 10, 0.0001);
                   });
               });
           }
