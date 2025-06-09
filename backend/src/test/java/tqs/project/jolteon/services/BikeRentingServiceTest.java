@@ -55,6 +55,7 @@ public class BikeRentingServiceTest {
 
         endSpot = new ChargingSpot();
         endSpot.setId(2L);
+        endSpot.setCapacity(2);
 
         landmark = new CulturalLandmark();
         landmark.setId(1L);
