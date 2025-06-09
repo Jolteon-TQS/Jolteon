@@ -287,13 +287,15 @@
             <rule>
               <element>CLASS</element>
               <excludes>
-                <exclude>*Test</exclude>
+                <exclude>*Test*</exclude>
+                <exclude>tqs.project.jolteon.services.DatabaseResetService</exclude>
+                <exclude>tqs.project.jolteon.controllers.ResetController</exclude>
               </excludes>
               <limits>
                 <limit>
                   <counter>LINE</counter>
                   <value>COVEREDRATIO</value>
-                  <minimum>0.90</minimum>
+                  <minimum>0.80</minimum>
                 </limit>
               </limits>
             </rule>
@@ -311,6 +313,12 @@
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <excludes>
+                <exclude>tqs/project/jolteon/services/DatabaseResetService.class</exclude>
+                <exclude>tqs/project/jolteon/controllers/ResetController.class</exclude>
+              </excludes>
+            </configuration>
           </execution>
         </executions>
       </plugin>

@@ -8,7 +8,9 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+// import jakarta.annotation.Generated;
 
+// @Generated("excluded from coverage")
 @Service
 public class DatabaseResetService {
 
@@ -18,7 +20,7 @@ public class DatabaseResetService {
         this.dataSource = dataSource;
     }
 
-    public void resetDatabase() throws Exception {
+    public void resetDatabase() {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -45,7 +47,7 @@ public class DatabaseResetService {
             conn.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Failed to reset and seed database", e);
+            throw new RuntimeException("Failed to reset and seed database", e);
         }
     }
 }

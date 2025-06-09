@@ -175,6 +175,15 @@ public class BikeRentingServiceTest {
         verify(bikeRentingRepository).delete(renting);
     }
 
+    @Test void testDeleteBikeRenting_NotFound() {
+        when(bikeRentingRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> 
+            bikeRentingService.deleteBikeRenting(99L)
+        );
+        assertEquals("Bike renting not found", e.getMessage());
+    }
+
     @Test
     public void testUpdateBikeRenting_Success() {
         BikeRenting existing = new BikeRenting();
@@ -196,6 +205,19 @@ public class BikeRentingServiceTest {
 
         assertThat(result.getBike()).isEqualTo(bike);
         assertThat(result.getUser()).isEqualTo(user);
+    }
+
+    @Test
+    public void testUpdateBikeRenting_NotFound() {
+        BikeRenting updated = new BikeRenting();
+        updated.setId(99L);
+
+        when(bikeRentingRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> 
+            bikeRentingService.updateBikeRenting(99L, updated)
+        );
+        assertEquals("Bike renting not found", e.getMessage());
     }
 
     @Test
@@ -224,6 +246,16 @@ public class BikeRentingServiceTest {
         assertThat(result.getEndTime()).isEqualTo(endTime);
         assertThat(result.getEndSpot()).isEqualTo(endSpot);
         assertThat(result.getBike().getIsAvailable()).isTrue();
+    }
+
+    @Test
+    public void testEndBikeRenting_BikeRentingNotFound() {
+        when(bikeRentingRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> 
+            bikeRentingService.endBikeRenting(99L, 2L)
+        );
+        assertEquals("Bike renting not found", e.getMessage());
     }
 
     @Test

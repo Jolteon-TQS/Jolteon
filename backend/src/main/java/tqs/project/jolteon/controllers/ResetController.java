@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import tqs.project.jolteon.services.DatabaseResetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+// import jakarta.annotation.Generated;
 
+// @Generated("excluded from coverage")
 @RestController
 @RequestMapping("/api/reset")
 public class ResetController {
