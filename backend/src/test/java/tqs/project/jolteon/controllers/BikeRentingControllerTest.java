@@ -154,6 +154,36 @@ class BikeRentingControllerTest {
         }
 
         @Test
+        void createRenting_returnsBadRequest_whenServiceThrowsIllegalArgumentException() throws Exception {
+                String inputJson = """
+                                {
+                                  "bike": { "id": 99 },
+                                  "user": { "id": 1 },
+                                  "culturalLandmarks": [ { "id": 1 } ],
+                                  "startSpot": { "id": 1 },
+                                  "time": "2025-06-03T19:37:48.326Z"
+                                }
+                                """;
+
+                Mockito.when(bikeRentingService.createBikeRenting(
+                                Mockito.eq(99L),
+                                Mockito.eq(1L),
+                                Mockito.eq(1L),
+                                Mockito.isNull(),
+                                Mockito.eq(Set.of(1L)),
+                                Mockito.any(LocalDateTime.class),
+                                Mockito.isNull())).thenThrow(new IllegalArgumentException("Bike not found"));
+
+                mockMvc.perform(
+                                org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                                .post("/api/rentings")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content(inputJson))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(content().string("Bike not found")); // Optional: match message
+        }
+
+        @Test
         void endRenting_updatesAndReturnsBikeRentingDTO() throws Exception {
                 BikeRenting renting = createBikeRentingEntity(1L);
                 renting.setEndTime(LocalDateTime.of(2023, 1, 1, 12, 0));

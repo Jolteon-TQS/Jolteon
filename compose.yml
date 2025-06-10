@@ -12,10 +12,10 @@ services:
     volumes:
       - ./backend/logs:/app/logs 
 
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - ${FRONTEND_PORT}
+  frontend:
+    build: ./frontend
+    ports:
+      - ${FRONTEND_PORT}
 
 
   postgres:
@@ -27,42 +27,66 @@ services:
     ports:
       - "5433:5433"
 
-#   prometheus:
-#     image: prom/prometheus
-#     ports:
-#       - ${PROMETHEUS_PORTS}
-#     volumes:
-#       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - ${PROMETHEUS_PORTS}
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
-#   node-exporter:
-#     image: prom/node-exporter
-#     ports:
-#       - "9100:9100"
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - ${NODE_EXPORTER_PORTS}
 
-#   grafana:
-#     image: grafana/grafana
-#     ports:
-#       - ${GRAFANA_PORTS}
-#     volumes:
-#       - grafana-storage:/var/lib/grafana
-#     depends_on:
-#       - prometheus
+  grafana:
+    image: grafana/grafana
+    ports:
+      - ${GRAFANA_PORTS}
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - prometheus
 
-#   loki:
-#     image: grafana/loki:2.9.4
-#     ports:
-#       - "3100:3100"
-#     command: -config.file=/etc/loki/local-config.yaml
+  loki:
+    image: grafana/loki:2.9.4
+    ports:
+      - ${LOKI_PORTS}
+    command: -config.file=/etc/loki/local-config.yaml
 
-#   promtail:
-#     image: grafana/promtail:2.9.4
-#     volumes:
-#       - ./backend/logs:/app/backend/logs  
-#       - ./promtail-config.yml:/etc/promtail/promtail.yml
-#     command: -config.file=/etc/promtail/promtail.yml
-#     depends_on:
-#       - loki
+  promtail:
+    image: grafana/promtail:2.9.4
+    volumes:
+      - ./backend/logs:/app/backend/logs  
+      - ./promtail-config.yml:/etc/promtail/promtail.yml
+    command: -config.file=/etc/promtail/promtail.yml
+    depends_on:
+      - loki
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - ${INFLUXDB_PORTS}
+    environment:
+      - INFLUXDB_DB=k6
+
+  k6:
+    image: grafana/k6
+    volumes:
+      - ./k6/scripts:/scripts
+    # entrypoint: >
+    #   k6 run /scripts/test.js
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+    depends_on:
+      - backend
+      - influxdb
 
 
-# volumes:
-#   grafana-storage:
+
+volumes:
+  grafana-storage:

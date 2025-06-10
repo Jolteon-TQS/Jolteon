@@ -8,6 +8,7 @@ import {
 import { CulturalLandmark, getLandmarksByCity } from "../api/landmark-crud";
 import { BikeRentingDTO, createBikeRenting } from "../api/bikeRenting-crud";
 import { Bike } from "../api/bike-crud";
+import { toast } from "react-toastify";
 
 function BikeList({ duration }: { duration: number | null }) {
   const [stations, setStations] = useState<Station[]>([]);
@@ -145,8 +146,21 @@ function BikeList({ duration }: { duration: number | null }) {
         ...prev,
         [selectedStation.id]: updatedBikes.length,
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create rental:", error);
+
+      if (error?.response?.status === 400) {
+        const errorMessage =
+          typeof error.response.data === "string"
+            ? error.response.data
+            : "Could not create rental.";
+
+        toast.error(<div data-cy="error-toast">{errorMessage}</div>);
+      } else {
+        toast.error(
+          <div data-cy="error-toast">{"An unexpected error occurred."}</div>,
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -186,12 +200,15 @@ function BikeList({ duration }: { duration: number | null }) {
         </li>
 
         {currentStations.length > 0 ? (
-          currentStations.map((station) => {
+          currentStations.map((station, index) => {
             const availableCount = availableBikesMap[station.id] ?? 0;
             return (
               <li
                 key={station.id}
                 className="list-row flex items-center gap-4 p-4 border-t border-base-200"
+                data-cy={`station-row-${index}`}
+                data-city={station.city}
+                data-available-bikes={availableCount}
               >
                 <div>
                   <img
@@ -212,6 +229,7 @@ function BikeList({ duration }: { duration: number | null }) {
                   className="btn btn-primary"
                   disabled={availableCount === 0}
                   onClick={() => handleRentClick(station)}
+                  data-cy={`rent-button-${index}`}
                 >
                   Rent Here
                 </button>
@@ -361,6 +379,7 @@ function BikeList({ duration }: { duration: number | null }) {
                 className="btn btn-primary"
                 onClick={handleConfirmRental}
                 disabled={isSubmitting || !selectedBike}
+                data-cy="confirm-rent-button"
               >
                 {isSubmitting ? (
                   <span className="loading loading-spinner"></span>

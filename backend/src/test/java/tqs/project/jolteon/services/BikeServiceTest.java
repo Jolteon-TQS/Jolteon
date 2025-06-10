@@ -142,4 +142,40 @@ class BikeServiceTest {
 
         assertEquals("Autonomy must be greater than 0", exception.getMessage());
     }
+
+    @Test
+    void whenGetBikesByCityIsCalled_thenBikesInCityShouldBeReturned() {
+        String city = "Porto";
+        Bike bike1 = new Bike();
+        bike1.setCity(city);
+        Bike bike2 = new Bike();
+        bike2.setCity(city);
+
+        when(bikeRepository.findByCity(city)).thenReturn(Arrays.asList(bike1, bike2));
+
+        List<Bike> bikes = bikeService.getBikesByCity(city);
+
+        assertEquals(2, bikes.size());
+        assertEquals(city, bikes.get(0).getCity());
+        assertEquals(city, bikes.get(1).getCity());
+        verify(bikeRepository, times(1)).findByCity(city);
+    }
+
+    @Test
+    void whenGetBikesByChargingSpotIdIsCalled_thenListOfBikesShouldBeReturned() {
+        Long chargingSpotId = 1L;
+        Bike bike1 = new Bike();
+        bike1.setId(1L);
+        Bike bike2 = new Bike();
+        bike2.setId(2L);
+
+        when(bikeRepository.findByChargingSpotId(chargingSpotId)).thenReturn(Arrays.asList(bike1, bike2));
+
+        List<Bike> bikes = bikeService.getBikesByChargingPointId(chargingSpotId);
+
+        assertEquals(2, bikes.size());
+        assertEquals(1L, bikes.get(0).getId());
+        assertEquals(2L, bikes.get(1).getId());
+        verify(bikeRepository, times(1)).findByChargingSpotId(chargingSpotId);
+    }
 }
